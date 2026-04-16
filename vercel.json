@@ -1,0 +1,19 @@
+{
+    "version": 2,
+    "name": "veteo",
+    "buildCommand": null,
+    "routes": [
+        {
+            "src": "/sw.js",
+            "headers": {
+                "Cache-Control": "no-cache, no-store, must-revalidate",
+                "Service-Worker-Allowed": "/"
+            },
+            "dest": "/sw.js"
+        },
+        {
+            "src": "/(.*)",
+            "dest": "/$1"
+        }
+    ]
+}
