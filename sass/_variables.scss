@@ -1,0 +1,61 @@
+$bg: #0a0b0e;
+$surface: #111216;
+$surface-2: #17191f;
+$surface-3: #1e2028;
+
+$border: rgba(255, 255, 255, 0.065);
+$border-2: rgba(255, 255, 255, 0.115);
+
+$text: #eeeae3;
+$muted: #71737d;
+$dim: #2e3038;
+
+$violet: #c4b5fd;
+$violet-glow: rgba(196, 181, 253, 0.13);
+$violet-border: rgba(196, 181, 253, 0.22);
+
+$green: #6ee7b7;
+$green-glow: rgba(110, 231, 183, 0.13);
+$green-border: rgba(110, 231, 183, 0.22);
+
+$red: #fca5a5;
+$red-glow: rgba(252, 165, 165, 0.13);
+$red-border: rgba(252, 165, 165, 0.22);
+
+$amber: #fcd34d;
+$amber-glow: rgba(252, 211, 77, 0.13);
+$amber-border: rgba(252, 211, 77, 0.22);
+
+$blue: #93c5fd;
+$blue-glow: rgba(147, 197, 253, 0.13);
+
+$orange: #fb923c;
+$orange-glow: rgba(251, 146, 60, 0.4);
+
+$danger: #f87171;
+$danger-muted: rgba(248, 113, 113, 0.15);
+
+$radius-xs: 6px;
+$radius-sm: 10px;
+$radius: 16px;
+$radius-lg: 22px;
+$radius-xl: 28px;
+
+$ff-display: 'Google Sans Display', 'Google Sans', sans-serif;
+$ff-body: 'Google Sans', sans-serif;
+$ff-mono: 'Google Sans Mono', monospace;
+
+$shadow-sm: 0 4px 16px rgba(0, 0, 0, 0.3);
+$shadow-md: 0 16px 48px rgba(0, 0, 0, 0.45);
+$shadow-lg: 0 32px 80px rgba(0, 0, 0, 0.6);
+
+$ease: cubic-bezier(.4, 0, .2, 1);
+$ease-spring: cubic-bezier(.34, 1.56, .64, 1);
+$duration-fast: 150ms;
+$duration-base: 250ms;
+$duration-slow: 400ms;
+
+$z-base: 1;
+$z-overlay: 50;
+$z-modal: 100;
+$z-noise: 200;

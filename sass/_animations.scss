@@ -1,0 +1,114 @@
+@use 'variables' as v;
+
+@keyframes fadeDown {
+    from {
+        opacity: 0;
+        transform: translateY(-14px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes fadeUp {
+    from {
+        opacity: 0;
+        transform: translateY(18px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes scaleIn {
+    from {
+        opacity: 0;
+        transform: scale(0.94) translateY(8px);
+    }
+
+    to {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+    }
+}
+
+@keyframes pulse-green {
+
+    0%,
+    100% {
+        opacity: 1;
+        box-shadow: 0 0 10px v.$green;
+    }
+
+    50% {
+        opacity: 0.3;
+        box-shadow: 0 0 3px v.$green;
+    }
+}
+
+@keyframes pulse-orange {
+
+    0%,
+    100% {
+        opacity: 1;
+        box-shadow: 0 0 12px rgba(251, 146, 60, 0.7);
+    }
+
+    50% {
+        opacity: 0.3;
+        box-shadow: 0 0 3px rgba(251, 146, 60, 0.2);
+    }
+}
+
+// Clases de animación en cascada
+.a1 {
+    animation: fadeUp 0.45s 0.05s v.$ease both;
+}
+
+.a2 {
+    animation: fadeUp 0.45s 0.12s v.$ease both;
+}
+
+.a3 {
+    animation: fadeUp 0.45s 0.19s v.$ease both;
+}
+
+.a4 {
+    animation: fadeUp 0.45s 0.26s v.$ease both;
+}
+
+.a5 {
+    animation: fadeUp 0.45s 0.33s v.$ease both;
+}
+
+.a6 {
+    animation: fadeUp 0.45s 0.40s v.$ease both;
+}
+
+.header {
+    animation: fadeDown 0.55s v.$ease both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        transition-duration: 0.01ms !important;
+    }
+}
