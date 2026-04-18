@@ -107,6 +107,24 @@
     align-items: flex-start;
     margin-bottom: 14px;
     gap: 12px;
+
+    div {
+        @media (max-width: 560px) {
+            display: inline-block;
+        }
+
+        .btn-ghost {
+            @media (max-width: 560px) {
+                margin-left: 2.5rem;
+            }
+        }
+
+        .btn-primary {
+            @media (max-width: 560px) {
+                margin-left: 2.5rem;
+            }
+        }
+    }
 }
 
 .footer {
@@ -118,6 +136,11 @@
     font-size: 0.75rem;
     color: v.$dim;
     margin-top: 6px;
+
+    @media (max-width: 560px) {
+        flex-direction: column;
+        gap: 0.5rem;
+    }
 }
 
 .field-row {
@@ -127,5 +150,6 @@
 
     @media (max-width: 560px) {
         grid-template-columns: 1fr;
+        gap: 1rem;
     }
 }

@@ -8,6 +8,7 @@ const app = initializeApp(CONFIGURACION.firebase);
 const mensajeria = getMessaging(app);
 const CLAVE_ALMACENAMIENTO_NOTIFICACIONES = 'veteo_notif_config_v1';
 
+
 function cargarConfiguracion() {
     try { return JSON.parse(localStorage.getItem(CLAVE_ALMACENAMIENTO_NOTIFICACIONES)) || null; } catch { return null; }
 }
@@ -137,25 +138,31 @@ export function inicializarNotificaciones() {
         }
 
         try {
+            console.log("[Veteo] Solicitando permiso...");
             const permiso = await Notification.requestPermission();
 
             if (permiso === 'granted') {
                 establecerEstado(puntoEstado, textoEstado, 'Conectando...', 'activo');
 
                 const registro = await navigator.serviceWorker.ready;
+                console.log("[Veteo] Service Worker listo:", registro);
+
                 const token = await getToken(mensajeria, {
                     vapidKey: CONFIGURACION.vapidKey,
                     serviceWorkerRegistration: registro
                 });
 
                 if (token) {
+                    console.log("[Veteo] Token obtenido:", token);
                     guardarConfiguracion({ active: true, fcmToken: token });
                     mostrarEstadoActivo();
 
                     fetch(CONFIGURACION.apiUrl, {
                         method: 'POST',
                         body: JSON.stringify({ action: 'saveToken', token: token, email: usuario.email })
-                    }).catch(error => console.error("Error al guardar token:", error));
+                    }).then(res => res.json())
+                        .then(data => console.log("[Veteo] Token guardado en Sheet:", data))
+                        .catch(error => console.error("Error al guardar token:", error));
 
                     registro.showNotification('Veteo App conectada ✓', {
                         body: `Recordatorio configurado a las 08:00 hs.`,
@@ -164,6 +171,7 @@ export function inicializarNotificaciones() {
                     });
 
                     onMessage(mensajeria, (cargaUtil) => {
+                        console.log("[Veteo] Mensaje recibido en primer plano:", cargaUtil);
                         const titulo = cargaUtil.notification?.title || 'Veteo App';
                         const opciones = {
                             body: cargaUtil.notification?.body || 'Tienes un nuevo recordatorio.',
@@ -179,7 +187,7 @@ export function inicializarNotificaciones() {
                 mostrarEstadoDenegado();
             }
         } catch (error) {
-            console.error(error);
+            console.error("[Veteo] Error en notificaciones:", error);
             alert("Detalle del error: " + error.message);
             establecerEstado(puntoEstado, textoEstado, 'Error de conexión', 'denegado');
         }

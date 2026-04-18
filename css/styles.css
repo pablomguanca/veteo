@@ -329,6 +329,21 @@ h3 {
   margin-bottom: 14px;
   gap: 12px;
 }
+@media (max-width: 560px) {
+  .card-row div {
+    display: inline-block;
+  }
+}
+@media (max-width: 560px) {
+  .card-row div .btn-ghost {
+    margin-left: 2.5rem;
+  }
+}
+@media (max-width: 560px) {
+  .card-row div .btn-primary {
+    margin-left: 2.5rem;
+  }
+}
 
 .footer {
   display: flex;
@@ -340,6 +355,12 @@ h3 {
   color: #2e3038;
   margin-top: 6px;
 }
+@media (max-width: 560px) {
+  .footer {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+}
 
 .field-row {
   display: grid;
@@ -349,6 +370,7 @@ h3 {
 @media (max-width: 560px) {
   .field-row {
     grid-template-columns: 1fr;
+    gap: 1rem;
   }
 }
 

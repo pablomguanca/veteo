@@ -1,9 +1,16 @@
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
-import { getMessaging, onBackgroundMessage } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-messaging-sw.js";
-import { CONFIGURACION } from './js/modules/config.js';
+importScripts('https://www.gstatic.com/firebasejs/10.8.1/firebase-app-compat.js');
+importScripts('https://www.gstatic.com/firebasejs/10.8.1/firebase-messaging-compat.js');
 
-const aplicacion = initializeApp(CONFIGURACION.firebase);
-const mensajeria = getMessaging(aplicacion);
+firebase.initializeApp({
+    apiKey: "AIzaSyCWoRSWiOLPL8YJxMV2YDI43jTFBdTxKUA",
+    authDomain: "veteo-app-d22d3.firebaseapp.com",
+    projectId: "veteo-app-d22d3",
+    storageBucket: "veteo-app-d22d3.firebasestorage.app",
+    messagingSenderId: "674956796169",
+    appId: "1:674956796169:web:848c97f9a1cc1674cb73d8"
+});
+
+const mensajeria = firebase.messaging();
 
 const NOMBRE_CACHE = 'veteo-v1';
 const URLS_CACHE = [
@@ -87,7 +94,7 @@ self.addEventListener('notificationclick', (evento) => {
     );
 });
 
-onBackgroundMessage(mensajeria, (cargaUtil) => {
+mensajeria.onBackgroundMessage((cargaUtil) => {
     const titulo = cargaUtil.notification?.title || 'Veteo App';
     const opciones = {
         body: cargaUtil.notification?.body || 'Tienes una nueva notificación.',
