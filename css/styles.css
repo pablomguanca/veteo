@@ -1059,16 +1059,16 @@ h3 {
 .vdb-row {
   display: grid;
   grid-template-columns: auto minmax(0, 1fr) auto;
-  gap: 12px;
+  background: #17191f;
   align-items: start;
   padding: 12px 15px;
   border-radius: 10px;
   border: 1px solid rgba(255, 255, 255, 0.065);
-  background: #17191f;
   transition: border-color 150ms, opacity 0.3s;
   animation: fadeUp 400ms cubic-bezier(0.4, 0, 0.2, 1) both;
 }
 .vdb-row__meta {
+  font-family: "Google Sans Mono", monospace;
   display: flex;
   align-items: center;
   flex-wrap: wrap;
@@ -1087,7 +1087,7 @@ h3 {
   justify-content: center;
   width: 32px;
   height: 32px;
-  background: #0f172a;
+  background: #0a0b0e;
   border: none;
   border-radius: 8px;
   cursor: pointer;
@@ -1114,7 +1114,7 @@ h3 {
 .vdb-row .copy-btn .copy-icon::after {
   top: -1px;
   left: -1px;
-  background: #0f172a;
+  background: #0a0b0e;
 }
 .vdb-row .copy-btn.copied {
   background: #064e3b;

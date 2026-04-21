@@ -795,16 +795,16 @@
 .vdb-row {
     display: grid;
     grid-template-columns: auto minmax(0, 1fr) auto;
-    gap: 12px;
+    background: v.$surface-2;
     align-items: start;
     padding: 12px 15px;
     border-radius: v.$radius-sm;
     border: 1px solid v.$border;
-    background: v.$surface-2;
     transition: border-color v.$duration-fast, opacity 0.3s;
     animation: fadeUp v.$duration-slow v.$ease both;
 
     &__meta {
+        font-family: v.$ff-mono;
         display: flex;
         align-items: center;
         flex-wrap: wrap;
@@ -825,7 +825,7 @@
         justify-content: center;
         width: 32px;
         height: 32px;
-        background: #0f172a;
+        background: v.$bg;
         border: none;
         border-radius: 8px;
         cursor: pointer;
@@ -855,7 +855,7 @@
             &::after {
                 top: -1px;
                 left: -1px;
-                background: #0f172a;
+                background: v.$bg;
             }
         }
 
