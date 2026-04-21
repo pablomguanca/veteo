@@ -309,12 +309,13 @@
 
 .venc-item {
     display: flex;
+    font-family: v.$ff-mono;
     align-items: center;
     gap: 12px;
     padding: 12px 15px;
     border-radius: v.$radius-sm;
     border: 1px solid v.$border;
-    background: v.$surface-2;
+    background: #17191f;
     transition: border-color v.$duration-fast;
     animation: fadeUp v.$duration-slow v.$ease both;
 
