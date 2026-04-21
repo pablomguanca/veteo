@@ -277,11 +277,15 @@
     color: v.$muted;
 }
 
-.venc-list {
+.vdb-list {
     display: flex;
     flex-direction: column;
-    gap: 8px;
-    min-height: 60px;
+    gap: 10px;
+    max-height: 400px; 
+    overflow-y: auto;
+    padding-right: 6px;
+    scrollbar-width: thin;
+    scrollbar-color: rgba(255, 255, 255, 0.1) transparent;
 }
 
 .venc-empty {
@@ -305,12 +309,13 @@
 
 .venc-item {
     display: flex;
+    font-family: v.$ff-mono;
     align-items: center;
     gap: 12px;
     padding: 12px 15px;
     border-radius: v.$radius-sm;
     border: 1px solid v.$border;
-    background: v.$surface-2;
+    background: #17191f;
     transition: border-color v.$duration-fast;
     animation: fadeUp v.$duration-slow v.$ease both;
 
@@ -320,25 +325,18 @@
 }
 
 .venc-badge {
-    flex-shrink: 0;
-    padding: 3px 9px;
-    border-radius: 999px;
-    font-family: v.$ff-mono;
-    font-size: 10px;
-    font-weight: 500;
-    letter-spacing: 0.05em;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 0.7rem;
+    font-weight: 700;
     white-space: nowrap;
+}
 
-    &--90 {
-        background: v.$violet-glow;
-        color: v.$violet;
-        border: 1px solid v.$violet-border;
-    }
-
-    &--60 {
-        background: v.$green-glow;
-        color: v.$green;
-        border: 1px solid v.$green-border;
+.etapa {
+    &--7 {
+        background: v.$amber-glow;
+        color: v.$amber;
+        border: 1px solid v.$amber-border;
     }
 
     &--30 {
@@ -347,12 +345,24 @@
         border: 1px solid v.$red-border;
     }
 
-    &--7 {
-        background: v.$amber-glow;
-        color: v.$amber;
-        border: 1px solid v.$amber-border;
+    &--60 {
+        background: v.$green-glow;
+        color: v.$green;
+        border: 1px solid v.$green-border;
     }
-}
+
+    &--90 {
+        background: v.$violet-glow;
+        color: v.$violet;
+        border: 1px solid v.$violet-border;
+    }
+
+    &--unknown {
+        background: v.$surface-3;
+        color: v.$muted;
+        border: 1px solid v.$border;
+    }
+}        
 
 .venc-info {
     flex: 1;
@@ -803,6 +813,11 @@
     transition: border-color v.$duration-fast, opacity 0.3s;
     animation: fadeUp v.$duration-slow v.$ease both;
 
+    @media (max-width: 600px) {
+        grid-template-columns: auto 1fr;
+        gap: 10px;
+    }
+
     &__meta {
         font-family: v.$ff-mono;
         display: flex;
@@ -817,6 +832,13 @@
         display: flex;
         align-items: center;
         gap: 8px;
+
+        @media (max-width: 600px) {
+            grid-column: 1 / -1;
+            justify-content: flex-end;
+            padding-top: 12px;
+            border-top: 1px solid v.$border;
+        }
     }
 
     .copy-btn {
@@ -868,6 +890,7 @@
             }
         }
     }
+
 
     .action-btn {
         padding: 8px 16px;
