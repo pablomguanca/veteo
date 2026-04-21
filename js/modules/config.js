@@ -1,7 +1,7 @@
 export const CONFIGURACION = {
     googleClientId: '689341924893-glv7o74h60mfa87d6pf54u3ucjl53kc9.apps.googleusercontent.com',
     firebase: {
-        apiKey: "AIzaSyCWoRSWiOLPL8YJxMV2YDI43jTFBdTxKUA",
+        apiKey: "AIzaSyBpfo6SlTucKfzccxzcA1wc3p6IZRV_1oQ",
         authDomain: "veteo-app-d22d3.firebaseapp.com",
         projectId: "veteo-app-d22d3",
         storageBucket: "veteo-app-d22d3.firebasestorage.app",
