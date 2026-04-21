@@ -2,14 +2,6 @@ import { alternarEstadoVacio } from '../utils/ui.js';
 import { obtenerUsuarioActual } from './google-auth.js';
 import { CONFIGURACION } from './config.js';
 
-const ESTADOS_DISPONIBLES = ['PENDIENTE', 'CARGADO', 'DEPRECIADO'];
-
-const CLASES_ESTADO = {
-    PENDIENTE: 'estado--pendiente',
-    CARGADO: 'estado--cargado',
-    DEPRECIADO: 'estado--depreciado',
-};
-
 let productosEnMemoria = [];
 
 export function obtenerProductosEnMemoria() {
@@ -21,10 +13,8 @@ function parsearTxt(contenido) {
     for (const linea of contenido.split('\n')) {
         const limpia = linea.trim();
         if (!/^\*\s+\d+/.test(limpia)) continue;
-
         const interior = limpia.replace(/^\*\s*/, '').replace(/\s*\*$/, '').trim();
         const partes = interior.split(/\s+/);
-
         if (partes.length < 7) continue;
         if (!/^\d{2}\/\d{2}\/\d{4}$/.test(partes[partes.length - 1])) continue;
 
@@ -44,7 +34,6 @@ function parsearTxt(contenido) {
 function parsearFecha(cadenaFecha) {
     if (!cadenaFecha) return null;
     const limpia = String(cadenaFecha).trim();
-
     if (/^\d{2}\/\d{2}\/\d{4}$/.test(limpia)) {
         const [dia, mes, anio] = limpia.split('/');
         return new Date(`${anio}-${mes}-${dia}T00:00:00`);
@@ -117,10 +106,10 @@ function escaparHTML(cadena) {
         .replace(/"/g, '&quot;');
 }
 
-function ejecutarCargaCompleta(item, tipo) {
-    const sec = parseInt(item.SEC);
-    const ean = item.EAN;
-    const dias = obtenerDiasRestantes(item.VENCIMIENTO);
+async function ejecutarCargaCompleta(item, tipo) {
+    const sec = parseInt(item.sec || item.SEC);
+    const ean = item.ean || item.EAN;
+    const vto = item.vencimiento || item.VENCIMIENTO;
 
     const FORMS = {
         PAS: { url: "https://docs.google.com/forms/d/e/1FAIpQLSduF5W6fBCrrCTkrMCnPrUgxNSjAE1_VWY3p9c5xVqFf5xM9Q/viewform", id: "entry.1767407709" },
@@ -137,29 +126,35 @@ function ejecutarCargaCompleta(item, tipo) {
     } else {
         if (sec === 15) {
             urlAbrir = `${FORMS.PAS.url}?usp=pp_url&${FORMS.PAS.id}=${ean}`;
-        }
-        else if ([20, 22, 24, 26].includes(sec)) {
+        } else if ([20, 22, 24, 26].includes(sec)) {
             urlAbrir = FORMS.PFT.url;
-        }
-        else if (sec === 14) {
+        } else if (sec === 14) {
             nuevoEstado = "PEND. PCH";
-            alert("Sect. 14: Marcado como PENDIENTE PCH para cargar en PC.");
+            alert("Sect. 14: Marcado como PENDIENTE PCH.");
         }
     }
 
     if (urlAbrir) window.open(urlAbrir, '_blank');
 
-    const email = localStorage.getItem('userEmail');
-    updateEstado(ean, item.VENCIMIENTO, nuevoEstado, email);
+    const usuario = obtenerUsuarioActual();
+    if (usuario) {
+        try {
+            const res = await apiActualizarEstado(ean, vto, nuevoEstado, usuario);
+            if (res.ok) {
+                const p = productosEnMemoria.find(x => (x.ean || x.EAN) === ean && (x.vencimiento || x.VENCIMIENTO) === vto);
+                if (p) p.ESTADO = nuevoEstado;
+                renderizarTabla(document.getElementById('vdb-list'), document.getElementById('vdb-empty'), productosEnMemoria);
+            }
+        } catch (e) { console.error(e); }
+    }
 }
 
 function copiarEAN(ean, event) {
     event.stopPropagation();
+    const btn = event.currentTarget;
     navigator.clipboard.writeText(ean).then(() => {
-        const btn = event.currentTarget;
-        const originalInner = btn.innerHTML;
-        btn.innerHTML = '✓';
-        setTimeout(() => btn.innerHTML = originalInner, 1500);
+        btn.classList.add('copied');
+        setTimeout(() => btn.classList.remove('copied'), 2000);
     });
 }
 
@@ -171,12 +166,21 @@ function renderizarTabla(contenedor, elementoVacio, filas) {
     }
     alternarEstadoVacio(elementoVacio, true);
 
-    const filasOrdenadas = [...filas].sort((a, b) => obtenerDiasRestantes(a.VENCIMIENTO) - obtenerDiasRestantes(b.VENCIMIENTO));
+    const filasOrdenadas = [...filas].sort((a, b) => obtenerDiasRestantes(a.vencimiento || a.VENCIMIENTO) - obtenerDiasRestantes(b.vencimiento || b.VENCIMIENTO));
 
     filasOrdenadas.forEach(item => {
-        const dias = obtenerDiasRestantes(item.VENCIMIENTO);
+        const ean = item.ean || item.EAN;
+        const vto = item.vencimiento || item.VENCIMIENTO;
+        const desc = item.descripcion || item.DESCRIPCION;
+        const sec = parseInt(item.sec || item.SEC);
+        const cant = item.cantidad || item.CANTIDAD;
+        const estado = item.ESTADO || 'PENDIENTE';
+
+        const dias = obtenerDiasRestantes(vto);
         const etapa = obtenerEtapa(dias);
-        const sec = parseInt(item.SEC);
+
+        const textoVence = dias === 0 ? 'Vence hoy' : `Vence el ${formatearFecha(vto)}`;
+        const textoDias = dias < 0 ? `Vencido hace ${Math.abs(dias)}d` : `${dias}d restantes`;
 
         let labelPrincipal = "CARGAR";
         if (sec === 15) labelPrincipal = "PAS";
@@ -186,33 +190,33 @@ function renderizarTabla(contenedor, elementoVacio, filas) {
         const mostrarUM = (sec === 14 || sec === 15) && (dias >= 3 && dias <= 7);
 
         const elemento = document.createElement('div');
-        elemento.className = `vdb-row ${item.ESTADO === 'CARGADO' ? 'vdb-row--done' : ''}`;
+        elemento.className = `vdb-row ${estado.includes('CARGADO') ? 'vdb-row--done' : ''}`;
 
         elemento.innerHTML = `
-            <div class="vdb-row__left">
-                <span class="venc-badge ${etapa.claseCSS}">${etapa.etiqueta}</span>
+        <div class="vdb-row__left">
+            <span class="venc-badge ${etapa.claseCSS}">${etapa.etiqueta}</span>
+        </div>
+        <div class="vdb-row__info">
+            <div class="vdb-row__name">${escaparHTML(desc)}</div>
+            <div class="vdb-row__meta">
+                EAN ${escaparHTML(ean)} · SEC ${sec} · ${textoVence} · ${textoDias} · Cant: ${cant}
             </div>
-            <div class="vdb-row__info">
-                <div class="vdb-row__name">${escaparHTML(item.DESCRIPCION)}</div>
-                <div class="vdb-row__meta">
-                    <span class="ean-copy-wrapper">
-                        EAN ${escaparHTML(item.EAN)}
-                        <button class="copy-btn" onclick="copiarEAN('${item.EAN}', event)">📋</button>
-                    </span>
-                    · SEC ${escaparHTML(item.SEC)} · Cant: ${escaparHTML(String(item.CANTIDAD))}
-                </div>
-            </div>
-            <div class="vdb-row__actions">
-                <button class="action-btn action-btn--main" onclick='ejecutarCargaCompleta(${JSON.stringify(item)}, "PRINCIPAL")'>
-                    ${labelPrincipal}
-                </button>
-                ${mostrarUM ? `
-                    <button class="action-btn action-btn--um" onclick='ejecutarCargaCompleta(${JSON.stringify(item)}, "UM")'>
-                        UM
-                    </button>
-                ` : ''}
-            </div>
+        </div>
+        <div class="vdb-row__actions">
+            <button class="copy-btn" id="copy-${ean}-${vto}">
+                <div class="copy-icon"></div>
+            </button>
+            <button class="action-btn action-btn--main" id="main-${ean}-${vto}">${labelPrincipal}</button>
+            ${mostrarUM ? `<button class="action-btn action-btn--um" id="um-${ean}-${vto}">UM</button>` : ''}
+        </div>
         `;
+
+        elemento.querySelector(`#copy-${ean}-${vto}`).onclick = (e) => copiarEAN(ean, e);
+        elemento.querySelector(`#main-${ean}-${vto}`).onclick = () => ejecutarCargaCompleta(item, 'PRINCIPAL');
+        if (mostrarUM) {
+            elemento.querySelector(`#um-${ean}-${vto}`).onclick = () => ejecutarCargaCompleta(item, 'UM');
+        }
+
         contenedor.appendChild(elemento);
     });
 }
@@ -221,7 +225,6 @@ function establecerCargando(boton, texto) { boton.disabled = true; boton.textCon
 function restablecerBoton(boton, texto) { boton.disabled = false; boton.textContent = texto; }
 
 export async function inicializarBaseDatosVencimientos() {
-    const seccionDb = document.getElementById('vdb-section');
     const entradaArchivo = document.getElementById('vdb-file-input');
     const botonImportar = document.getElementById('vdb-import-btn');
     const botonRefrescar = document.getElementById('vdb-refresh-btn');
@@ -229,137 +232,56 @@ export async function inicializarBaseDatosVencimientos() {
     const elementoVacio = document.getElementById('vdb-empty');
     const elementoEstado = document.getElementById('vdb-status');
 
-    if (!seccionDb || !contenedorLista) return;
-
-    function actualizarBotonImportar() {
-        if (!botonImportar) return;
-        const estaLogueado = !!obtenerUsuarioActual();
-        botonImportar.disabled = !estaLogueado;
-        botonImportar.title = estaLogueado
-            ? 'Importar archivo TXT de vencimientos'
-            : 'Iniciá sesión con Google para importar';
-    }
+    if (!contenedorLista) return;
 
     async function cargarDatos() {
         const usuario = obtenerUsuarioActual();
         if (!usuario) {
             renderizarTabla(contenedorLista, elementoVacio, []);
-            if (elementoEstado) elementoEstado.textContent = 'Iniciá sesión con Google para ver o importar tus vencimientos.';
+            if (elementoEstado) elementoEstado.textContent = 'Iniciá sesión con Google para ver o importar.';
             return;
         }
 
-        if (elementoEstado) elementoEstado.textContent = 'Conectando con tu base de datos…';
+        if (elementoEstado) elementoEstado.textContent = 'Conectando…';
 
         try {
             const datosApi = await apiObtenerTodo(usuario);
-
             if (datosApi.needsSetup) {
-                if (elementoEstado) elementoEstado.textContent = 'Primera vez — creando tu base de datos corporativa…';
-
-                const registro = await apiConfigurarHoja(usuario);
-
-                if (!registro.ok) throw new Error(registro.error || 'No se pudo registrar la hoja.');
-
-                if (elementoEstado) elementoEstado.textContent = `Hoja creada y compartida con ${usuario.email}`;
-                renderizarTabla(contenedorLista, elementoVacio, productosEnMemoria);
+                await apiConfigurarHoja(usuario);
+                await cargarDatos();
                 return;
             }
-
-            const filasDesdeHoja = datosApi.rows || [];
-
-            if (filasDesdeHoja.length > 0) {
-                productosEnMemoria = filasDesdeHoja;
-                renderizarTabla(contenedorLista, elementoVacio, productosEnMemoria);
-
-                if (elementoEstado) elementoEstado.textContent = construirEstado(usuario);
-
-                window.dispatchEvent(new CustomEvent('veteo:productosActualizados', { detail: productosEnMemoria }));
-            } else {
-                renderizarTabla(contenedorLista, elementoVacio, productosEnMemoria);
-                if (elementoEstado) elementoEstado.textContent = productosEnMemoria.length
-                    ? construirEstado(usuario)
-                    : `Sin productos cargados · ${usuario.email}`;
-            }
+            productosEnMemoria = datosApi.rows || [];
+            renderizarTabla(contenedorLista, elementoVacio, productosEnMemoria);
+            if (elementoEstado) elementoEstado.textContent = construirEstado(usuario);
         } catch (error) {
-            console.error('[Veteo]', error);
-            if (elementoEstado) elementoEstado.textContent = `Error: ${error.message || 'No se pudo conectar con la base de datos.'}`;
+            if (elementoEstado) elementoEstado.textContent = 'Error de conexión.';
         }
     }
 
     function construirEstado(usuario) {
-        const productosVigentes = productosEnMemoria.filter(item => {
-            const dias = obtenerDiasRestantes(item.VENCIMIENTO);
-            return dias !== null && dias >= 0;
-        });
-        return `${productosVigentes.length} producto${productosVigentes.length !== 1 ? 's' : ''} vigente${productosVigentes.length !== 1 ? 's' : ''} en memoria · ${usuario.email}`;
-    }
-
-    function iniciarFiltradoAutomatico() {
-        setInterval(() => {
-            const usuario = obtenerUsuarioActual();
-            if (!productosEnMemoria.length) return;
-            const cantidadPrevia = productosEnMemoria.length;
-            productosEnMemoria = productosEnMemoria.filter(item => {
-                const dias = obtenerDiasRestantes(item.VENCIMIENTO);
-                return dias !== null && dias >= 0;
-            });
-            if (productosEnMemoria.length < cantidadPrevia) {
-                renderizarTabla(contenedorLista, elementoVacio, productosEnMemoria);
-                if (elementoEstado && usuario) elementoEstado.textContent = construirEstado(usuario);
-                window.dispatchEvent(new CustomEvent('veteo:productosActualizados', { detail: productosEnMemoria }));
-            }
-        }, 60 * 1000);
+        const vigentes = productosEnMemoria.filter(item => obtenerDiasRestantes(item.vencimiento || item.VENCIMIENTO) >= 0);
+        return `${vigentes.length} productos vigentes · ${usuario.email}`;
     }
 
     botonImportar?.addEventListener('click', () => {
-        const usuario = obtenerUsuarioActual();
-        if (!usuario) {
-            if (elementoEstado) elementoEstado.textContent = 'Iniciá sesión con Google para importar el archivo.';
-            document.getElementById('google-btn')?.scrollIntoView({ behavior: 'smooth', block: 'center' });
-            return;
-        }
+        if (!obtenerUsuarioActual()) return;
         entradaArchivo?.click();
     });
 
     entradaArchivo?.addEventListener('change', async () => {
         const usuario = obtenerUsuarioActual();
-        if (!usuario) {
-            if (elementoEstado) elementoEstado.textContent = 'Iniciá sesión con Google para importar el archivo.';
-            entradaArchivo.value = '';
-            return;
-        }
-
         const archivo = entradaArchivo.files[0];
-        if (!archivo) return;
+        if (!archivo || !usuario) return;
 
         establecerCargando(botonImportar, 'Procesando…');
-        if (elementoEstado) elementoEstado.textContent = 'Leyendo archivo…';
-
         const lector = new FileReader();
-        lector.onload = async (evento) => {
-            const filas = parsearTxt(evento.target.result);
-
-            if (filas.length === 0) {
-                if (elementoEstado) elementoEstado.textContent = 'No se encontraron productos en el archivo.';
-                restablecerBoton(botonImportar, '↑ Importar TXT');
-                entradaArchivo.value = '';
-                return;
+        lector.onload = async (e) => {
+            const filas = parsearTxt(e.target.result);
+            if (filas.length > 0) {
+                const res = await apiImportarTxt(filas, usuario);
+                if (res.ok) await cargarDatos();
             }
-
-            if (elementoEstado) elementoEstado.textContent = `${filas.length} productos encontrados. Enviando al Sheet de ${usuario.email}…`;
-
-            try {
-                const resultado = await apiImportarTxt(filas, usuario);
-                if (resultado.ok) {
-                    if (elementoEstado) elementoEstado.textContent = `✓ ${resultado.imported || filas.length} productos importados. Sincronizando…`;
-                    await cargarDatos();
-                } else {
-                    if (elementoEstado) elementoEstado.textContent = `Error: ${resultado.error || 'No se pudo importar el archivo.'}`;
-                }
-            } catch {
-                if (elementoEstado) elementoEstado.textContent = 'Error al conectar con el servidor.';
-            }
-
             restablecerBoton(botonImportar, '↑ Importar TXT');
             entradaArchivo.value = '';
         };
@@ -368,55 +290,11 @@ export async function inicializarBaseDatosVencimientos() {
 
     botonRefrescar?.addEventListener('click', cargarDatos);
 
-    contenedorLista.addEventListener('click', async (evento) => {
-        const botonEstado = evento.target.closest('.estado-btn');
-        if (!botonEstado) return;
-
-        const usuario = obtenerUsuarioActual();
-        if (!usuario) {
-            if (elementoEstado) elementoEstado.textContent = 'Iniciá sesión con Google para modificar estados.';
-            return;
-        }
-
-        const codigoEan = botonEstado.dataset.ean;
-        const fechaVencimiento = botonEstado.dataset.vencimiento;
-        const estadoActual = botonEstado.textContent.trim();
-        const siguienteEstado = ESTADOS_DISPONIBLES[(ESTADOS_DISPONIBLES.indexOf(estadoActual) + 1) % ESTADOS_DISPONIBLES.length];
-
-        botonEstado.textContent = '…';
-        botonEstado.disabled = true;
-
-        try {
-            const resultado = await apiActualizarEstado(codigoEan, fechaVencimiento, siguienteEstado, usuario);
-            if (resultado.ok) {
-                const item = productosEnMemoria.find(
-                    producto => String(producto.EAN) === String(codigoEan) && String(producto.VENCIMIENTO) === String(fechaVencimiento)
-                );
-                if (item) item.ESTADO = siguienteEstado;
-                botonEstado.textContent = siguienteEstado;
-                botonEstado.className = `estado-btn ${CLASES_ESTADO[siguienteEstado]}`;
-            } else {
-                botonEstado.textContent = estadoActual;
-            }
-        } catch {
-            botonEstado.textContent = estadoActual;
-        }
-        botonEstado.disabled = false;
-    });
-
-    actualizarBotonImportar();
-
     const usuarioActual = obtenerUsuarioActual();
     if (usuarioActual) {
         await cargarDatos();
     } else {
         renderizarTabla(contenedorLista, elementoVacio, []);
-        if (elementoEstado) elementoEstado.textContent = 'Iniciá sesión con Google para ver o importar tus vencimientos.';
-        window.addEventListener('veteo:login', async () => {
-            actualizarBotonImportar();
-            await cargarDatos();
-        }, { once: true });
+        window.addEventListener('veteo:login', () => cargarDatos(), { once: true });
     }
-
-    iniciarFiltradoAutomatico();
 }

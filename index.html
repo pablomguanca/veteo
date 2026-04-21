@@ -187,14 +187,13 @@
 
         <section class="card card--wide a3" aria-label="Base de datos de vencimientos" id="vdb-section">
             <div class="card-row">
-                <div>
+                <div class="card__header-text">
                     <div class="card__label">Génesix → Sheets</div>
                     <div class="card__title">Vencimientos importados</div>
                 </div>
-                <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;">
-                    <button class="btn-ghost" id="vdb-refresh-btn">↺ Actualizar</button>
+                <div class="card__header-actions"> <button class="btn-ghost" id="vdb-refresh-btn">↺ Actualizar</button>
                     <button class="btn-primary" id="vdb-import-btn">↑ Importar</button>
-                    <input type="file" id="vdb-file-input" accept=".txt" style="display:none;" />
+                    <input type="file" id="vdb-file-input" accept=".txt" class="u-hidden" />
                 </div>
             </div>
 

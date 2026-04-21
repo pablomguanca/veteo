@@ -1030,18 +1030,30 @@ h3 {
   display: none;
 }
 
+.card-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 15px;
+  margin-bottom: 20px;
+}
+.card-row .card__header-actions {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.u-hidden {
+  display: none !important;
+}
+
 .vdb-list {
   display: flex;
   flex-direction: column;
-  gap: 12px;
-  max-height: 380px;
-  overflow-y: auto;
-  overflow-x: hidden;
-  padding-right: 6px;
-  scroll-behavior: smooth;
-  min-height: 60px;
-  scrollbar-width: thin;
-  scrollbar-color: rgba(255, 255, 255, 0.12) transparent;
+  gap: 10px;
+  min-height: 100px;
 }
 
 .vdb-row {
@@ -1053,44 +1065,67 @@ h3 {
   border-radius: 10px;
   border: 1px solid rgba(255, 255, 255, 0.065);
   background: #17191f;
-  transition: border-color 150ms;
+  transition: border-color 150ms, opacity 0.3s;
   animation: fadeUp 400ms cubic-bezier(0.4, 0, 0.2, 1) both;
-}
-.vdb-row__info {
-  flex: 1;
 }
 .vdb-row__meta {
   display: flex;
   align-items: center;
+  flex-wrap: wrap;
   gap: 6px;
   font-size: 0.75rem;
   color: #71737d;
 }
 .vdb-row__actions {
   display: flex;
+  align-items: center;
   gap: 8px;
 }
-.vdb-row .ean-copy-wrapper {
+.vdb-row .copy-btn {
   display: inline-flex;
   align-items: center;
-  gap: 4px;
-  background: #17191f;
-  padding: 2px 6px;
-  border-radius: 4px;
-}
-.vdb-row .copy-btn {
-  background: none;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  background: #0f172a;
   border: none;
+  border-radius: 8px;
   cursor: pointer;
-  font-size: 0.7rem;
-  padding: 0;
-  opacity: 0.6;
+  transition: 0.3s;
 }
-.vdb-row .copy-btn:hover {
-  opacity: 1;
+.vdb-row .copy-btn .copy-icon {
+  position: relative;
+  width: 14px;
+  height: 14px;
+}
+.vdb-row .copy-btn .copy-icon::before, .vdb-row .copy-btn .copy-icon::after {
+  content: "";
+  position: absolute;
+  width: 10px;
+  height: 12px;
+  border: 2px solid white;
+  border-radius: 2px;
+}
+.vdb-row .copy-btn .copy-icon::before {
+  top: 2px;
+  left: 2px;
+  opacity: 0.4;
+}
+.vdb-row .copy-btn .copy-icon::after {
+  top: -1px;
+  left: -1px;
+  background: #0f172a;
+}
+.vdb-row .copy-btn.copied {
+  background: #064e3b;
+}
+.vdb-row .copy-btn.copied .copy-icon::before,
+.vdb-row .copy-btn.copied .copy-icon::after {
+  border-color: #22c55e;
 }
 .vdb-row .action-btn {
   padding: 8px 16px;
+  height: 32px;
   border-radius: 6px;
   font-size: 0.75rem;
   font-weight: 700;
@@ -1100,15 +1135,14 @@ h3 {
 .vdb-row .action-btn--main {
   background: #1e2028;
   color: #eeeae3;
-  min-width: 60px;
 }
-.vdb-row .action-btn--main[onclick*=PAS] {
+.vdb-row .action-btn--main[id*=PAS] {
   border-bottom: 2px solid #22c55e;
 }
-.vdb-row .action-btn--main[onclick*=PFT] {
+.vdb-row .action-btn--main[id*=PFT] {
   border-bottom: 2px solid #ef4444;
 }
-.vdb-row .action-btn--main[onclick*=PCH] {
+.vdb-row .action-btn--main[id*=PCH] {
   border-bottom: 2px solid #3b82f6;
 }
 .vdb-row .action-btn--um {
@@ -1118,32 +1152,6 @@ h3 {
 .vdb-row--done {
   opacity: 0.5;
   filter: grayscale(0.5);
-}
-
-.etapa--7 {
-  background: rgba(252, 211, 77, 0.13);
-  color: #fcd34d;
-  border: 1px solid rgba(252, 211, 77, 0.22);
-}
-.etapa--30 {
-  background: rgba(252, 165, 165, 0.13);
-  color: #fca5a5;
-  border: 1px solid rgba(252, 165, 165, 0.22);
-}
-.etapa--60 {
-  background: rgba(110, 231, 183, 0.13);
-  color: #6ee7b7;
-  border: 1px solid rgba(110, 231, 183, 0.22);
-}
-.etapa--90 {
-  background: rgba(196, 181, 253, 0.13);
-  color: #c4b5fd;
-  border: 1px solid rgba(196, 181, 253, 0.22);
-}
-.etapa--unknown {
-  background: #1e2028;
-  color: #71737d;
-  border: 1px solid rgba(255, 255, 255, 0.065);
 }
 
 .estado-btn {
