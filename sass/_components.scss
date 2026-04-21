@@ -813,6 +813,11 @@
     transition: border-color v.$duration-fast, opacity 0.3s;
     animation: fadeUp v.$duration-slow v.$ease both;
 
+    @media (max-width: 600px) {
+        grid-template-columns: auto 1fr;
+        gap: 10px;
+    }
+
     &__meta {
         display: flex;
         align-items: center;
@@ -826,6 +831,13 @@
         display: flex;
         align-items: center;
         gap: 8px;
+
+        @media (max-width: 600px) {
+            grid-column: 1 / -1;
+            justify-content: flex-end;
+            padding-top: 12px;
+            border-top: 1px solid v.$border;
+        }
     }
 
     .copy-btn {
@@ -877,6 +889,7 @@
             }
         }
     }
+
 
     .action-btn {
         padding: 8px 16px;
