@@ -106,11 +106,57 @@ function escaparHTML(cadena) {
         .replace(/"/g, '&quot;');
 }
 
+function actualizarBannerAlertas(productos) {
+    const seccionPrincipal = document.getElementById('vdb-section');
+    if (!seccionPrincipal) return;
+
+    let banner = document.getElementById('notif-banner');
+
+    const criticos = productos.filter(p => {
+        const dias = obtenerDiasRestantes(p.vencimiento || p.VENCIMIENTO);
+        return dias !== null && dias >= 0 && dias <= 7 && !(p.ESTADO || '').includes('CARGADO');
+    });
+
+    const notiDeshabilitadas = ("Notification" in window) && Notification.permission !== "granted";
+
+    if (criticos.length === 0 && !notiDeshabilitadas) {
+        if (banner) banner.remove();
+        return;
+    }
+
+    if (!banner) {
+        banner = document.createElement('div');
+        banner.id = 'notif-banner';
+        seccionPrincipal.parentNode.insertBefore(banner, seccionPrincipal);
+    }
+
+    let contenido = '';
+
+    if (notiDeshabilitadas) {
+        contenido += `
+            <div style="background: rgba(245, 158, 11, 0.1); border: 1px solid #f59e0b; color: #f59e0b; padding: 12px; border-radius: 8px; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center; font-size: 0.8rem;">
+                <span>🔔 Las notificaciones se encuentran deshabilitadas.</span>
+                <button onclick="Notification.requestPermission().then(() => location.reload())" style="background: #f59e0b; color: #000; border: none; padding: 4px 8px; border-radius: 4px; font-weight: bold; cursor: pointer;">Habilitar</button>
+            </div>
+        `;
+    }
+
+    if (criticos.length > 0) {
+        contenido += `
+            <div style="background: rgba(239, 68, 68, 0.1); border: 1px solid #ef4444; color: #ef4444; padding: 12px; border-radius: 8px; margin-bottom: 10px; font-weight: bold; font-size: 0.85rem; display: flex; align-items: center; gap: 8px;">
+                <span>🚨</span> Tenés ${criticos.length} producto${criticos.length > 1 ? 's' : ''} que vencen en menos de 7 días.
+            </div>
+        `;
+    }
+
+    banner.innerHTML = contenido;
+}
+
 async function ejecutarCargaCompleta(item, tipo) {
     const sec = parseInt(item.sec || item.SEC);
     const ean = item.ean || item.EAN;
     const vto = item.vencimiento || item.VENCIMIENTO;
-    
+
     const FORMS = {
         PAS: { url: "https://docs.google.com/forms/d/e/1FAIpQLSduF5W6fBCrrCTkrMCnPrUgxNSjAE1_VWY3p9c5xVqFf5xM9Q/viewform", id: "entry.1767407709" },
         PFT: { url: "https://docs.google.com/forms/d/e/1FAIpQLSfz_CdCLjbi_Sbjh5KVv2a1BqoLLNuQWpc5sKNTTTgshPofCg/viewform" },
@@ -145,8 +191,8 @@ async function ejecutarCargaCompleta(item, tipo) {
                 if (p) p.ESTADO = nuevoEstado;
                 renderizarTabla(document.getElementById('vdb-list'), document.getElementById('vdb-empty'), productosEnMemoria);
             }
-        } catch (e) { 
-            console.error(e); 
+        } catch (e) {
+            console.error(e);
         }
     }
 }
@@ -154,9 +200,17 @@ async function ejecutarCargaCompleta(item, tipo) {
 function copiarEAN(ean, event) {
     event.stopPropagation();
     const btn = event.currentTarget;
+
     navigator.clipboard.writeText(ean).then(() => {
         btn.classList.add('copied');
-        setTimeout(() => btn.classList.remove('copied'), 2000);
+
+        const originalContent = btn.innerHTML;
+        btn.innerHTML = 'EAN copiado ✓';
+
+        setTimeout(() => {
+            btn.classList.remove('copied');
+            btn.innerHTML = originalContent;
+        }, 2000);
     });
 }
 
@@ -180,7 +234,7 @@ function renderizarTabla(contenedor, elementoVacio, filas) {
 
         const dias = obtenerDiasRestantes(vto);
         const etapa = obtenerEtapa(dias);
-        
+
         const textoVence = dias === 0 ? 'Vence hoy' : `Vence el ${formatearFecha(vto)}`;
         const textoDias = dias < 0 ? `Vencido hace ${Math.abs(dias)}d` : `${dias}d restantes`;
 
@@ -215,7 +269,7 @@ function renderizarTabla(contenedor, elementoVacio, filas) {
 
         elemento.querySelector('.copy-btn').onclick = (e) => copiarEAN(ean, e);
         elemento.querySelector('.action-btn--main').onclick = () => ejecutarCargaCompleta(item, 'PRINCIPAL');
-        
+
         if (mostrarUM) {
             elemento.querySelector('.action-btn--um').onclick = () => ejecutarCargaCompleta(item, 'UM');
         }
@@ -224,14 +278,14 @@ function renderizarTabla(contenedor, elementoVacio, filas) {
     });
 }
 
-function establecerCargando(boton, texto) { 
-    boton.disabled = true; 
-    boton.textContent = texto; 
+function establecerCargando(boton, texto) {
+    boton.disabled = true;
+    boton.textContent = texto;
 }
 
-function restablecerBoton(boton, texto) { 
-    boton.disabled = false; 
-    boton.textContent = texto; 
+function restablecerBoton(boton, texto) {
+    boton.disabled = false;
+    boton.textContent = texto;
 }
 
 export async function inicializarBaseDatosVencimientos() {
