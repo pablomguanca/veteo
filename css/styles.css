@@ -135,6 +135,8 @@ h3 {
 .btn-primary:hover {
   opacity: 0.88;
   transform: translateY(-1px);
+  background-color: #2e3038;
+  color: #fcd34d;
 }
 
 .btn-ghost {
@@ -151,7 +153,7 @@ h3 {
   transition: all 150ms cubic-bezier(0.4, 0, 0.2, 1);
 }
 .btn-ghost:hover {
-  border-color: rgba(255, 255, 255, 0.115);
+  border-color: #fcd34d;
   color: #eeeae3;
 }
 .btn-ghost--danger:hover {
@@ -235,7 +237,7 @@ h3 {
 .header {
   display: flex;
   flex-direction: column;
-  gap: 6px;
+  gap: 1.5rem;
   margin-bottom: 6px;
 }
 
@@ -352,25 +354,14 @@ h3 {
   padding-top: 22px;
   border-top: 1px solid rgba(255, 255, 255, 0.065);
   font-size: 0.75rem;
-  color: #2e3038;
+  color: rgba(255, 255, 255, 0.115);
   margin-top: 6px;
 }
 @media (max-width: 560px) {
   .footer {
-    flex-direction: column;
-    gap: 0.5rem;
-  }
-}
-
-.field-row {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 12px;
-}
-@media (max-width: 560px) {
-  .field-row {
-    grid-template-columns: 1fr;
-    gap: 1rem;
+    flex-direction: row;
+    font-size: 0.75rem;
+    gap: 8px;
   }
 }
 
@@ -510,6 +501,24 @@ h3 {
   height: 6px;
   border-radius: 50%;
   flex-shrink: 0;
+}
+.chip__dot--blue {
+  background-color: #3b82f6;
+}
+.chip__dot--green {
+  background-color: #22c55e;
+}
+.chip__dot--amber {
+  background-color: #fb923c;
+}
+.chip__dot--red {
+  background-color: #ef4444;
+}
+.chip__dot--purple {
+  background-color: #c4b5fd;
+}
+.chip__dot--violet {
+  background-color: #8b5cf6;
 }
 
 .checklist {
@@ -1047,40 +1056,68 @@ h3 {
   transition: border-color 150ms;
   animation: fadeUp 400ms cubic-bezier(0.4, 0, 0.2, 1) both;
 }
-.vdb-row:hover {
-  border-color: rgba(255, 255, 255, 0.115);
-}
-.vdb-row__left {
-  flex-shrink: 0;
-}
 .vdb-row__info {
-  min-width: 0;
-}
-.vdb-row__name {
-  font-size: 0.875rem;
-  font-weight: 500;
-  white-space: normal;
-  overflow: visible;
-  text-overflow: unset;
-  word-break: break-word;
-  overflow-wrap: anywhere;
-  line-height: 1.35;
+  flex: 1;
 }
 .vdb-row__meta {
-  font-family: "Google Sans Mono", monospace;
-  font-size: 10px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.75rem;
   color: #71737d;
-  margin-top: 4px;
-  white-space: normal;
-  overflow: visible;
-  text-overflow: unset;
-  word-break: break-word;
-  overflow-wrap: anywhere;
-  line-height: 1.45;
 }
-.vdb-row__right {
-  flex-shrink: 0;
-  align-self: start;
+.vdb-row__actions {
+  display: flex;
+  gap: 8px;
+}
+.vdb-row .ean-copy-wrapper {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  background: #17191f;
+  padding: 2px 6px;
+  border-radius: 4px;
+}
+.vdb-row .copy-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 0.7rem;
+  padding: 0;
+  opacity: 0.6;
+}
+.vdb-row .copy-btn:hover {
+  opacity: 1;
+}
+.vdb-row .action-btn {
+  padding: 8px 16px;
+  border-radius: 6px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  border: none;
+  cursor: pointer;
+}
+.vdb-row .action-btn--main {
+  background: #1e2028;
+  color: #eeeae3;
+  min-width: 60px;
+}
+.vdb-row .action-btn--main[onclick*=PAS] {
+  border-bottom: 2px solid #22c55e;
+}
+.vdb-row .action-btn--main[onclick*=PFT] {
+  border-bottom: 2px solid #ef4444;
+}
+.vdb-row .action-btn--main[onclick*=PCH] {
+  border-bottom: 2px solid #3b82f6;
+}
+.vdb-row .action-btn--um {
+  background: #f59e0b;
+  color: #000;
+}
+.vdb-row--done {
+  opacity: 0.5;
+  filter: grayscale(0.5);
 }
 
 .etapa--7 {

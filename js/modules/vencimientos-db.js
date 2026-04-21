@@ -117,27 +117,76 @@ function escaparHTML(cadena) {
         .replace(/"/g, '&quot;');
 }
 
+function ejecutarCargaCompleta(item, tipo) {
+    const sec = parseInt(item.SEC);
+    const ean = item.EAN;
+    const dias = obtenerDiasRestantes(item.VENCIMIENTO);
+
+    const FORMS = {
+        PAS: { url: "https://docs.google.com/forms/d/e/1FAIpQLSduF5W6fBCrrCTkrMCnPrUgxNSjAE1_VWY3p9c5xVqFf5xM9Q/viewform", id: "entry.1767407709" },
+        PFT: { url: "https://docs.google.com/forms/d/e/1FAIpQLSfz_CdCLjbi_Sbjh5KVv2a1BqoLLNuQWpc5sKNTTTgshPofCg/viewform" },
+        UM: { url: "https://docs.google.com/forms/d/1dGuyCKKq8ypnkzTzs94OL1KvPKBUFwgMPf0BlQ-ZwOw/viewform", id: "entry.895724790" }
+    };
+
+    let urlAbrir = "";
+    let nuevoEstado = "CARGADO";
+
+    if (tipo === 'UM') {
+        urlAbrir = `${FORMS.UM.url}?usp=pp_url&${FORMS.UM.id}=${ean}`;
+        nuevoEstado = "CARGADO UM";
+    } else {
+        if (sec === 15) {
+            urlAbrir = `${FORMS.PAS.url}?usp=pp_url&${FORMS.PAS.id}=${ean}`;
+        }
+        else if ([20, 22, 24, 26].includes(sec)) {
+            urlAbrir = FORMS.PFT.url;
+        }
+        else if (sec === 14) {
+            nuevoEstado = "PEND. PCH";
+            alert("Sect. 14: Marcado como PENDIENTE PCH para cargar en PC.");
+        }
+    }
+
+    if (urlAbrir) window.open(urlAbrir, '_blank');
+
+    const email = localStorage.getItem('userEmail');
+    updateEstado(ean, item.VENCIMIENTO, nuevoEstado, email);
+}
+
+function copiarEAN(ean, event) {
+    event.stopPropagation();
+    navigator.clipboard.writeText(ean).then(() => {
+        const btn = event.currentTarget;
+        const originalInner = btn.innerHTML;
+        btn.innerHTML = '✓';
+        setTimeout(() => btn.innerHTML = originalInner, 1500);
+    });
+}
+
 function renderizarTabla(contenedor, elementoVacio, filas) {
-    contenedor.querySelectorAll('.vdb-row').forEach(elemento => elemento.remove());
-    const hayFilas = filas?.length > 0;
-    alternarEstadoVacio(elementoVacio, hayFilas);
-    if (!hayFilas) return;
+    contenedor.querySelectorAll('.vdb-row').forEach(el => el.remove());
+    if (!filas?.length) {
+        alternarEstadoVacio(elementoVacio, false);
+        return;
+    }
+    alternarEstadoVacio(elementoVacio, true);
 
     const filasOrdenadas = [...filas].sort((a, b) => obtenerDiasRestantes(a.VENCIMIENTO) - obtenerDiasRestantes(b.VENCIMIENTO));
 
     filasOrdenadas.forEach(item => {
-        const diasRestantes = obtenerDiasRestantes(item.VENCIMIENTO);
-        const etapa = obtenerEtapa(diasRestantes);
-        const estadoActual = item.ESTADO || 'PENDIENTE';
-        const textoDias = diasRestantes === null ? '—'
-            : diasRestantes < 0 ? `Vencido hace ${Math.abs(diasRestantes)}d`
-                : diasRestantes === 0 ? 'Vence hoy'
-                    : `${diasRestantes}d restantes`;
+        const dias = obtenerDiasRestantes(item.VENCIMIENTO);
+        const etapa = obtenerEtapa(dias);
+        const sec = parseInt(item.SEC);
+
+        let labelPrincipal = "CARGAR";
+        if (sec === 15) labelPrincipal = "PAS";
+        if ([20, 22, 24, 26].includes(sec)) labelPrincipal = "PFT";
+        if (sec === 14) labelPrincipal = "PCH";
+
+        const mostrarUM = (sec === 14 || sec === 15) && (dias >= 3 && dias <= 7);
 
         const elemento = document.createElement('div');
-        elemento.className = 'vdb-row';
-        elemento.dataset.ean = item.EAN;
-        elemento.dataset.vencimiento = item.VENCIMIENTO;
+        elemento.className = `vdb-row ${item.ESTADO === 'CARGADO' ? 'vdb-row--done' : ''}`;
 
         elemento.innerHTML = `
             <div class="vdb-row__left">
@@ -146,17 +195,22 @@ function renderizarTabla(contenedor, elementoVacio, filas) {
             <div class="vdb-row__info">
                 <div class="vdb-row__name">${escaparHTML(item.DESCRIPCION)}</div>
                 <div class="vdb-row__meta">
-                    EAN ${escaparHTML(item.EAN)} · SEC ${escaparHTML(item.SEC)} ·
-                    ${formatearFecha(item.VENCIMIENTO)} · ${textoDias} ·
-                    Cant: ${escaparHTML(String(item.CANTIDAD))}
+                    <span class="ean-copy-wrapper">
+                        EAN ${escaparHTML(item.EAN)}
+                        <button class="copy-btn" onclick="copiarEAN('${item.EAN}', event)">📋</button>
+                    </span>
+                    · SEC ${escaparHTML(item.SEC)} · Cant: ${escaparHTML(String(item.CANTIDAD))}
                 </div>
             </div>
-            <div class="vdb-row__right">
-                <button class="estado-btn ${CLASES_ESTADO[estadoActual]}"
-                    data-ean="${escaparHTML(item.EAN)}"
-                    data-vencimiento="${escaparHTML(item.VENCIMIENTO)}">
-                    ${estadoActual}
+            <div class="vdb-row__actions">
+                <button class="action-btn action-btn--main" onclick='ejecutarCargaCompleta(${JSON.stringify(item)}, "PRINCIPAL")'>
+                    ${labelPrincipal}
                 </button>
+                ${mostrarUM ? `
+                    <button class="action-btn action-btn--um" onclick='ejecutarCargaCompleta(${JSON.stringify(item)}, "UM")'>
+                        UM
+                    </button>
+                ` : ''}
             </div>
         `;
         contenedor.appendChild(elemento);

@@ -140,6 +140,8 @@ h3 {
     &:hover {
         opacity: 0.88;
         transform: translateY(-1px);
+        background-color: v.$dim;
+        color: v.$amber;
     }
 }
 
@@ -157,7 +159,7 @@ h3 {
     transition: all v.$duration-fast v.$ease;
 
     &:hover {
-        border-color: v.$border-2;
+        border-color: v.$amber;
         color: v.$text;
     }
 

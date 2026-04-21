@@ -157,7 +157,32 @@
         height: 6px;
         border-radius: 50%;
         flex-shrink: 0;
+
+        &--blue {
+            background-color: #3b82f6;
+        }
+
+        &--green {
+            background-color: #22c55e;
+        }
+
+        &--amber {
+            background-color: v.$orange;
+        }
+
+        &--red {
+            background-color: #ef4444;
+        }
+
+        &--purple {
+            background-color: v.$violet;
+        }
+
+        &--violet {
+            background-color: #8b5cf6;
+        }
     }
+
 }
 
 .checklist {
@@ -766,45 +791,80 @@
     transition: border-color v.$duration-fast;
     animation: fadeUp v.$duration-slow v.$ease both;
 
-    &:hover {
-        border-color: v.$border-2;
-    }
-
-    &__left {
-        flex-shrink: 0;
-    }
-
     &__info {
-        min-width: 0;
-    }
-
-    &__name {
-        font-size: 0.875rem;
-        font-weight: 500;
-        white-space: normal;
-        overflow: visible;
-        text-overflow: unset;
-        word-break: break-word;
-        overflow-wrap: anywhere;
-        line-height: 1.35;
+        flex: 1;
     }
 
     &__meta {
-        font-family: v.$ff-mono;
-        font-size: 10px;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        font-size: 0.75rem;
         color: v.$muted;
-        margin-top: 4px;
-        white-space: normal;
-        overflow: visible;
-        text-overflow: unset;
-        word-break: break-word;
-        overflow-wrap: anywhere;
-        line-height: 1.45;
     }
 
-    &__right {
-        flex-shrink: 0;
-        align-self: start;
+    &__actions {
+        display: flex;
+        gap: 8px;
+    }
+
+    .ean-copy-wrapper {
+        display: inline-flex;
+        align-items: center;
+        gap: 4px;
+        background: v.$surface-2;
+        padding: 2px 6px;
+        border-radius: 4px;
+    }
+
+    .copy-btn {
+        background: none;
+        border: none;
+        cursor: pointer;
+        font-size: 0.7rem;
+        padding: 0;
+        opacity: 0.6;
+
+        &:hover {
+            opacity: 1;
+        }
+    }
+
+    .action-btn {
+        padding: 8px 16px;
+        border-radius: 6px;
+        font-size: 0.75rem;
+        font-weight: 700;
+        border: none;
+        cursor: pointer;
+
+        &--main {
+            background: v.$surface-3;
+            color: v.$text;
+            min-width: 60px;
+
+            &[onclick*="PAS"] {
+                border-bottom: 2px solid #22c55e;
+            }
+
+            &[onclick*="PFT"] {
+                border-bottom: 2px solid #ef4444;
+            }
+
+            &[onclick*="PCH"] {
+                border-bottom: 2px solid #3b82f6;
+            }
+        }
+
+        &--um {
+            background: #f59e0b;
+            color: #000;
+        }
+    }
+
+    &--done {
+        opacity: 0.5;
+        filter: grayscale(0.5);
     }
 }
 

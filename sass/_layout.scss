@@ -19,7 +19,7 @@
 .header {
     display: flex;
     flex-direction: column;
-    gap: 6px;
+    gap: 1.5rem;
     margin-bottom: 6px;
 }
 
@@ -134,22 +134,12 @@
     padding-top: 22px;
     border-top: 1px solid v.$border;
     font-size: 0.75rem;
-    color: v.$dim;
+    color: v.$border-2;
     margin-top: 6px;
 
     @media (max-width: 560px) {
-        flex-direction: column;
-        gap: 0.5rem;
-    }
-}
-
-.field-row {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 12px;
-
-    @media (max-width: 560px) {
-        grid-template-columns: 1fr;
-        gap: 1rem;
+        flex-direction: row;
+        font-size: 0.75rem;
+        gap: 8px;
     }
 }
