@@ -808,6 +808,7 @@
     background: v.$surface-2;
     align-items: start;
     padding: 12px 15px;
+    gap: 5px;
     border-radius: v.$radius-sm;
     border: 1px solid v.$border;
     transition: border-color v.$duration-fast, opacity 0.3s;
@@ -900,6 +901,11 @@
         font-weight: 700;
         border: none;
         cursor: pointer;
+
+        &:hover {
+            background-color: v.$green-glow;
+            color: v.$text;
+        }
 
         &--main {
             background: v.$surface-3;
