@@ -110,11 +110,11 @@ async function ejecutarCargaCompleta(item, tipo) {
     const sec = parseInt(item.sec || item.SEC);
     const ean = item.ean || item.EAN;
     const vto = item.vencimiento || item.VENCIMIENTO;
-
+    
     const FORMS = {
         PAS: { url: "https://docs.google.com/forms/d/e/1FAIpQLSduF5W6fBCrrCTkrMCnPrUgxNSjAE1_VWY3p9c5xVqFf5xM9Q/viewform", id: "entry.1767407709" },
         PFT: { url: "https://docs.google.com/forms/d/e/1FAIpQLSfz_CdCLjbi_Sbjh5KVv2a1BqoLLNuQWpc5sKNTTTgshPofCg/viewform" },
-        UM: { url: "https://docs.google.com/forms/d/1dGuyCKKq8ypnkzTzs94OL1KvPKBUFwgMPf0BlQ-ZwOw/viewform", id: "entry.895724790" }
+        UM: { url: "https://docs.google.com/forms/d/e/1FAIpQLSduF5W6fBCrrCTkrMCnPrUgxNSjAE1_VWY3p9c5xVqFf5xM9Q/viewform", id: "entry.895724790" }
     };
 
     let urlAbrir = "";
@@ -145,7 +145,9 @@ async function ejecutarCargaCompleta(item, tipo) {
                 if (p) p.ESTADO = nuevoEstado;
                 renderizarTabla(document.getElementById('vdb-list'), document.getElementById('vdb-empty'), productosEnMemoria);
             }
-        } catch (e) { console.error(e); }
+        } catch (e) { 
+            console.error(e); 
+        }
     }
 }
 
@@ -178,7 +180,7 @@ function renderizarTabla(contenedor, elementoVacio, filas) {
 
         const dias = obtenerDiasRestantes(vto);
         const etapa = obtenerEtapa(dias);
-
+        
         const textoVence = dias === 0 ? 'Vence hoy' : `Vence el ${formatearFecha(vto)}`;
         const textoDias = dias < 0 ? `Vencido hace ${Math.abs(dias)}d` : `${dias}d restantes`;
 
@@ -193,36 +195,44 @@ function renderizarTabla(contenedor, elementoVacio, filas) {
         elemento.className = `vdb-row ${estado.includes('CARGADO') ? 'vdb-row--done' : ''}`;
 
         elemento.innerHTML = `
-        <div class="vdb-row__left">
-            <span class="venc-badge ${etapa.claseCSS}">${etapa.etiqueta}</span>
-        </div>
-        <div class="vdb-row__info">
-            <div class="vdb-row__name">${escaparHTML(desc)}</div>
-            <div class="vdb-row__meta">
-                EAN ${escaparHTML(ean)} · SEC ${sec} · ${textoVence} · ${textoDias} · Cant: ${cant}
+            <div class="vdb-row__left">
+                <span class="venc-badge ${etapa.claseCSS}">${etapa.etiqueta}</span>
             </div>
-        </div>
-        <div class="vdb-row__actions">
-            <button class="copy-btn" id="copy-${ean}-${vto}">
-                <div class="copy-icon"></div>
-            </button>
-            <button class="action-btn action-btn--main" id="main-${ean}-${vto}">${labelPrincipal}</button>
-            ${mostrarUM ? `<button class="action-btn action-btn--um" id="um-${ean}-${vto}">UM</button>` : ''}
-        </div>
+            <div class="vdb-row__info">
+                <div class="vdb-row__name">${escaparHTML(desc)}</div>
+                <div class="vdb-row__meta">
+                    EAN ${escaparHTML(ean)} · SEC ${sec} · ${textoVence} · ${textoDias} · Cant: ${cant}
+                </div>
+            </div>
+            <div class="vdb-row__actions">
+                <button class="copy-btn" title="Copiar EAN">
+                    <div class="copy-icon"></div>
+                </button>
+                <button class="action-btn action-btn--main" id="btn-main-${ean}">${labelPrincipal}</button>
+                ${mostrarUM ? `<button class="action-btn action-btn--um">UM</button>` : ''}
+            </div>
         `;
 
-        elemento.querySelector(`#copy-${ean}-${vto}`).onclick = (e) => copiarEAN(ean, e);
-        elemento.querySelector(`#main-${ean}-${vto}`).onclick = () => ejecutarCargaCompleta(item, 'PRINCIPAL');
+        elemento.querySelector('.copy-btn').onclick = (e) => copiarEAN(ean, e);
+        elemento.querySelector('.action-btn--main').onclick = () => ejecutarCargaCompleta(item, 'PRINCIPAL');
+        
         if (mostrarUM) {
-            elemento.querySelector(`#um-${ean}-${vto}`).onclick = () => ejecutarCargaCompleta(item, 'UM');
+            elemento.querySelector('.action-btn--um').onclick = () => ejecutarCargaCompleta(item, 'UM');
         }
 
         contenedor.appendChild(elemento);
     });
 }
 
-function establecerCargando(boton, texto) { boton.disabled = true; boton.textContent = texto; }
-function restablecerBoton(boton, texto) { boton.disabled = false; boton.textContent = texto; }
+function establecerCargando(boton, texto) { 
+    boton.disabled = true; 
+    boton.textContent = texto; 
+}
+
+function restablecerBoton(boton, texto) { 
+    boton.disabled = false; 
+    boton.textContent = texto; 
+}
 
 export async function inicializarBaseDatosVencimientos() {
     const entradaArchivo = document.getElementById('vdb-file-input');
@@ -255,6 +265,7 @@ export async function inicializarBaseDatosVencimientos() {
             renderizarTabla(contenedorLista, elementoVacio, productosEnMemoria);
             if (elementoEstado) elementoEstado.textContent = construirEstado(usuario);
         } catch (error) {
+            console.error('[Veteo Error]:', error);
             if (elementoEstado) elementoEstado.textContent = 'Error de conexión.';
         }
     }
