@@ -365,6 +365,50 @@ h3 {
   }
 }
 
+.notif-banner {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 16px;
+  background: rgba(252, 211, 77, 0.08);
+  border: 1px solid rgba(252, 211, 77, 0.25);
+  border-radius: 16px;
+  font-size: 0.85rem;
+  animation: fadeDown 400ms cubic-bezier(0.4, 0, 0.2, 1) both;
+}
+.notif-banner[hidden] {
+  display: none;
+}
+.notif-banner__icon {
+  font-size: 1rem;
+}
+.notif-banner__text {
+  flex: 1;
+  color: #eeeae3;
+}
+.notif-banner__btn {
+  padding: 5px 12px;
+  background: #fcd34d;
+  color: #0a0b0e;
+  border-radius: 6px;
+  font-size: 0.78rem;
+  font-weight: 500;
+  white-space: nowrap;
+  transition: opacity 150ms;
+}
+.notif-banner__btn:hover {
+  opacity: 0.85;
+}
+.notif-banner__close {
+  color: #71737d;
+  font-size: 0.8rem;
+  padding: 4px 6px;
+  transition: color 150ms;
+}
+.notif-banner__close:hover {
+  color: #eeeae3;
+}
+
 #veteo-alerta-global {
   display: flex;
   flex-direction: column;

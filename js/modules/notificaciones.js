@@ -72,8 +72,12 @@ function revisarVencimientosCriticos(banner, textoBanner, botonBanner) {
 
         const datosPlanilla = obtenerProductosEnMemoria();
         const criticosPlanilla = datosPlanilla.filter(item => {
-            const objetivo = parsearFechaNotificacion(item.VENCIMIENTO);
-            if (!objetivo) return false;
+            const vtoStr = item.VENCIMIENTO || item.vencimiento;
+            const estado = (item.ESTADO || item.estado || '').toUpperCase();
+            const objetivo = parsearFechaNotificacion(vtoStr);
+
+            if (!objetivo || estado.includes('CARGADO')) return false;
+
             const dias = Math.round((objetivo - hoy) / (1000 * 60 * 60 * 24));
             return dias >= 0 && dias <= 7;
         });
@@ -82,15 +86,26 @@ function revisarVencimientosCriticos(banner, textoBanner, botonBanner) {
 
         if (totalCriticos > 0 && banner) {
             banner.hidden = false;
-            textoBanner.textContent = `⚠️ Tenés ${totalCriticos} producto${totalCriticos > 1 ? 's' : ''} en etapa −7 días.`;
-            botonBanner.textContent = 'Ver ahora';
-            botonBanner.onclick = () => {
+            banner.className = 'vdb-alert vdb-alert--critical';
+
+            banner.innerHTML = `
+                <span class="vdb-alert__icon">⚠️</span>
+                <span class="vdb-alert__text">Tenés ${totalCriticos} producto${totalCriticos > 1 ? 's' : ''} en etapa −7 días.</span>
+                <button class="vdb-alert__btn">Ver ahora</button>
+            `;
+
+            const btn = banner.querySelector('.vdb-alert__btn');
+            btn.onclick = () => {
                 const destino = document.getElementById('vdb-list') || document.getElementById('venc-list');
                 destino?.scrollIntoView({ behavior: 'smooth' });
                 banner.hidden = true;
             };
+        } else if (banner) {
+            banner.hidden = true;
         }
-    } catch { }
+    } catch (e) {
+        console.error("Error en revisión de críticos:", e);
+    }
 }
 
 export function inicializarNotificaciones() {

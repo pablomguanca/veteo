@@ -1,5 +1,56 @@
 @use 'variables' as v;
 
+.notif-banner {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px 16px;
+    background: rgba(252, 211, 77, 0.08);
+    border: 1px solid rgba(252, 211, 77, 0.25);
+    border-radius: v.$radius;
+    font-size: 0.85rem;
+    animation: fadeDown v.$duration-slow v.$ease both;
+
+    &[hidden] {
+        display: none;
+    }
+
+    &__icon {
+        font-size: 1rem;
+    }
+
+    &__text {
+        flex: 1;
+        color: v.$text;
+    }
+
+    &__btn {
+        padding: 5px 12px;
+        background: v.$amber;
+        color: v.$bg;
+        border-radius: v.$radius-xs;
+        font-size: 0.78rem;
+        font-weight: 500;
+        white-space: nowrap;
+        transition: opacity v.$duration-fast;
+
+        &:hover {
+            opacity: 0.85;
+        }
+    }
+
+    &__close {
+        color: v.$muted;
+        font-size: 0.8rem;
+        padding: 4px 6px;
+        transition: color v.$duration-fast;
+
+        &:hover {
+            color: v.$text;
+        }
+    }
+}
+
 #veteo-alerta-global {
     display: flex;
     flex-direction: column;
