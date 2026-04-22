@@ -291,6 +291,7 @@ export async function inicializarBaseDatosVencimientos() {
             productosEnMemoria = datosApi.rows || [];
             renderizarTabla(contenedorLista, elementoVacio, productosEnMemoria);
             if (elementoEstado) elementoEstado.textContent = construirEstado(usuario);
+            window.dispatchEvent(new CustomEvent('veteo:productosActualizados', { detail: productosEnMemoria }));
         } catch (error) {
             console.error('[Veteo Error]:', error);
             if (elementoEstado) elementoEstado.textContent = 'Error de conexión.';
