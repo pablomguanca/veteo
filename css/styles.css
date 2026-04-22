@@ -428,12 +428,12 @@ h3 {
 .vdb-alert--warning {
   background: rgba(252, 211, 77, 0.08);
   border: 1px solid rgba(252, 211, 77, 0.25);
-  color: #fcd34d;
+  color: #eeeae3;
 }
 .vdb-alert--critical {
   background: rgba(239, 68, 68, 0.1);
   border: 1px solid rgba(239, 68, 68, 0.25);
-  color: #fca5a5;
+  color: #eeeae3;
   font-weight: 600;
 }
 .vdb-alert__icon {

@@ -217,27 +217,85 @@ export function inicializarNotificaciones() {
 
     cerrarBanner?.addEventListener('click', () => ocultarBanner(banner));
 
+    // --- FUNCIONES DE ESTADO DEL PANEL ---
     function mostrarEstadoActivo() {
         establecerEstado(puntoEstado, textoEstado, 'Activo', 'activo');
-        controles.hidden = true;
-        panelActivo.hidden = false;
-        textoActivo.textContent = `Recordatorio activo de lunes a viernes a las 08:00 hs.`;
+        if (controles) controles.hidden = true;
+        if (panelActivo) panelActivo.hidden = false;
+        if (textoActivo) textoActivo.textContent = `Recordatorio activo de lunes a viernes a las 08:00 hs.`;
     }
 
     function mostrarEstadoInactivo() {
         establecerEstado(puntoEstado, textoEstado, 'Sin configurar', 'inactivo');
-        controles.hidden = false;
-        panelActivo.hidden = true;
+        if (controles) controles.hidden = false;
+        if (panelActivo) panelActivo.hidden = true;
     }
 
     function mostrarEstadoDenegado() {
         establecerEstado(puntoEstado, textoEstado, 'Bloqueado por el navegador', 'denegado');
-        botonHabilitar.disabled = true;
-        botonHabilitar.textContent = 'Permiso bloqueado';
-        mostrarBanner(banner, textoBanner, botonBanner, {
-            mensaje: 'Las notificaciones están bloqueadas. Habilitá los permisos desde la configuración del navegador.',
-            etiquetaBoton: 'Cómo habilitarlas',
-            alHacerClic: () => window.open('https://support.google.com/chrome/answer/3220216', '_blank'),
-        });
+        if (botonHabilitar) {
+            botonHabilitar.disabled = true;
+            botonHabilitar.textContent = 'Permiso bloqueado';
+        }
+        // Usamos la lógica de revisar críticos pero forzando el mensaje de error
+        banner.hidden = false;
+        textoBanner.textContent = 'Las notificaciones están bloqueadas. Habilitá los permisos desde el navegador.';
+        botonBanner.textContent = 'Cómo habilitarlas';
+        botonBanner.onclick = () => window.open('https://support.google.com/chrome/answer/3220216', '_blank');
+    }
+
+    function revisarVencimientosCriticos(banner, textoBanner, botonBanner) {
+        try {
+            const hoy = new Date();
+            hoy.setHours(0, 0, 0, 0);
+
+            const datosManuales = JSON.parse(localStorage.getItem('veteo_vencimientos_v1')) || [];
+            const criticosManuales = datosManuales.filter(item => {
+                const objetivo = new Date(item.fecha + 'T00:00:00');
+                if (isNaN(objetivo)) return false;
+                const dias = Math.round((objetivo - hoy) / (1000 * 60 * 60 * 24));
+                return dias >= 0 && dias <= 7;
+            });
+
+            const datosPlanilla = typeof obtenerProductosEnMemoria === 'function' ? obtenerProductosEnMemoria() : [];
+            const criticosPlanilla = datosPlanilla.filter(item => {
+                const vtoStr = item.VENCIMIENTO || item.vencimiento;
+                const estado = (item.ESTADO || item.estado || '').toUpperCase();
+
+                let objetivo = null;
+                if (vtoStr?.includes('/')) {
+                    const [d, m, a] = vtoStr.split('/');
+                    objetivo = new Date(`${a}-${m}-${d}T00:00:00`);
+                } else {
+                    objetivo = new Date(vtoStr);
+                }
+
+                if (!objetivo || isNaN(objetivo) || estado.includes('CARGADO')) return false;
+                const dias = Math.round((objetivo - hoy) / (1000 * 60 * 60 * 24));
+                return dias >= 0 && dias <= 7;
+            });
+
+            const totalCriticos = criticosManuales.length + criticosPlanilla.length;
+
+            if (totalCriticos > 0 && banner) {
+                banner.hidden = false;
+                banner.className = 'vdb-alert vdb-alert--critical';
+                if (textoBanner) {
+                    textoBanner.textContent = `Tenés ${totalCriticos} producto${totalCriticos > 1 ? 's' : ''} que vencen en menos de 7 días.`;
+                }
+                if (botonBanner) {
+                    botonBanner.hidden = false;
+                    botonBanner.textContent = 'Ver ahora';
+                    botonBanner.onclick = () => {
+                        const destino = document.getElementById('vdb-list') || document.getElementById('venc-list');
+                        destino?.scrollIntoView({ behavior: 'smooth' });
+                    };
+                }
+            } else if (banner && Notification.permission !== 'denied') {
+                banner.hidden = true;
+            }
+        } catch (e) {
+            console.error("Error en revisión:", e);
+        }
     }
 }
