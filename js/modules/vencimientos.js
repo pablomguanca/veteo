@@ -55,7 +55,9 @@ function renderizarItems(contenedor, elementoVacio, items) {
 
     if (!hayItems) return;
 
-    const itemsOrdenados = [...items].sort((a, b) => new Date(a.fecha) - new Date(b.fecha));
+    const itemsFiltrados = items.filter(item => obtenerDiasRestantes(item.fecha) >= 0);
+
+    const itemsOrdenados = itemsFiltrados.sort((a, b) => new Date(a.fecha) - new Date(b.fecha));
 
     itemsOrdenados.forEach(item => {
         const etapa = resolverEtapa(item.etapa, item.fecha);

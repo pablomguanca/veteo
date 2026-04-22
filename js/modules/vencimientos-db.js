@@ -162,7 +162,7 @@ async function ejecutarCargaCompleta(item, tipo) {
     const FORMS = {
         PAS: { url: "https://docs.google.com/forms/d/e/1FAIpQLSduF5W6fBCrrCTkrMCnPrUgxNSjAE1_VWY3p9c5xVqFf5xM9Q/viewform", id: "entry.1767407709" },
         PFT: { url: "https://docs.google.com/forms/d/e/1FAIpQLSfz_CdCLjbi_Sbjh5KVv2a1BqoLLNuQWpc5sKNTTTgshPofCg/viewform" },
-        UM:  { url: "https://docs.google.com/forms/d/1dGuyCKKq8ypnkzTzs94OL1KvPKBUFwgMPf0BlQ-ZwOw/viewform", id: "entry.895724790" },
+        UM: { url: "https://docs.google.com/forms/d/1dGuyCKKq8ypnkzTzs94OL1KvPKBUFwgMPf0BlQ-ZwOw/viewform", id: "entry.895724790" },
         S10: { url: "https://docs.google.com/forms/d/e/1FAIpQLSecPY7Wynn_Jqn8rob6F4IY61wLne3fsA_MjnQHiS8_ddMVAw/viewform" },
         PCH: { url: "http://10.94.164.15:16000/pch/app/login" }
     };
@@ -235,7 +235,14 @@ function renderizarTabla(contenedor, elementoVacio, filas) {
     }
     alternarEstadoVacio(elementoVacio, true);
 
-    const filasOrdenadas = [...filas].sort((a, b) => obtenerDiasRestantes(a.vencimiento || a.VENCIMIENTO) - obtenerDiasRestantes(b.vencimiento || b.VENCIMIENTO));
+    const filasFiltradas = filas.filter(item => {
+        const dias = obtenerDiasRestantes(item.vencimiento || item.VENCIMIENTO);
+        return dias !== null && dias >= 0;
+    });
+
+    const filasOrdenadas = filasFiltradas.sort((a, b) =>
+        obtenerDiasRestantes(a.vencimiento || a.VENCIMIENTO) - obtenerDiasRestantes(b.vencimiento || b.VENCIMIENTO)
+    );
 
     filasOrdenadas.forEach(item => {
         const ean = item.ean || item.EAN;
