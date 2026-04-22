@@ -112,9 +112,9 @@ async function ejecutarCargaCompleta(item, tipo) {
     const vto = item.vencimiento || item.VENCIMIENTO;
 
     const FORMS = {
-        PAS: { url: "https://docs.google.com/forms/d/e/1FAIpQLSduF5W6fBCrrCTkrMCnPrUgxNSjAE1_VWY3p9c5xVqFf5xM9Q/viewform", id: "entry.1767407709" },
+        PAS: { url: "https://docs.google.com/forms/d/e/1FAIpQLSduF5W6fBCrrCTkrMCnPrUgxNSjAE1_VWY3p9c5xVqFf5xM9Q/viewform", id: "entry.1279354663" },
         PFT: { url: "https://docs.google.com/forms/d/e/1FAIpQLSfz_CdCLjbi_Sbjh5KVv2a1BqoLLNuQWpc5sKNTTTgshPofCg/viewform" },
-        UM: { url: "https://docs.google.com/forms/d/1dGuyCKKq8ypnkzTzs94OL1KvPKBUFwgMPf0BlQ-ZwOw/viewform", id: "entry.895724790" },
+        UM: { url: "https://docs.google.com/forms/d/1dGuyCKKq8ypnkzTzs94OL1KvPKBUFwgMPf0BlQ-ZwOw/viewform", id: "entry.315963851" },
         S10: { url: "https://docs.google.com/forms/d/e/1FAIpQLSecPY7Wynn_Jqn8rob6F4IY61wLne3fsA_MjnQHiS8_ddMVAw/viewform" },
         PCH: { url: "http://10.94.164.15:16000/pch/app/login" }
     };
@@ -132,7 +132,6 @@ async function ejecutarCargaCompleta(item, tipo) {
             urlAbrir = FORMS.PFT.url;
         } else if (sec === 14) {
             urlAbrir = FORMS.PCH.url;
-            nuevoEstado = "PEND. PCH";
         } else if (sec === 10) {
             urlAbrir = FORMS.S10.url;
         }

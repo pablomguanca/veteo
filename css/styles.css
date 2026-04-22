@@ -631,10 +631,24 @@ h3 {
   color: #71737d;
 }
 
+.scrollable-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  min-height: 100px;
+  max-height: 300px;
+  overflow-y: auto;
+  margin-top: 15px;
+  padding-right: 8px;
+  scrollbar-width: thin;
+  scrollbar-color: #71737d transparent;
+}
+
 .vdb-list {
   display: flex;
   flex-direction: column;
   gap: 10px;
+  min-height: 100px;
   max-height: 400px;
   overflow-y: auto;
   padding-right: 6px;
@@ -662,10 +676,9 @@ h3 {
 
 .venc-item {
   display: flex;
-  font-family: "Google Sans Mono", monospace;
   align-items: center;
   gap: 12px;
-  padding: 12px 15px;
+  padding: 10px 15px;
   border-radius: 10px;
   border: 1px solid rgba(255, 255, 255, 0.065);
   background: #17191f;
@@ -675,70 +688,67 @@ h3 {
 .venc-item:hover {
   border-color: rgba(255, 255, 255, 0.115);
 }
-
-.venc-badge {
+.venc-item__badge {
   padding: 4px 8px;
   border-radius: 4px;
   font-size: 0.7rem;
   font-weight: 700;
   white-space: nowrap;
+  border: 1px solid transparent;
 }
-
-.etapa--7 {
+.venc-item__badge--7 {
   background: rgba(252, 211, 77, 0.13);
   color: #fcd34d;
-  border: 1px solid rgba(252, 211, 77, 0.22);
+  border-color: rgba(252, 211, 77, 0.22);
 }
-.etapa--30 {
+.venc-item__badge--30 {
   background: rgba(252, 165, 165, 0.13);
   color: #fca5a5;
-  border: 1px solid rgba(252, 165, 165, 0.22);
+  border-color: rgba(252, 165, 165, 0.22);
 }
-.etapa--60 {
+.venc-item__badge--60 {
   background: rgba(110, 231, 183, 0.13);
   color: #6ee7b7;
-  border: 1px solid rgba(110, 231, 183, 0.22);
+  border-color: rgba(110, 231, 183, 0.22);
 }
-.etapa--90 {
+.venc-item__badge--90 {
   background: rgba(196, 181, 253, 0.13);
   color: #c4b5fd;
-  border: 1px solid rgba(196, 181, 253, 0.22);
+  border-color: rgba(196, 181, 253, 0.22);
 }
-.etapa--unknown {
+.venc-item__badge--unknown {
   background: #1e2028;
   color: #71737d;
-  border: 1px solid rgba(255, 255, 255, 0.065);
+  border-color: rgba(255, 255, 255, 0.065);
 }
-
-.venc-info {
+.venc-item__info {
   flex: 1;
   min-width: 0;
 }
-
-.venc-name {
+.venc-item__name {
   font-size: 0.875rem;
   font-weight: 500;
+  text-transform: uppercase;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
 }
-
-.venc-meta {
+.venc-item__meta {
   font-family: "Google Sans Mono", monospace;
   font-size: 10px;
   color: #71737d;
-  margin-top: 2px;
+  margin-top: 1px;
 }
-
-.venc-delete {
+.venc-item__delete {
   color: #2e3038;
   font-size: 0.8rem;
   padding: 4px 8px;
   border-radius: 6px;
-  transition: color 150ms, background 150ms;
+  transition: all 150ms;
   flex-shrink: 0;
+  cursor: pointer;
 }
-.venc-delete:hover {
+.venc-item__delete:hover {
   color: #f87171;
   background: rgba(248, 113, 113, 0.15);
 }
@@ -1081,13 +1091,6 @@ h3 {
 
 .u-hidden {
   display: none !important;
-}
-
-.vdb-list {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  min-height: 100px;
 }
 
 .vdb-row {

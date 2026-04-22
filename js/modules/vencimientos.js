@@ -3,10 +3,10 @@ import { alternarEstadoVacio } from '../utils/ui.js';
 const CLAVE_ALMACENAMIENTO_VENCIMIENTOS = 'veteo_vencimientos_v1';
 
 const NIVELES_ETAPA = [
-    { clave: '-7', etiqueta: '−7d', dias: 7, claseCSS: 'venc-badge--7' },
-    { clave: '-30', etiqueta: '−30d', dias: 30, claseCSS: 'venc-badge--30' },
-    { clave: '-60', etiqueta: '−60d', dias: 60, claseCSS: 'venc-badge--60' },
-    { clave: '-90', etiqueta: '−90d', dias: 90, claseCSS: 'venc-badge--90' },
+    { clave: '-7', etiqueta: '−7d', dias: 7, claseCSS: 'venc-item__badge--7' },
+    { clave: '-30', etiqueta: '−30d', dias: 30, claseCSS: 'venc-item__badge--30' },
+    { clave: '-60', etiqueta: '−60d', dias: 60, claseCSS: 'venc-item__badge--60' },
+    { clave: '-90', etiqueta: '−90d', dias: 90, claseCSS: 'venc-item__badge--90' },
 ];
 
 function cargarItems() {
@@ -50,18 +50,17 @@ function renderizarItems(contenedor, elementoVacio, items) {
     contenedor.querySelectorAll('.venc-item').forEach(elemento => elemento.remove());
 
     const hayItems = items.length > 0;
-
     alternarEstadoVacio(elementoVacio, hayItems);
 
     if (!hayItems) return;
 
     const itemsFiltrados = items.filter(item => obtenerDiasRestantes(item.fecha) >= 0);
-
     const itemsOrdenados = itemsFiltrados.sort((a, b) => new Date(a.fecha) - new Date(b.fecha));
 
     itemsOrdenados.forEach(item => {
         const etapa = resolverEtapa(item.etapa, item.fecha);
         const diasFaltantes = obtenerDiasRestantes(item.fecha);
+
         const textoDias = diasFaltantes < 0
             ? `Vencido hace ${Math.abs(diasFaltantes)} días`
             : diasFaltantes === 0
@@ -72,14 +71,18 @@ function renderizarItems(contenedor, elementoVacio, items) {
         elemento.className = 'venc-item';
         elemento.setAttribute('role', 'listitem');
         elemento.dataset.id = item.id;
+
         elemento.innerHTML = `
-        <span class="venc-badge ${etapa.claseCSS}">${etapa.etiqueta}</span>
-        <div class="venc-info">
-        <div class="venc-name">${escaparHTML(item.producto)}</div>
-        <div class="venc-meta">${formatearFecha(item.fecha)} · ${textoDias}${item.nota ? ' · ' + escaparHTML(item.nota) : ''}</div>
-        </div>
-        <button class="venc-delete" aria-label="Eliminar ${escaparHTML(item.producto)}" data-id="${item.id}">✕</button>
-    `;
+            <span class="venc-item__badge ${etapa.claseCSS}">${etapa.etiqueta}</span>
+            <div class="venc-item__info">
+                <div class="venc-item__name">${escaparHTML(item.producto)}</div>
+                <div class="venc-item__meta">
+                    ${formatearFecha(item.fecha)} · ${textoDias}${item.nota ? ' · ' + escaparHTML(item.nota) : ''}
+                </div>
+            </div>
+            <button class="venc-item__delete" aria-label="Eliminar ${escaparHTML(item.producto)}" data-id="${item.id}">✕</button>
+        `;
+
         contenedor.appendChild(elemento);
     });
 }
@@ -172,7 +175,7 @@ export function inicializarVencimientos() {
     });
 
     listaVencimientos.addEventListener('click', evento => {
-        const botonEliminar = evento.target.closest('.venc-delete');
+        const botonEliminar = evento.target.closest('.venc-item__delete');
         if (!botonEliminar) return;
         const identificador = botonEliminar.dataset.id;
         const itemsActualizados = cargarItems().filter(item => item.id !== identificador);
