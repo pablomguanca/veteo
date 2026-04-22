@@ -8,9 +8,9 @@ const app = initializeApp(CONFIGURACION.firebase);
 const mensajeria = getMessaging(app);
 const CLAVE_ALMACENAMIENTO_NOTIFICACIONES = 'veteo_notif_config_v1';
 
-
 function cargarConfiguracion() {
-    try { return JSON.parse(localStorage.getItem(CLAVE_ALMACENAMIENTO_NOTIFICACIONES)) || null; } catch { return null; }
+    try { return JSON.parse(localStorage.getItem(CLAVE_ALMACENAMIENTO_NOTIFICACIONES)) || null; }
+    catch { return null; }
 }
 
 function guardarConfiguracion(configuracion) {
@@ -23,104 +23,109 @@ function limpiarConfiguracion() {
 
 function establecerEstado(punto, texto, textoEstado, estado) {
     const estados = {
-        inactivo: { clasePunto: '', etiqueta: 'Sin configurar' },
-        activo: { clasePunto: 'notif-status__dot--active', etiqueta: 'Activo' },
-        denegado: { clasePunto: 'notif-status__dot--denied', etiqueta: 'Bloqueado' },
+        inactivo:  { clasePunto: '', etiqueta: 'Sin configurar' },
+        activo:    { clasePunto: 'notif-status__dot--active', etiqueta: 'Activo' },
+        denegado:  { clasePunto: 'notif-status__dot--denied', etiqueta: 'Bloqueado' },
     };
-    const seleccion = estados[estado] || estados.inactivo;
+    const seleccion = estados[estado] ?? estados.inactivo;
     punto.className = `notif-status__dot ${seleccion.clasePunto}`;
     texto.textContent = textoEstado || seleccion.etiqueta;
 }
 
-function mostrarBanner(elementoBanner, elementoTexto, elementoBoton, { mensaje, etiquetaBoton, alHacerClic }) {
-    elementoBanner.hidden = false;
-    elementoTexto.textContent = mensaje;
-    elementoBoton.textContent = etiquetaBoton;
-    elementoBoton.onclick = alHacerClic;
-}
-
-function ocultarBanner(elementoBanner) {
-    elementoBanner.hidden = true;
-}
-
-function parsearFechaNotificacion(cadenaFecha) {
+function parsearFecha(cadenaFecha) {
     if (!cadenaFecha) return null;
-    const cadenaLimpia = String(cadenaFecha).trim();
-    if (/^\d{2}\/\d{2}\/\d{4}$/.test(cadenaLimpia)) {
-        const [dia, mes, anio] = cadenaLimpia.split('/');
-        return new Date(`${anio}-${mes}-${dia}T00:00:00`);
+    const s = String(cadenaFecha).trim();
+
+    if (/^\d{2}\/\d{2}\/\d{4}$/.test(s)) {
+        const [d, m, a] = s.split('/');
+        return new Date(`${a}-${m}-${d}T00:00:00`);
     }
-    if (/^\d{4}-\d{2}-\d{2}/.test(cadenaLimpia)) {
-        return new Date(cadenaLimpia.split('T')[0] + 'T00:00:00');
+    if (/^\d{4}-\d{2}-\d{2}/.test(s)) {
+        return new Date(s.slice(0, 10) + 'T00:00:00');
     }
-    const fecha = new Date(cadenaLimpia);
-    return isNaN(fecha) ? null : fecha;
+
+    const fallback = new Date(s);
+    return isNaN(fallback) ? null : fallback;
 }
 
-function revisarVencimientosCriticos(banner, textoBanner, botonBanner) {
-    try {
-        const hoy = new Date();
-        hoy.setHours(0, 0, 0, 0);
+function mostrarBanner(refs, { mensaje, etiquetaBoton, alHacerClic, modificadorExtra = null }) {
+    const { banner, textoBanner, botonBanner } = refs;
 
-        const datosManuales = JSON.parse(localStorage.getItem('veteo_vencimientos_v1')) || [];
-        const criticosManuales = datosManuales.filter(item => {
-            const objetivo = parsearFechaNotificacion(item.fecha);
-            if (!objetivo) return false;
-            const dias = Math.round((objetivo - hoy) / (1000 * 60 * 60 * 24));
-            return dias >= 0 && dias <= 7;
+    banner.classList.remove('vdb-alert--warning');
+    if (modificadorExtra) banner.classList.add(modificadorExtra);
+
+    textoBanner.textContent = mensaje;
+    botonBanner.textContent = etiquetaBoton;
+    botonBanner.hidden = false;
+    botonBanner.onclick = alHacerClic;
+    banner.hidden = false;
+}
+
+function ocultarBanner(refs) {
+    refs.banner.hidden = true;
+}
+
+function contarCriticos() {
+    const hoy = new Date();
+    hoy.setHours(0, 0, 0, 0);
+
+    const esCritico = (fecha) => {
+        const objetivo = parsearFecha(fecha);
+        if (!objetivo || isNaN(objetivo)) return false;
+        const dias = Math.round((objetivo - hoy) / 864e5);
+        return dias >= 0 && dias <= 7;
+    };
+
+    const datosManuales = (() => {
+        try { return JSON.parse(localStorage.getItem('veteo_vencimientos_v1')) || []; }
+        catch { return []; }
+    })();
+    const criticosManuales = datosManuales.filter(item => esCritico(item.fecha));
+
+    const datosPlanilla = obtenerProductosEnMemoria();
+    const criticosPlanilla = datosPlanilla.filter(item => {
+        const estado = (item.ESTADO || item.estado || '').toUpperCase();
+        if (estado.includes('CARGADO')) return false;
+        return esCritico(item.VENCIMIENTO || item.vencimiento);
+    });
+
+    return criticosManuales.length + criticosPlanilla.length;
+}
+
+function revisarVencimientosCriticos(refs) {
+    if (Notification.permission === 'denied') return;
+
+    const total = contarCriticos();
+
+    if (total > 0) {
+        mostrarBanner(refs, {
+            mensaje: `Tenés ${total} producto${total > 1 ? 's' : ''} que vencen en menos de 7 días.`,
+            etiquetaBoton: 'Ver ahora',
+            alHacerClic: () => {
+                const destino = document.getElementById('vdb-list') ?? document.getElementById('venc-list');
+                destino?.scrollIntoView({ behavior: 'smooth' });
+                ocultarBanner(refs);
+            },
         });
-
-        const datosPlanilla = obtenerProductosEnMemoria();
-        const criticosPlanilla = datosPlanilla.filter(item => {
-            const vtoStr = item.VENCIMIENTO || item.vencimiento;
-            const estado = (item.ESTADO || item.estado || '').toUpperCase();
-            const objetivo = parsearFechaNotificacion(vtoStr);
-            if (!objetivo || estado.includes('CARGADO')) return false;
-            const dias = Math.round((objetivo - hoy) / (1000 * 60 * 60 * 24));
-            return dias >= 0 && dias <= 7;
-        });
-
-        const totalCriticos = criticosManuales.length + criticosPlanilla.length;
-
-        if (totalCriticos > 0 && banner) {
-            banner.hidden = false;
-
-            if (textoBanner) {
-                textoBanner.textContent = `Tenés ${totalCriticos} producto${totalCriticos > 1 ? 's' : ''} en etapa −7 días.`;
-            }
-
-            if (botonBanner) {
-                botonBanner.textContent = 'Ver ahora';
-                botonBanner.onclick = () => {
-                    const destino = document.getElementById('vdb-list') || document.getElementById('venc-list');
-                    destino?.scrollIntoView({ behavior: 'smooth' });
-                    banner.hidden = true;
-                };
-            }
-
-            const btnCerrar = document.getElementById('notif-banner-close');
-            if (btnCerrar) {
-                btnCerrar.onclick = () => { banner.hidden = true; };
-            }
-        } else if (banner) {
-            banner.hidden = true;
-        }
-    } catch (e) {
-        console.error(e);
+    } else {
+        ocultarBanner(refs);
     }
 }
 
 export function inicializarNotificaciones() {
-    const botonHabilitar = document.getElementById('notif-enable-btn');
+    const botonHabilitar  = document.getElementById('notif-enable-btn');
     const botonDeshabilitar = document.getElementById('notif-disable-btn');
-    const controles = document.getElementById('notif-controls');
-    const panelActivo = document.getElementById('notif-active');
-    const textoActivo = document.getElementById('notif-active-text');
-    const puntoEstado = document.getElementById('notif-dot');
-    const textoEstado = document.getElementById('notif-status-text');
-    const banner = document.getElementById('notif-banner');
-    const textoBanner = document.getElementById('notif-banner-text');
-    const botonBanner = document.getElementById('notif-banner-btn');
+    const controles       = document.getElementById('notif-controls');
+    const panelActivo     = document.getElementById('notif-active');
+    const textoActivo     = document.getElementById('notif-active-text');
+    const puntoEstado     = document.getElementById('notif-dot');
+    const textoEstado     = document.getElementById('notif-status-text');
+
+    const refsBanner = {
+        banner:      document.getElementById('notif-banner'),
+        textoBanner: document.getElementById('notif-banner-text'),
+        botonBanner: document.getElementById('notif-banner-btn'),
+    };
     const cerrarBanner = document.getElementById('notif-banner-close');
 
     if (!botonHabilitar) return;
@@ -141,11 +146,8 @@ export function inicializarNotificaciones() {
         mostrarEstadoInactivo();
     }
 
-    revisarVencimientosCriticos(banner, textoBanner, botonBanner);
-
-    window.addEventListener('veteo:productosActualizados', () => {
-        revisarVencimientosCriticos(banner, textoBanner, botonBanner);
-    });
+    revisarVencimientosCriticos(refsBanner);
+    window.addEventListener('veteo:productosActualizados', () => revisarVencimientosCriticos(refsBanner));
 
     botonHabilitar.addEventListener('click', async () => {
         const usuario = obtenerUsuarioActual();
@@ -162,47 +164,44 @@ export function inicializarNotificaciones() {
                 establecerEstado(puntoEstado, textoEstado, 'Conectando...', 'activo');
 
                 const registro = await navigator.serviceWorker.ready;
-                console.log("[Veteo] Service Worker listo:", registro);
-
                 const token = await getToken(mensajeria, {
                     vapidKey: CONFIGURACION.vapidKey,
-                    serviceWorkerRegistration: registro
+                    serviceWorkerRegistration: registro,
                 });
 
                 if (token) {
-                    console.log("[Veteo] Token obtenido:", token);
                     guardarConfiguracion({ active: true, fcmToken: token });
                     mostrarEstadoActivo();
 
                     fetch(CONFIGURACION.apiUrl, {
                         method: 'POST',
-                        body: JSON.stringify({ action: 'saveToken', token: token, email: usuario.email })
-                    }).then(res => res.json())
-                        .then(data => console.log("[Veteo] Token guardado en Sheet:", data))
-                        .catch(error => console.error("Error al guardar token:", error));
+                        body: JSON.stringify({ action: 'saveToken', token, email: usuario.email }),
+                    })
+                        .then(res => res.json())
+                        .then(data => console.log("[Veteo] Token guardado:", data))
+                        .catch(err => console.error("[Veteo] Error al guardar token:", err));
 
                     registro.showNotification('Veteo App conectada ✓', {
-                        body: `Recordatorio configurado a las 08:00 hs.`,
+                        body: 'Recordatorio configurado a las 08:00 hs.',
                         icon: './icons/icon-512.png',
                         tag: 'veteo-setup',
                     });
 
-                    onMessage(mensajeria, (cargaUtil) => {
-                        console.log("[Veteo] Mensaje recibido en primer plano:", cargaUtil);
-                        const titulo = cargaUtil.notification?.title || 'Veteo App';
-                        const opciones = {
-                            body: cargaUtil.notification?.body || 'Tienes un nuevo recordatorio.',
-                            icon: './icons/icon-512.png'
-                        };
-                        registro.showNotification(titulo, opciones);
+                    onMessage(mensajeria, (payload) => {
+                        registro.showNotification(
+                            payload.notification?.title ?? 'Veteo App',
+                            { body: payload.notification?.body ?? 'Tenés un nuevo recordatorio.', icon: './icons/icon-512.png' }
+                        );
                     });
 
                 } else {
-                    establecerEstado(puntoEstado, textoEstado, 'Error: No se obtuvo token', 'denegado');
+                    establecerEstado(puntoEstado, textoEstado, 'Error: no se obtuvo token', 'denegado');
                 }
+
             } else if (permiso === 'denied') {
                 mostrarEstadoDenegado();
             }
+
         } catch (error) {
             console.error("[Veteo] Error en notificaciones:", error);
             alert("Detalle del error: " + error.message);
@@ -215,14 +214,13 @@ export function inicializarNotificaciones() {
         mostrarEstadoInactivo();
     });
 
-    cerrarBanner?.addEventListener('click', () => ocultarBanner(banner));
+    cerrarBanner?.addEventListener('click', () => ocultarBanner(refsBanner));
 
-    // --- FUNCIONES DE ESTADO DEL PANEL ---
     function mostrarEstadoActivo() {
         establecerEstado(puntoEstado, textoEstado, 'Activo', 'activo');
         if (controles) controles.hidden = true;
         if (panelActivo) panelActivo.hidden = false;
-        if (textoActivo) textoActivo.textContent = `Recordatorio activo de lunes a viernes a las 08:00 hs.`;
+        if (textoActivo) textoActivo.textContent = 'Recordatorio activo de lunes a viernes a las 08:00 hs.';
     }
 
     function mostrarEstadoInactivo() {
@@ -233,69 +231,17 @@ export function inicializarNotificaciones() {
 
     function mostrarEstadoDenegado() {
         establecerEstado(puntoEstado, textoEstado, 'Bloqueado por el navegador', 'denegado');
-        if (botonHabilitar) {
-            botonHabilitar.disabled = true;
-            botonHabilitar.textContent = 'Permiso bloqueado';
-        }
-        // Usamos la lógica de revisar críticos pero forzando el mensaje de error
-        banner.hidden = false;
-        textoBanner.textContent = 'Las notificaciones están bloqueadas. Habilitá los permisos desde el navegador.';
-        botonBanner.textContent = 'Cómo habilitarlas';
-        botonBanner.onclick = () => window.open('https://support.google.com/chrome/answer/3220216', '_blank');
-    }
+        botonHabilitar.disabled = true;
+        botonHabilitar.textContent = 'Permiso bloqueado';
 
-    function revisarVencimientosCriticos(banner, textoBanner, botonBanner) {
-        try {
-            const hoy = new Date();
-            hoy.setHours(0, 0, 0, 0);
-
-            const datosManuales = JSON.parse(localStorage.getItem('veteo_vencimientos_v1')) || [];
-            const criticosManuales = datosManuales.filter(item => {
-                const objetivo = new Date(item.fecha + 'T00:00:00');
-                if (isNaN(objetivo)) return false;
-                const dias = Math.round((objetivo - hoy) / (1000 * 60 * 60 * 24));
-                return dias >= 0 && dias <= 7;
+        const total = contarCriticos();
+        if (total === 0) {
+            mostrarBanner(refsBanner, {
+                mensaje: 'Las notificaciones están bloqueadas. Habilitá los permisos desde el navegador.',
+                etiquetaBoton: 'Cómo habilitarlas',
+                alHacerClic: () => window.open('https://support.google.com/chrome/answer/3220216', '_blank'),
+                modificadorExtra: 'vdb-alert--warning',
             });
-
-            const datosPlanilla = typeof obtenerProductosEnMemoria === 'function' ? obtenerProductosEnMemoria() : [];
-            const criticosPlanilla = datosPlanilla.filter(item => {
-                const vtoStr = item.VENCIMIENTO || item.vencimiento;
-                const estado = (item.ESTADO || item.estado || '').toUpperCase();
-
-                let objetivo = null;
-                if (vtoStr?.includes('/')) {
-                    const [d, m, a] = vtoStr.split('/');
-                    objetivo = new Date(`${a}-${m}-${d}T00:00:00`);
-                } else {
-                    objetivo = new Date(vtoStr);
-                }
-
-                if (!objetivo || isNaN(objetivo) || estado.includes('CARGADO')) return false;
-                const dias = Math.round((objetivo - hoy) / (1000 * 60 * 60 * 24));
-                return dias >= 0 && dias <= 7;
-            });
-
-            const totalCriticos = criticosManuales.length + criticosPlanilla.length;
-
-            if (totalCriticos > 0 && banner) {
-                banner.hidden = false;
-                banner.className = 'vdb-alert vdb-alert--critical';
-                if (textoBanner) {
-                    textoBanner.textContent = `Tenés ${totalCriticos} producto${totalCriticos > 1 ? 's' : ''} que vencen en menos de 7 días.`;
-                }
-                if (botonBanner) {
-                    botonBanner.hidden = false;
-                    botonBanner.textContent = 'Ver ahora';
-                    botonBanner.onclick = () => {
-                        const destino = document.getElementById('vdb-list') || document.getElementById('venc-list');
-                        destino?.scrollIntoView({ behavior: 'smooth' });
-                    };
-                }
-            } else if (banner && Notification.permission !== 'denied') {
-                banner.hidden = true;
-            }
-        } catch (e) {
-            console.error("Error en revisión:", e);
         }
     }
 }
