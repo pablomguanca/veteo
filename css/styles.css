@@ -365,57 +365,6 @@ h3 {
   }
 }
 
-.notif-banner {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  padding: 12px 16px;
-  background: rgba(252, 211, 77, 0.08);
-  border: 1px solid rgba(252, 211, 77, 0.25);
-  border-radius: 16px;
-  font-size: 0.85rem;
-  animation: fadeDown 400ms cubic-bezier(0.4, 0, 0.2, 1) both;
-}
-.notif-banner[hidden] {
-  display: none;
-}
-.notif-banner__icon {
-  font-size: 1rem;
-}
-.notif-banner__text {
-  flex: 1;
-  color: #eeeae3;
-}
-.notif-banner__btn {
-  padding: 5px 12px;
-  background: #fcd34d;
-  color: #0a0b0e;
-  border-radius: 6px;
-  font-size: 0.78rem;
-  font-weight: 500;
-  white-space: nowrap;
-  transition: opacity 150ms;
-}
-.notif-banner__btn:hover {
-  opacity: 0.85;
-}
-.notif-banner__close {
-  color: #71737d;
-  font-size: 0.8rem;
-  padding: 4px 6px;
-  transition: color 150ms;
-}
-.notif-banner__close:hover {
-  color: #eeeae3;
-}
-
-#veteo-alerta-global {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  margin-bottom: 20px;
-}
-
 .vdb-alert {
   display: flex;
   align-items: center;
@@ -423,18 +372,28 @@ h3 {
   padding: 12px 16px;
   border-radius: 16px;
   font-size: 0.85rem;
+  margin-bottom: 20px;
   animation: fadeDown 400ms cubic-bezier(0.4, 0, 0.2, 1) both;
+}
+.vdb-alert[hidden] {
+  display: none !important;
 }
 .vdb-alert--warning {
   background: rgba(252, 211, 77, 0.08);
   border: 1px solid rgba(252, 211, 77, 0.25);
+  color: #fcd34d;
+}
+.vdb-alert--warning .vdb-alert__text {
   color: #eeeae3;
 }
 .vdb-alert--critical {
   background: rgba(239, 68, 68, 0.1);
   border: 1px solid rgba(239, 68, 68, 0.25);
-  color: #eeeae3;
+  color: #fca5a5;
   font-weight: 600;
+}
+.vdb-alert--critical .vdb-alert__text {
+  color: #eeeae3;
 }
 .vdb-alert__icon {
   font-size: 1.1rem;
@@ -442,7 +401,7 @@ h3 {
 }
 .vdb-alert__text {
   flex: 1;
-  color: #eeeae3;
+  line-height: 1.4;
 }
 .vdb-alert__btn {
   padding: 5px 12px;
@@ -454,13 +413,26 @@ h3 {
   font-weight: 600;
   white-space: nowrap;
   cursor: pointer;
-  transition: opacity 150ms;
+  transition: opacity 150ms, transform 150ms;
 }
 .vdb-alert__btn:hover {
   opacity: 0.85;
 }
 .vdb-alert__btn:active {
   transform: scale(0.96);
+}
+.vdb-alert__close {
+  background: none;
+  border: none;
+  color: #71737d;
+  font-size: 0.9rem;
+  padding: 4px 6px;
+  cursor: pointer;
+  transition: color 150ms;
+  margin-left: 4px;
+}
+.vdb-alert__close:hover {
+  color: #eeeae3;
 }
 
 .today-card {

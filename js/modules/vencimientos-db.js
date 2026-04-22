@@ -106,54 +106,6 @@ function escaparHTML(cadena) {
         .replace(/"/g, '&quot;');
 }
 
-function actualizarBannerAlertas(productos) {
-    const seccionPrincipal = document.getElementById('vdb-section');
-    if (!seccionPrincipal) return;
-
-    let banner = document.getElementById('veteo-alerta-global');
-
-    const criticos = productos.filter(p => {
-        const dias = obtenerDiasRestantes(p.vencimiento || p.VENCIMIENTO);
-        return dias !== null && dias >= 0 && dias <= 7 && !(p.ESTADO || '').includes('CARGADO');
-    });
-
-    const notiDeshabilitadas = ("Notification" in window) && Notification.permission !== "granted";
-
-    if (criticos.length === 0 && !notiDeshabilitadas) {
-        if (banner) banner.remove();
-        return;
-    }
-
-    if (!banner) {
-        banner = document.createElement('div');
-        banner.id = 'veteo-alerta-global';
-        seccionPrincipal.parentNode.insertBefore(banner, seccionPrincipal);
-    }
-
-    let contenido = '';
-
-    if (notiDeshabilitadas) {
-        contenido += `
-            <div class="vdb-alert vdb-alert--warning">
-                <span class="vdb-alert__icon">🔔</span>
-                <span class="vdb-alert__text">Las notificaciones se encuentran deshabilitadas.</span>
-                <button class="vdb-alert__btn" onclick="Notification.requestPermission().then(() => location.reload())">Habilitar</button>
-            </div>
-        `;
-    }
-
-    if (criticos.length > 0) {
-        contenido += `
-            <div class="vdb-alert vdb-alert--critical">
-                <span class="vdb-alert__icon">🚨</span>
-                <span class="vdb-alert__text">Tenés ${criticos.length} producto${criticos.length > 1 ? 's' : ''} que vencen en menos de 7 días.</span>
-            </div>
-        `;
-    }
-
-    banner.innerHTML = contenido;
-}
-
 async function ejecutarCargaCompleta(item, tipo) {
     const sec = parseInt(item.sec || item.SEC);
     const ean = item.ean || item.EAN;
