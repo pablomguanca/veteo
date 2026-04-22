@@ -50,11 +50,11 @@
             </div>
         </header>
 
-        <aside class="notif-banner" id="notif-banner" hidden>
-            <span class="notif-banner__icon" aria-hidden="true"></span>
-            <span class="notif-banner__text" id="notif-banner-text"></span>
-            <button class="notif-banner__btn" id="notif-banner-btn"></button>
-            <button class="notif-banner__close" id="notif-banner-close" aria-label="Cerrar">✕</button>
+        <aside class="vdb-alert vdb-alert--critical" id="notif-banner" hidden>
+            <span class="vdb-alert__icon" id="notif-banner-icon" aria-hidden="true">⚠️</span>
+            <span class="vdb-alert__text" id="notif-banner-text"></span>
+            <button class="vdb-alert__btn" id="notif-banner-btn"></button>
+            <button class="vdb-alert__close" id="notif-banner-close" aria-label="Cerrar">✕</button>
         </aside>
 
         <section class="today-card a1" role="region" aria-label="Resumen del día">
@@ -153,8 +153,8 @@
                 <div class="modal__body">
                     <div class="field">
                         <label class="field__label" for="f-producto">Producto: EAN y Descripción</label>
-                        <input class="field__input" id="f-producto" type="text"
-                            placeholder="Ingresá tu producto acá" autocomplete="off" />
+                        <input class="field__input" id="f-producto" type="text" placeholder="Ingresá tu producto acá"
+                            autocomplete="off" />
                     </div>
                     <div class="field-row">
                         <div class="field">

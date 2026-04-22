@@ -73,12 +73,12 @@ function renderizarItems(contenedor, elementoVacio, items) {
         elemento.setAttribute('role', 'listitem');
         elemento.dataset.id = item.id;
         elemento.innerHTML = `
-      <span class="venc-badge ${etapa.claseCSS}">${etapa.etiqueta}</span>
-      <div class="venc-info">
+        <span class="venc-badge ${etapa.claseCSS}">${etapa.etiqueta}</span>
+        <div class="venc-info">
         <div class="venc-name">${escaparHTML(item.producto)}</div>
         <div class="venc-meta">${formatearFecha(item.fecha)} · ${textoDias}${item.nota ? ' · ' + escaparHTML(item.nota) : ''}</div>
-      </div>
-      <button class="venc-delete" aria-label="Eliminar ${escaparHTML(item.producto)}" data-id="${item.id}">✕</button>
+        </div>
+        <button class="venc-delete" aria-label="Eliminar ${escaparHTML(item.producto)}" data-id="${item.id}">✕</button>
     `;
         contenedor.appendChild(elemento);
     });

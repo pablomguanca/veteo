@@ -84,19 +84,24 @@ function revisarVencimientosCriticos(banner, textoBanner, botonBanner) {
 
         if (totalCriticos > 0 && banner) {
             banner.hidden = false;
-            banner.className = 'vdb-alert vdb-alert--critical';
-            banner.innerHTML = `
-                <span class="vdb-alert__icon">⚠️</span>
-                <span class="vdb-alert__text">Tenés ${totalCriticos} producto${totalCriticos > 1 ? 's' : ''} en etapa −7 días.</span>
-                <button class="vdb-alert__btn">Ver ahora</button>
-            `;
 
-            const btn = banner.querySelector('.vdb-alert__btn');
-            btn.onclick = () => {
-                const destino = document.getElementById('vdb-list') || document.getElementById('venc-list');
-                destino?.scrollIntoView({ behavior: 'smooth' });
-                banner.hidden = true;
-            };
+            if (textoBanner) {
+                textoBanner.textContent = `Tenés ${totalCriticos} producto${totalCriticos > 1 ? 's' : ''} en etapa −7 días.`;
+            }
+
+            if (botonBanner) {
+                botonBanner.textContent = 'Ver ahora';
+                botonBanner.onclick = () => {
+                    const destino = document.getElementById('vdb-list') || document.getElementById('venc-list');
+                    destino?.scrollIntoView({ behavior: 'smooth' });
+                    banner.hidden = true;
+                };
+            }
+
+            const btnCerrar = document.getElementById('notif-banner-close');
+            if (btnCerrar) {
+                btnCerrar.onclick = () => { banner.hidden = true; };
+            }
         } else if (banner) {
             banner.hidden = true;
         }

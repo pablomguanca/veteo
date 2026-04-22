@@ -259,11 +259,12 @@ function renderizarTabla(contenedor, elementoVacio, filas) {
         const textoDias = dias < 0 ? `Vencido hace ${Math.abs(dias)}d` : `${dias}d restantes`;
 
         let labelPrincipal = "CARGAR";
+        if (sec === 10) labelPrincipal = "ACC";
         if (sec === 15) labelPrincipal = "PAS";
-        if ([20, 22, 24, 26].includes(sec)) labelPrincipal = "PFT";
+        if ([20, 22, 23, 24, 26].includes(sec)) labelPrincipal = "PFT";
         if (sec === 14) labelPrincipal = "PCH";
 
-        const mostrarUM = (sec === 14 || sec === 15) && (dias >= 3 && dias <= 7);
+        const mostrarUM = (sec === 14 || sec === 15 || sec === 10) && (dias >= 3 && dias <= 7);
 
         const elemento = document.createElement('div');
         elemento.className = `vdb-row ${estado.includes('CARGADO') ? 'vdb-row--done' : ''}`;
