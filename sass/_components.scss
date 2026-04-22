@@ -1,22 +1,37 @@
 @use 'variables' as v;
 
-.notif-banner {
+#veteo-alerta-global {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.vdb-alert {
     display: flex;
     align-items: center;
-    gap: 10px;
+    gap: 12px;
     padding: 12px 16px;
-    background: rgba(252, 211, 77, 0.08);
-    border: 1px solid rgba(252, 211, 77, 0.25);
     border-radius: v.$radius;
     font-size: 0.85rem;
     animation: fadeDown v.$duration-slow v.$ease both;
 
-    &[hidden] {
-        display: none;
+    &--warning {
+        background: rgba(252, 211, 77, 0.08);
+        border: 1px solid rgba(252, 211, 77, 0.25);
+        color: v.$amber;
+    }
+
+    &--critical {
+        background: rgba(239, 68, 68, 0.1);
+        border: 1px solid rgba(239, 68, 68, 0.25);
+        color: v.$red;
+        font-weight: 600;
     }
 
     &__icon {
-        font-size: 1rem;
+        font-size: 1.1rem;
+        flex-shrink: 0;
     }
 
     &__text {
@@ -28,25 +43,20 @@
         padding: 5px 12px;
         background: v.$amber;
         color: v.$bg;
+        border: none;
         border-radius: v.$radius-xs;
         font-size: 0.78rem;
-        font-weight: 500;
+        font-weight: 600;
         white-space: nowrap;
+        cursor: pointer;
         transition: opacity v.$duration-fast;
 
         &:hover {
             opacity: 0.85;
         }
-    }
 
-    &__close {
-        color: v.$muted;
-        font-size: 0.8rem;
-        padding: 4px 6px;
-        transition: color v.$duration-fast;
-
-        &:hover {
-            color: v.$text;
+        &:active {
+            transform: scale(0.96);
         }
     }
 }
@@ -281,7 +291,7 @@
     display: flex;
     flex-direction: column;
     gap: 10px;
-    max-height: 400px; 
+    max-height: 400px;
     overflow-y: auto;
     padding-right: 6px;
     scrollbar-width: thin;
@@ -362,7 +372,7 @@
         color: v.$muted;
         border: 1px solid v.$border;
     }
-}        
+}
 
 .venc-info {
     flex: 1;
@@ -779,7 +789,7 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    flex-wrap: wrap;
+    flex-wrap: nowrap;
     gap: 15px;
     margin-bottom: 20px;
 

@@ -110,7 +110,7 @@ function actualizarBannerAlertas(productos) {
     const seccionPrincipal = document.getElementById('vdb-section');
     if (!seccionPrincipal) return;
 
-    let banner = document.getElementById('notif-banner');
+    let banner = document.getElementById('veteo-alerta-global');
 
     const criticos = productos.filter(p => {
         const dias = obtenerDiasRestantes(p.vencimiento || p.VENCIMIENTO);
@@ -126,7 +126,7 @@ function actualizarBannerAlertas(productos) {
 
     if (!banner) {
         banner = document.createElement('div');
-        banner.id = 'notif-banner';
+        banner.id = 'veteo-alerta-global';
         seccionPrincipal.parentNode.insertBefore(banner, seccionPrincipal);
     }
 
@@ -134,17 +134,19 @@ function actualizarBannerAlertas(productos) {
 
     if (notiDeshabilitadas) {
         contenido += `
-            <div style="background: rgba(245, 158, 11, 0.1); border: 1px solid #f59e0b; color: #f59e0b; padding: 12px; border-radius: 8px; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center; font-size: 0.8rem;">
-                <span>🔔 Las notificaciones se encuentran deshabilitadas.</span>
-                <button onclick="Notification.requestPermission().then(() => location.reload())" style="background: #f59e0b; color: #000; border: none; padding: 4px 8px; border-radius: 4px; font-weight: bold; cursor: pointer;">Habilitar</button>
+            <div class="vdb-alert vdb-alert--warning">
+                <span class="vdb-alert__icon">🔔</span>
+                <span class="vdb-alert__text">Las notificaciones se encuentran deshabilitadas.</span>
+                <button class="vdb-alert__btn" onclick="Notification.requestPermission().then(() => location.reload())">Habilitar</button>
             </div>
         `;
     }
 
     if (criticos.length > 0) {
         contenido += `
-            <div style="background: rgba(239, 68, 68, 0.1); border: 1px solid #ef4444; color: #ef4444; padding: 12px; border-radius: 8px; margin-bottom: 10px; font-weight: bold; font-size: 0.85rem; display: flex; align-items: center; gap: 8px;">
-                <span>🚨</span> Tenés ${criticos.length} producto${criticos.length > 1 ? 's' : ''} que vencen en menos de 7 días.
+            <div class="vdb-alert vdb-alert--critical">
+                <span class="vdb-alert__icon">🚨</span>
+                <span class="vdb-alert__text">Tenés ${criticos.length} producto${criticos.length > 1 ? 's' : ''} que vencen en menos de 7 días.</span>
             </div>
         `;
     }
@@ -160,7 +162,9 @@ async function ejecutarCargaCompleta(item, tipo) {
     const FORMS = {
         PAS: { url: "https://docs.google.com/forms/d/e/1FAIpQLSduF5W6fBCrrCTkrMCnPrUgxNSjAE1_VWY3p9c5xVqFf5xM9Q/viewform", id: "entry.1767407709" },
         PFT: { url: "https://docs.google.com/forms/d/e/1FAIpQLSfz_CdCLjbi_Sbjh5KVv2a1BqoLLNuQWpc5sKNTTTgshPofCg/viewform" },
-        UM: { url: "https://docs.google.com/forms/d/e/1FAIpQLSduF5W6fBCrrCTkrMCnPrUgxNSjAE1_VWY3p9c5xVqFf5xM9Q/viewform", id: "entry.895724790" }
+        UM:  { url: "https://docs.google.com/forms/d/1dGuyCKKq8ypnkzTzs94OL1KvPKBUFwgMPf0BlQ-ZwOw/viewform", id: "entry.895724790" },
+        S10: { url: "https://docs.google.com/forms/d/e/1FAIpQLSecPY7Wynn_Jqn8rob6F4IY61wLne3fsA_MjnQHiS8_ddMVAw/viewform" },
+        PCH: { url: "http://10.94.164.15:16000/pch/app/login" }
     };
 
     let urlAbrir = "";
@@ -175,8 +179,10 @@ async function ejecutarCargaCompleta(item, tipo) {
         } else if ([20, 22, 24, 26].includes(sec)) {
             urlAbrir = FORMS.PFT.url;
         } else if (sec === 14) {
+            urlAbrir = FORMS.PCH.url;
             nuevoEstado = "PEND. PCH";
-            alert("Sect. 14: Marcado como PENDIENTE PCH.");
+        } else if (sec === 10) {
+            urlAbrir = FORMS.S10.url;
         }
     }
 
@@ -190,6 +196,8 @@ async function ejecutarCargaCompleta(item, tipo) {
                 const p = productosEnMemoria.find(x => (x.ean || x.EAN) === ean && (x.vencimiento || x.VENCIMIENTO) === vto);
                 if (p) p.ESTADO = nuevoEstado;
                 renderizarTabla(document.getElementById('vdb-list'), document.getElementById('vdb-empty'), productosEnMemoria);
+                actualizarBannerAlertas(productosEnMemoria);
+                window.dispatchEvent(new CustomEvent('veteo:productosActualizados', { detail: productosEnMemoria }));
             }
         } catch (e) {
             console.error(e);
@@ -200,16 +208,21 @@ async function ejecutarCargaCompleta(item, tipo) {
 function copiarEAN(ean, event) {
     event.stopPropagation();
     const btn = event.currentTarget;
+    const originalIcon = btn.innerHTML;
 
     navigator.clipboard.writeText(ean).then(() => {
+
         btn.classList.add('copied');
 
-        const originalContent = btn.innerHTML;
-        btn.innerHTML = 'EAN copiado ✓';
+        btn.innerHTML = `
+            <svg class="copy-icon" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="20 6 9 17 4 12"></polyline>
+            </svg>
+        `;
 
         setTimeout(() => {
             btn.classList.remove('copied');
-            btn.innerHTML = originalContent;
+            btn.innerHTML = originalIcon;
         }, 2000);
     });
 }
