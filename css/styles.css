@@ -1283,6 +1283,7 @@ h3 {
   color: #71737d;
   letter-spacing: 0.06em;
   min-height: 16px;
+  margin-bottom: 8px;
 }
 
 @media (max-width: 640px) {
