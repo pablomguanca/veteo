@@ -56,10 +56,11 @@ function obtenerDiasRestantes(cadenaFecha) {
 function obtenerEtapa(diasRestantes) {
     if (diasRestantes === null) return { etiqueta: '?', claseCSS: 'etapa--unknown' };
     const etiqueta = diasRestantes < 0 ? `+${Math.abs(diasRestantes)}d` : `-${diasRestantes}d`;
-    if (diasRestantes <= 7) return { etiqueta, claseCSS: 'etapa--7' };
-    if (diasRestantes <= 30) return { etiqueta, claseCSS: 'etapa--30' };
-    if (diasRestantes <= 60) return { etiqueta, claseCSS: 'etapa--60' };
-    return { etiqueta, claseCSS: 'etapa--90' };
+    if (diasRestantes <= 7) return { etiqueta, claseCSS: 'venc-badge--7' };
+    if (diasRestantes <= 30) return { etiqueta, claseCSS: 'venc-badge--30' };
+    if (diasRestantes <= 60) return { etiqueta, claseCSS: 'venc-badge--60' };
+    return { etiqueta, claseCSS: 'venc-badge--90' };
+    return { etiqueta: '?', claseCSS: 'venc-badge--unknown' };
 }
 
 function formatearFecha(cadenaFecha) {
