@@ -838,6 +838,45 @@
     display: none !important;
 }
 
+.venc-badge {
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 0.7rem;
+    font-weight: 700;
+    white-space: nowrap;
+    border: 1px solid transparent;
+
+    &--7 {
+        background: v.$amber-glow;
+        color: v.$amber;
+        border-color: v.$amber-border;
+    }
+
+    &--30 {
+        background: v.$red-glow;
+        color: v.$red;
+        border-color: v.$red-border;
+    }
+
+    &--60 {
+        background: v.$green-glow;
+        color: v.$green;
+        border-color: v.$green-border;
+    }
+
+    &--90 {
+        background: v.$violet-glow;
+        color: v.$violet;
+        border-color: v.$violet-border;
+    }
+
+    &--unknown {
+        background: v.$surface-3;
+        color: v.$muted;
+        border-color: v.$border;
+    }
+}
+
 .vdb-row {
     display: grid;
     grid-template-columns: auto minmax(0, 1fr) auto;
