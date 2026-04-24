@@ -5,7 +5,17 @@ async function iniciarEscaneo() {
     if (escaneando) return;
 
     if (!lector) {
-        lector = new window.ZXing.BrowserMultiFormatReader();
+        const hints = new Map();
+        const formatos = [
+            window.ZXing.BarcodeFormat.EAN_13,
+            window.ZXing.BarcodeFormat.EAN_8,
+            window.ZXing.BarcodeFormat.UPC_A,
+            window.ZXing.BarcodeFormat.UPC_E,
+            window.ZXing.BarcodeFormat.CODE_128
+        ];
+        hints.set(window.ZXing.DecodeHintType.POSSIBLE_FORMATS, formatos);
+        
+        lector = new window.ZXing.BrowserMultiFormatReader(hints);
     }
 
     const contenedor = document.getElementById('modal-escaner');
@@ -24,8 +34,9 @@ async function iniciarEscaneo() {
             { 
                 video: { 
                     facingMode: 'environment',
-                    width: { ideal: 720 },
-                    height: { ideal: 1280 }
+                    width: { ideal: 1920 },
+                    height: { ideal: 1080 },
+                    advanced: [{ focusMode: "continuous" }]
                 } 
             },
             videoEscaner,
@@ -37,7 +48,7 @@ async function iniciarEscaneo() {
             }
         );
     } catch (error) {
-        console.error('Error al acceder a la cámara:', error);
+        console.error(error);
         detenerEscaneo();
     }
 }
