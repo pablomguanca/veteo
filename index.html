@@ -56,7 +56,7 @@
             <button class="vdb-alert__btn" id="notif-banner-btn"></button>
             <button class="vdb-alert__close" id="notif-banner-close" aria-label="Cerrar">✕</button>
         </aside>
-        
+
         <section class="today-card a1" role="region" aria-label="Resumen del día">
             <div class="today-card__indicator">
                 <span class="live-dot live-dot--orange" aria-hidden="true"></span>
@@ -132,7 +132,21 @@
                     <div class="card__label">Gestión manual</div>
                     <div class="card__title">Vencimientos cargados</div>
                 </div>
-                <button class="btn-primary" id="add-venc-btn">+ Agregar</button>
+                <div class="card-row__actions">
+                    <div class="card-row__actions-inner">
+                        <button class="btn-icon" id="btn-escanear" aria-label="Escanear producto con cámara">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
+                                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M7 3H5a2 2 0 0 0-2 2v2"></path>
+                                <path d="M17 3h2a2 2 0 0 1 2 2v2"></path>
+                                <path d="M3 17v2a2 2 0 0 0 2 2h2"></path>
+                                <path d="M21 17v2a2 2 0 0 1-2 2h-2"></path>
+                                <circle cx="12" cy="12" r="3"></circle>
+                            </svg>
+                        </button>
+                        <button class="btn-primary" id="add-venc-btn">+ Agregar</button>
+                    </div>
+                </div>
             </div>
 
             <div class="scrollable-list" id="venc-list" role="list">
@@ -152,8 +166,13 @@
                 </header>
                 <div class="modal__body">
                     <div class="field">
-                        <label class="field__label" for="f-producto">Producto: EAN y Descripción</label>
-                        <input class="field__input" id="f-producto" type="text" placeholder="Ingresá tu producto acá"
+                        <label class="field__label" for="f-producto">EAN</label>
+                        <input class="field__input" id="f-producto" type="text" placeholder="Ingresá el EAN"
+                            autocomplete="off" />
+                    </div>
+                    <div class="field">
+                        <label class="field__label" for="f-descripcion">DESCRIPCIÓN</label>
+                        <input class="field__input" id="f-descripcion" type="text" placeholder="Ingresá la Descripción"
                             autocomplete="off" />
                     </div>
                     <div class="field-row">
@@ -189,7 +208,7 @@
             <div class="card-row">
                 <div class="card__header-text">
                     <div class="card__label">Génesix → Sheets</div>
-                    <div class="card__title">Vencimientos importados</div>
+                    <div class="card__title">Vencimientos Importados</div>
                 </div>
                 <div class="card__header-actions"> <button class="btn-ghost" id="vdb-refresh-btn">↺ Actualizar</button>
                     <button class="btn-primary" id="vdb-import-btn">↑ Importar</button>
@@ -338,7 +357,8 @@
                     <span class="notif-status__text" id="notif-status-text">Sin configurar</span>
                 </div>
             </div>
-            <p class="card__desc">Recibí recordatorios diarios para optimizar tu gestión. Se enviarán automáticamente todos los días a las 08:00 hs.</p>
+            <p class="card__desc">Recibí recordatorios diarios para optimizar tu gestión. Se enviarán automáticamente
+                todos los días a las 08:00 hs.</p>
             <div class="notif-controls" id="notif-controls">
                 <button class="btn-primary" id="notif-enable-btn">Activar notificaciones</button>
             </div>
@@ -358,6 +378,25 @@
         </footer>
 
     </main>
+    <div id="modal-escaner" class="modal-escaner" role="dialog" aria-modal="true" aria-labelledby="titulo-escaner"
+        hidden>
+        <div class="modal-escaner__contenido">
+
+            <header class="modal-escaner__cabecera">
+                <h2 id="titulo-escaner" class="modal-escaner__titulo">Escanear Producto</h2>
+                <button id="btn-cerrar-escaner" class="btn-cerrar"
+                    aria-label="Cerrar cámara de escáner">&times;</button>
+            </header>
+
+            <div class="modal-escaner__video-wrapper" aria-hidden="true">
+                <video id="video-camara" playsinline></video>
+                <div class="modal-escaner__mirilla"></div>
+            </div>
+
+            <p class="modal-escaner__texto">Enfocá el código de barras en el centro</p>
+        </div>
+    </div>
+    <script src="https://unpkg.com/@zxing/library@latest/umd/index.min.js"></script>
     <script src="./js/app.js" type="module"></script>
 </body>
 

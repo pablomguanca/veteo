@@ -8,6 +8,7 @@ import { inicializarEstadoFormularios } from './modules/estado-formularios.js';
 import { inicializarBaseDatosVencimientos } from './modules/vencimientos-db.js';
 import { inicializarAutenticacionGoogle } from './modules/google-auth.js';
 import { inicializarEnlaces } from './modules/enlaces.js';
+import { inicializarEscaner } from './modules/escaner.js';
 
 document.addEventListener('DOMContentLoaded', () => {
     inicializarFecha();
@@ -20,4 +21,5 @@ document.addEventListener('DOMContentLoaded', () => {
     inicializarBaseDatosVencimientos();
     inicializarAutenticacionGoogle();
     inicializarEnlaces();
+    inicializarEscaner();
 });

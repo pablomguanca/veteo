@@ -1,0 +1,173 @@
+@use 'variables' as v;
+
+.modal-escaner {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(#000, 0.8);
+    z-index: v.$z-modal;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    backdrop-filter: blur(8px);
+
+    &[hidden] {
+        display: none !important;
+    }
+
+    &__contenido {
+        background-color: v.$surface-2;
+        border: 1px solid v.$border;
+        border-radius: v.$radius;
+        padding: 24px;
+        width: 90%;
+        max-width: 400px;
+        box-shadow: v.$shadow-md;
+    }
+
+    &__cabecera {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 20px;
+
+        .modal-escaner__titulo {
+            margin: 0;
+            color: v.$text;
+            font-family: v.$ff-display;
+            font-size: 1.25rem;
+            font-weight: 500;
+        }
+
+        .btn-cerrar {
+            background: none;
+            border: none;
+            color: v.$muted;
+            font-size: 1.8rem;
+            cursor: pointer;
+            padding: 0;
+            line-height: 1;
+            transition: color v.$duration-base v.$ease;
+
+            &:hover {
+                color: v.$text;
+                text-shadow: 0 0 8px rgba(255, 255, 255, 0.2);
+            }
+        }
+    }
+
+    &__video-wrapper {
+        position: relative;
+        width: 100%;
+        border-radius: v.$radius-sm;
+        overflow: hidden;
+        background-color: v.$bg;
+        display: flex;
+        border: 1px solid v.$border-2;
+
+        #video-camara {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+
+        .modal-escaner__mirilla {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 75%;
+            height: 45%;
+            border: 2px solid v.$green;
+            border-radius: v.$radius-xs;
+            box-shadow: 0 0 0 9999px rgba(v.$bg, 0.85);
+            pointer-events: none;
+
+            &::after {
+                content: '';
+                position: absolute;
+                inset: 0;
+                box-shadow: inset 0 0 15px v.$green-glow;
+            }
+        }
+    }
+
+    &__texto {
+        text-align: center;
+        color: v.$muted;
+        font-family: v.$ff-body;
+        font-size: 0.9rem;
+        margin-top: 16px;
+        margin-bottom: 0;
+    }
+}
+
+.modal-backdrop {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.7);
+    backdrop-filter: blur(6px);
+    z-index: v.$z-modal;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    animation: fadeIn 200ms v.$ease both;
+
+    &[hidden] {
+        display: none;
+    }
+}
+
+.modal {
+    background: v.$surface-2;
+    border: 1px solid v.$border-2;
+    border-radius: v.$radius-xl;
+    width: min(480px, 100%);
+    box-shadow: v.$shadow-lg;
+    animation: scaleIn 250ms v.$ease-spring both;
+
+    &__header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 20px 22px 0;
+    }
+
+    &__title {
+        font-family: v.$ff-display;
+        font-size: 1.1rem;
+        font-weight: 700;
+    }
+
+    &__close {
+        color: v.$muted;
+        font-size: 0.9rem;
+        padding: 6px 8px;
+        border-radius: v.$radius-xs;
+        transition:
+            color v.$duration-fast,
+            background v.$duration-fast;
+
+        &:hover {
+            color: v.$text;
+            background: v.$surface-3;
+        }
+    }
+
+    &__body {
+        padding: 20px 22px;
+        display: flex;
+        flex-direction: column;
+        gap: 14px;
+    }
+
+    &__footer {
+        display: flex;
+        justify-content: flex-end;
+        gap: 10px;
+        padding: 0 22px 20px;
+    }
+}
