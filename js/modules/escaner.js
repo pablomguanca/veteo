@@ -21,7 +21,13 @@ async function iniciarEscaneo() {
 
     try {
         await lector.decodeFromConstraints(
-            { video: { facingMode: 'environment' } },
+            { 
+                video: { 
+                    facingMode: 'environment',
+                    width: { ideal: 1280 },
+                    height: { ideal: 720 }
+                } 
+            },
             videoEscaner,
             (resultado, error) => {
                 if (resultado) {
