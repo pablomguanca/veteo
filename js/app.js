@@ -6,9 +6,9 @@ import { inicializarNotificaciones } from './modules/notificaciones.js';
 import { registrarServiceWorker } from './modules/sw-register.js';
 import { inicializarEstadoFormularios } from './modules/estado-formularios.js';
 import { inicializarBaseDatosVencimientos } from './modules/vencimientos-db.js';
-import { inicializarAutenticacionGoogle } from './modules/google-auth.js';
 import { inicializarEnlaces } from './modules/enlaces.js';
 import { inicializarEscaner } from './modules/escaner.js';
+import './modules/google-auth.js';
 
 document.addEventListener('DOMContentLoaded', () => {
     inicializarFecha();
@@ -19,7 +19,6 @@ document.addEventListener('DOMContentLoaded', () => {
     registrarServiceWorker();
     inicializarEstadoFormularios();
     inicializarBaseDatosVencimientos();
-    inicializarAutenticacionGoogle();
     inicializarEnlaces();
     inicializarEscaner();
 });

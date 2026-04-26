@@ -1,150 +1,97 @@
+import { initializeApp, getApps, getApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
+import { getAuth, signInWithPopup, GoogleAuthProvider, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-auth.js";
 import { CONFIGURACION } from './config.js';
 
-const CLAVE_SESION = 'veteo_user';
-let tokenAcceso = null;
-let clienteToken = null;
+const app = getApps().length === 0 ? initializeApp(CONFIGURACION.firebase) : getApp();
+const auth = getAuth(app);
+const provider = new GoogleAuthProvider();
 
-function guardarSesion(cargaUtil) {
-    const usuario = {
-        nombre: cargaUtil.given_name,
-        foto: cargaUtil.picture,
-        email: cargaUtil.email,
-        googleId: cargaUtil.sub,
-    };
-    localStorage.setItem(CLAVE_SESION, JSON.stringify(usuario));
-    window.dispatchEvent(new CustomEvent('veteo:login', { detail: usuario }));
-}
+provider.addScope('https://www.googleapis.com/auth/drive.file');
+provider.addScope('https://www.googleapis.com/auth/spreadsheets');
 
-function cargarSesion() {
+const correosAutorizados = [
+    'pablo_guanca@carrefour.com',
+    'pablo_ciancio@carrefour.com',
+    'fernando_porro_falco@carrefour.com',
+    'sergio_gustavo_alfonsin@carrefour.com',
+    'cecilia_serrano@carrefour.com',
+    'cristian_rivas@carrefour.com',
+    'luis_gonzales@carrefour.com',
+    'adrian_falcon@carrefour.com',
+    'daisis_pereira@carrefour.com',
+    'anabel_gonzalez@carrefour.com',
+    'juan_riquelme@carrefour.com',
+    'pamela_montalvo@carrefour.com',
+    'valeria_lima@carrefour.com',
+    'ariel_hernan_latorre@carrefour.com',
+    'nadin_cespedes@carrefour.com',
+    'claudia_rochelle@carrefour.com',
+    'lorena_estefania_lucero@carrefour.com',
+    'yanina_malagueno@carrefour.com',
+    'ezequiel_mendez@carrefour.com',
+    'lorena_leguiza@carrefour.com',
+    'augusto_leon@carrefour.com',
+    'guillermo_Reynoso@carrefour.com',
+    'celeste_soledad_palavecino@carrefour.com',
+    'pedro_ramirez@carrefour.com',
+    'carolina_camargo@carrefour.com',
+    'natalia_medina@carrefour.com',
+    'jesus_rios@carrefour.com',
+    'pablo_chaperon@carrefour.com'
+];
+
+export async function iniciarSesionGoogle() {
+    const msjError = document.getElementById('error-message');
+    if (msjError) msjError.hidden = true;
+
     try {
-        const datosCrudos = localStorage.getItem(CLAVE_SESION);
-        return datosCrudos ? JSON.parse(datosCrudos) : null;
-    } catch {
-        return null;
-    }
-}
+        const resultado = await signInWithPopup(auth, provider);
+        const usuario = resultado.user;
 
-function mostrarUsuario(usuario) {
-    const saludo = document.getElementById('saludo-usuario');
-    const foto = document.getElementById('usuario-foto');
-    const informacion = document.getElementById('usuario-info');
-    const boton = document.getElementById('google-btn');
-
-    if (saludo) saludo.textContent = `Hola, ${usuario.nombre}!`;
-    if (foto) foto.src = usuario.foto;
-    if (informacion) informacion.style.display = 'flex';
-    if (boton) boton.style.display = 'none';
-}
-
-export function obtenerUsuarioActual() {
-    try {
-        const datosCrudos = localStorage.getItem(CLAVE_SESION);
-        return datosCrudos ? JSON.parse(datosCrudos) : null;
-    } catch {
-        return null;
-    }
-}
-
-export function obtenerTokenAcceso() {
-    return new Promise((resolver, rechazar) => {
-        if (tokenAcceso) {
-            resolver(tokenAcceso);
-            return;
-        }
-
-        if (!clienteToken) {
-            rechazar(new Error('Cliente de token no inicializado. El usuario debe iniciar sesión primero.'));
-            return;
-        }
-
-        clienteToken.callback = (respuesta) => {
-            if (respuesta.error) {
-                rechazar(new Error(respuesta.error));
-                return;
+        if (!correosAutorizados.includes(usuario.email)) {
+            await signOut(auth);
+            if (msjError) {
+                msjError.textContent = "Acceso denegado. Cuenta no autorizada para esta sucursal.";
+                msjError.hidden = false;
             }
-            tokenAcceso = respuesta.access_token;
-            resolver(tokenAcceso);
-        };
-
-        clienteToken.requestAccessToken({ prompt: '' });
-    });
-}
-
-export function limpiarTokenAcceso() {
-    tokenAcceso = null;
-}
-
-export function inicializarAutenticacionGoogle() {
-    const sesionGuardada = cargarSesion();
-
-    if (sesionGuardada) {
-        mostrarUsuario(sesionGuardada);
-        if (document.readyState === 'complete') {
-            inicializarSDK(sesionGuardada.email);
-        } else {
-            window.addEventListener('load', () => inicializarSDK(sesionGuardada.email));
+            return;
         }
-        window.dispatchEvent(new CustomEvent('veteo:login', { detail: sesionGuardada }));
-        return;
-    }
 
-    if (document.readyState === 'complete') {
-        inicializarSDK(null);
+        const credencial = GoogleAuthProvider.credentialFromResult(resultado);
+        const tokenAcceso = credencial.accessToken;
+
+        window.location.href = "index.html";
+
+    } catch (error) {
+        console.error("Error en login:", error);
+        if (msjError) {
+            msjError.textContent = "Error al conectar con Google.";
+            msjError.hidden = false;
+        }
+    }
+}
+
+onAuthStateChanged(auth, (usuario) => {
+    const esPaginaLogin = window.location.pathname.includes('login.html');
+
+    if (usuario && correosAutorizados.includes(usuario.email)) {
+        if (esPaginaLogin) {
+            window.location.href = "index.html";
+        } else {
+            const saludo = document.getElementById('saludo-usuario');
+            if (saludo) saludo.textContent = `Hola, ${usuario.displayName}!`;
+        }
     } else {
-        window.addEventListener('load', () => inicializarSDK(null));
+        if (!esPaginaLogin) {
+            window.location.href = "login.html";
+        }
     }
-}
+});
 
-function inicializarSDK(sugerenciaEmail) {
-    if (typeof google === 'undefined') return;
-
-    google.accounts.id.initialize({
-        client_id: CONFIGURACION.googleClientId,
-        callback: window.manejarRespuestaCredenciales,
-    });
-
-    const elementoBoton = document.getElementById('google-btn');
-    if (elementoBoton && elementoBoton.style.display !== 'none') {
-        google.accounts.id.renderButton(elementoBoton, {
-            theme: 'filled_black',
-            size: 'medium',
-            shape: 'pill',
-            locale: 'es',
-        });
+export async function cerrarSesion() {
+    try {
+        await signOut(auth);
+    } catch (error) {
+        console.error("Error al cerrar sesión", error);
     }
-
-    clienteToken = google.accounts.oauth2.initTokenClient({
-        client_id: CONFIGURACION.googleClientId,
-        scope: 'https://www.googleapis.com/auth/drive.file https://www.googleapis.com/auth/spreadsheets',
-        hint: sugerenciaEmail || '',
-        callback: () => { },
-    });
-}
-
-window.manejarRespuestaCredenciales = function (respuesta) {
-    const cargaUtil = JSON.parse(atob(respuesta.credential.split('.')[1]));
-
-    guardarSesion(cargaUtil);
-    mostrarUsuario({
-        nombre: cargaUtil.given_name,
-        foto: cargaUtil.picture,
-        email: cargaUtil.email,
-        googleId: cargaUtil.sub,
-    });
-
-    if (clienteToken) {
-        clienteToken = google.accounts.oauth2.initTokenClient({
-            client_id: CONFIGURACION.googleClientId,
-            scope: 'https://www.googleapis.com/auth/drive.file https://www.googleapis.com/auth/spreadsheets',
-            hint: cargaUtil.email,
-            callback: () => { },
-        });
-    }
-};
-
-export function cerrarSesion() {
-    localStorage.removeItem(CLAVE_SESION);
-    tokenAcceso = null;
-    window.dispatchEvent(new CustomEvent('veteo:logout'));
-    location.reload();
 }
