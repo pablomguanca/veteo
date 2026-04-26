@@ -75,27 +75,49 @@ onAuthStateChanged(auth, (usuario) => {
     const esPaginaLogin = window.location.pathname.includes('login.html');
     const body = document.body;
 
-    if (usuario && correosAutorizados.includes(usuario.email)) {
-        if (esPaginaLogin) {
-            window.location.replace("index.html");
-        } else {
-            body.classList.remove('protegido');
-
-            const saludo = document.getElementById('saludo-usuario');
-            const foto = document.getElementById('usuario-foto');
-            const infoDiv = document.getElementById('usuario-info');
-
-            if (infoDiv) infoDiv.hidden = false;
-            if (saludo) saludo.textContent = `Hola, ${usuario.displayName || 'Equipo'}!`;
-            if (foto && usuario.photoURL) foto.src = usuario.photoURL;
-        }
-    } else {
-        if (!esPaginaLogin) {
-            window.location.replace("login.html");
-        } else {
-            body.classList.remove('protegido');
-        }
+    if (esPaginaLogin) {
+        window.location.replace("index.html");
+        return;
     }
+
+    body.classList.remove('protegido');
+
+    const saludo = document.getElementById('saludo-usuario');
+    const foto = document.getElementById('usuario-foto');
+    const infoDiv = document.getElementById('usuario-info');
+    const btnGoogleFront = document.getElementById('btn-google-front');
+
+    if (usuario && correosAutorizados.includes(usuario.email)) {
+        if (infoDiv) infoDiv.hidden = false;
+        if (btnGoogleFront) btnGoogleFront.hidden = true;
+        if (saludo) saludo.textContent = `Hola, ${usuario.displayName || 'Equipo'}!`;
+        if (foto && usuario.photoURL) foto.src = usuario.photoURL;
+    } else {
+        if (infoDiv) infoDiv.hidden = true;
+        if (btnGoogleFront) btnGoogleFront.hidden = false;
+    }
+
+    // if (usuario && correosAutorizados.includes(usuario.email)) {
+    //     if (esPaginaLogin) {
+    //         window.location.replace("index.html");
+    //     } else {
+    //         body.classList.remove('protegido');
+
+    //         const saludo = document.getElementById('saludo-usuario');
+    //         const foto = document.getElementById('usuario-foto');
+    //         const infoDiv = document.getElementById('usuario-info');
+
+    //         if (infoDiv) infoDiv.hidden = false;
+    //         if (saludo) saludo.textContent = `Hola, ${usuario.displayName || 'Equipo'}!`;
+    //         if (foto && usuario.photoURL) foto.src = usuario.photoURL;
+    //     }
+    // } else {
+    //     if (!esPaginaLogin) {
+    //         window.location.replace("login.html");
+    //     } else {
+    //         body.classList.remove('protegido');
+    //     }
+    // }
 });
 
 export function obtenerUsuarioActual() {
