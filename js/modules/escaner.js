@@ -4,34 +4,58 @@ let escaneando = false;
 async function iniciarEscaneo() {
     if (escaneando) return;
 
-    if (!lector) {
-        lector = new window.ZXing.BrowserMultiFormatReader();
-    }
-
     const contenedor = document.getElementById('modal-escaner');
     const videoEscaner = document.getElementById('video-camara');
     const botonEscanear = document.getElementById('btn-escanear');
 
     escaneando = true;
     contenedor.hidden = false;
-
-    if (botonEscanear) {
-        botonEscanear.disabled = true;
-    }
+    if (botonEscanear) botonEscanear.disabled = true;
 
     try {
-        await lector.decodeFromConstraints(
-            { video: { facingMode: 'environment' } },
-            videoEscaner,
-            (resultado, error) => {
+        const stream = await navigator.mediaDevices.getUserMedia({
+            video: { 
+                facingMode: 'environment',
+                width: { ideal: 1920 },
+                height: { ideal: 1080 },
+                advanced: [{ focusMode: "continuous" }]
+            }
+        });
+        
+        videoEscaner.srcObject = stream;
+        await videoEscaner.play();
+
+        if ('BarcodeDetector' in window) {
+            const detector = new window.BarcodeDetector({ formats: ['ean_13', 'ean_8', 'upc_a', 'upc_e', 'code_128'] });
+            
+            const bucleEscaneo = async () => {
+                if (!escaneando) return;
+                try {
+                    const codigos = await detector.detect(videoEscaner);
+                    if (codigos.length > 0) {
+                        detenerEscaneo();
+                        abrirModalConEAN(codigos[0].rawValue);
+                        return; 
+                    }
+                } catch (e) {
+                }
+                requestAnimationFrame(bucleEscaneo);
+            };
+            
+            bucleEscaneo();
+            
+        } else {
+            if (!lector) lector = new window.ZXing.BrowserMultiFormatReader();
+            lector.decodeFromVideoDevice(null, videoEscaner, (resultado, error) => {
                 if (resultado) {
                     detenerEscaneo();
                     abrirModalConEAN(resultado.text);
                 }
-            }
-        );
+            });
+        }
+
     } catch (error) {
-        console.error('Error al acceder a la cámara:', error);
+        console.error(error);
         detenerEscaneo();
     }
 }
@@ -41,21 +65,17 @@ function detenerEscaneo() {
     const videoEscaner = document.getElementById('video-camara');
     const botonEscanear = document.getElementById('btn-escanear');
 
-    if (lector) {
-        lector.reset();
-    }
+    escaneando = false; 
 
     if (videoEscaner && videoEscaner.srcObject) {
         videoEscaner.srcObject.getTracks().forEach(track => track.stop());
         videoEscaner.srcObject = null;
     }
 
-    escaneando = false;
-    contenedor.hidden = true;
+    if (lector) lector.reset(); 
 
-    if (botonEscanear) {
-        botonEscanear.disabled = false;
-    }
+    contenedor.hidden = true;
+    if (botonEscanear) botonEscanear.disabled = false;
 }
 
 function abrirModalConEAN(ean) {
