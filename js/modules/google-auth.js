@@ -73,20 +73,34 @@ export async function iniciarSesionGoogle() {
 
 onAuthStateChanged(auth, (usuario) => {
     const esPaginaLogin = window.location.pathname.includes('login.html');
+    const body = document.body;
 
     if (usuario && correosAutorizados.includes(usuario.email)) {
         if (esPaginaLogin) {
-            window.location.href = "index.html";
+            window.location.replace("index.html");
         } else {
+            body.classList.remove('protegido');
+
             const saludo = document.getElementById('saludo-usuario');
-            if (saludo) saludo.textContent = `Hola, ${usuario.displayName}!`;
+            const foto = document.getElementById('usuario-foto');
+            const infoDiv = document.getElementById('usuario-info');
+
+            if (infoDiv) infoDiv.hidden = false;
+            if (saludo) saludo.textContent = `Hola, ${usuario.displayName || 'Equipo'}!`;
+            if (foto && usuario.photoURL) foto.src = usuario.photoURL;
         }
     } else {
         if (!esPaginaLogin) {
-            window.location.href = "login.html";
+            window.location.replace("login.html");
+        } else {
+            body.classList.remove('protegido');
         }
     }
 });
+
+export function obtenerUsuarioActual() {
+    return auth.currentUser;
+}
 
 export async function cerrarSesion() {
     try {

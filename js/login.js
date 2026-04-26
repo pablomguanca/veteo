@@ -4,6 +4,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const btnGoogle = document.getElementById('btn-google');
     
     if (btnGoogle) {
-        btnGoogle.addEventListener('click', iniciarSesionGoogle);
+        btnGoogle.addEventListener('click', () => {
+            iniciarSesionGoogle();
+        });
     }
 });
