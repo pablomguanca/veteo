@@ -221,6 +221,7 @@ h3 {
 .eyebrow {
   font-family: "Google Sans Mono", monospace;
   font-size: 10px;
+  text-align: center;
   letter-spacing: 0.2em;
   color: #71737d;
   text-transform: uppercase;
@@ -387,6 +388,7 @@ h3 {
 .site-title {
   font-family: "Sora", sans-serif, sans-serif;
   font-size: clamp(2.2rem, 6vw, 4rem);
+  text-align: center;
   font-weight: 800;
   letter-spacing: -0.03em;
   line-height: 1;
