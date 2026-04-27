@@ -70,7 +70,10 @@ function formatearFecha(cadenaFecha) {
 
 async function apiObtenerTodo(usuario) {
     const parametros = new URLSearchParams({ action: 'getAll', email: usuario.email });
-    const respuesta = await fetch(`${CONFIGURACION.apiUrl}?${parametros.toString()}`);
+    const respuesta = await fetch(`${CONFIGURACION.apiUrl}?${parametros.toString()}`, {
+        method: 'GET',
+        redirect: 'follow'
+    });
     return respuesta.json();
 }
 
