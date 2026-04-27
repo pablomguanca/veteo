@@ -117,7 +117,7 @@ async function ejecutarCargaCompleta(item, tipo) {
     const FORMS = {
         PAS: { url: "https://docs.google.com/forms/d/e/1FAIpQLSduF5W6fBCrrCTkrMCnPrUgxNSjAE1_VWY3p9c5xVqFf5xM9Q/viewform", id: "entry.1279354663" },
         PFT: { url: "https://docs.google.com/forms/d/e/1FAIpQLSfz_CdCLjbi_Sbjh5KVv2a1BqoLLNuQWpc5sKNTTTgshPofCg/viewform" },
-        UM: { url: "https://docs.google.com/forms/d/1dGuyCKKq8ypnkzTzs94OL1KvPKBUFwgMPf0BlQ-ZwOw/viewform", id: "entry.899659779" },
+        UM: { url: "https://docs.google.com/forms/d/1dGuyCKKq8ypnkzTzs94OL1KvPKBUFwgMPf0BlQ-ZwOw/viewform", id: "entry.140972296" },
         S10: { url: "https://docs.google.com/forms/d/e/1FAIpQLSecPY7Wynn_Jqn8rob6F4IY61wLne3fsA_MjnQHiS8_ddMVAw/viewform", id:"entry.1275730876" },
         PCH: { url: "http://10.94.164.15:16000/pch/app/login" }
     };
