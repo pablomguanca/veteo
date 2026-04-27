@@ -56,6 +56,8 @@ self.addEventListener('activate', (evento) => {
 
 self.addEventListener('fetch', (evento) => {
     if (evento.request.method !== 'GET') return;
+    if (!evento.request.url.startsWith('http')) return;
+    if (evento.request.url.includes('script.google.com')) return;
 
     evento.respondWith(
         caches.match(evento.request).then((cacheado) => {
