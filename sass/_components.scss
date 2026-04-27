@@ -516,6 +516,14 @@
         transform v.$duration-base v.$ease,
         box-shadow v.$duration-base v.$ease;
 
+    @media (max-width: 600px) {
+        display: grid;
+        grid-template-columns: auto 1fr;
+        grid-template-rows: auto 1fr auto;
+        column-gap: 16px;
+        row-gap: 4px;
+    }
+
     &::before {
         content: "";
         position: absolute;
@@ -526,6 +534,35 @@
 
     &:hover {
         transform: translateY(-2px);
+    }
+
+    @media (max-width: 600px) {
+
+        .sdays {
+            grid-column: 1 / 2;
+            grid-row: 2 / 3;
+            font-size: 1.6rem;
+            align-self: center;
+        }
+
+        .stag {
+            grid-column: 1 / 2;
+            grid-row: 1 / 2;
+            align-self: flex-end;
+        }
+
+        .sdesc {
+            grid-column: 2 / 3;
+            grid-row: 1 / 3;
+            align-self: center;
+            align-self: flex-start;
+        }
+
+        .slinks {
+            grid-column: 1 / -1;
+            grid-row: 3 / 4;
+            margin-top: 8px;
+        }
     }
 }
 
