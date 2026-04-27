@@ -27,12 +27,14 @@ function mostrarUsuario(usuario) {
     const saludo = document.getElementById('saludo-usuario');
     const foto = document.getElementById('usuario-foto');
     const informacion = document.getElementById('usuario-info');
-    const botonContainer = document.getElementById('btn-google-front');
+    const loginOverlay = document.getElementById('login-overlay');
+    const appContent = document.getElementById('app-content');
 
     if (saludo) saludo.textContent = `Hola, ${usuario.nombre}!`;
     if (foto) foto.src = usuario.foto;
     if (informacion) informacion.hidden = false;
-    if (botonContainer) botonContainer.style.display = 'none';
+    if (loginOverlay) loginOverlay.style.display = 'none';
+    if (appContent) appContent.hidden = false;
 }
 
 
@@ -90,7 +92,7 @@ export function inicializarAutenticacionGoogle() {
         clienteToken = google.accounts.oauth2.initTokenClient({
             client_id: CONFIGURACION.googleClientId,
             scope: 'https://www.googleapis.com/auth/spreadsheets https://www.googleapis.com/auth/drive.file',
-            callback: () => {},
+            callback: () => { },
         });
     };
 

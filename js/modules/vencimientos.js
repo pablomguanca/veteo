@@ -175,7 +175,7 @@ export function inicializarVencimientos() {
         itemsActuales.push(nuevoItem);
         guardarItems(itemsActuales);
         renderizarItems(listaVencimientos, elementoVacio, itemsActuales);
-        cerrarModal(fondoModal, formularioVenc);
+        cerrarModal(fondoModal, document.getElementById('venc-form'));
         enviarVencimientoNube(nuevoItem);
     });
 
