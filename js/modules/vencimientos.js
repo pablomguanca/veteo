@@ -1,3 +1,5 @@
+import { obtenerUsuarioActual } from './google-auth.js';
+import { CONFIGURACION } from './config.js';
 import { alternarEstadoVacio } from '../utils/ui.js';
 
 const CLAVE_ALMACENAMIENTO_VENCIMIENTOS = 'veteo_vencimientos_v1';
@@ -106,7 +108,7 @@ function abrirModal(fondoModal) {
 function cerrarModal(fondoModal, formulario) {
     fondoModal.hidden = true;
     document.body.style.overflow = '';
-    formulario.reset();
+    formulario?.reset();
 }
 
 export function inicializarVencimientos() {
@@ -142,30 +144,39 @@ export function inicializarVencimientos() {
     });
 
     botonGuardar?.addEventListener('click', () => {
-        const nombreProducto = document.getElementById('f-producto')?.value.trim();
-        const fechaSeleccionada = document.getElementById('f-fecha')?.value;
-        const etapaSeleccionada = document.getElementById('f-etapa')?.value || 'auto';
-        const notaAdicional = document.getElementById('f-nota')?.value.trim();
+        const eanValor = document.getElementById('f-producto')?.value.trim();
+        const descValor = document.getElementById('f-descripcion')?.value.trim();
+        const secValor = document.getElementById('f-sec')?.value.trim();
+        const cantValor = document.getElementById('f-cantidad')?.value || 1;
+        const fechaValor = document.getElementById('f-fecha')?.value;
+        const etapaValor = document.getElementById('f-etapa')?.value || 'auto';
+        const notaValor = document.getElementById('f-nota')?.value.trim();
 
-        if (!nombreProducto || !fechaSeleccionada) {
-            if (!nombreProducto) document.getElementById('f-producto')?.classList.add('field__input--error');
-            if (!fechaSeleccionada) document.getElementById('f-fecha')?.classList.add('field__input--error');
+        if (!descValor || !fechaValor) {
+            if (!descValor) document.getElementById('f-descripcion')?.classList.add('field__input--error');
+            if (!fechaValor) document.getElementById('f-fecha')?.classList.add('field__input--error');
             return;
         }
 
-        const itemsActuales = cargarItems();
-        itemsActuales.push({
+        const nuevoItem = {
             id: `v_${Date.now()}`,
-            producto: nombreProducto,
-            fecha: fechaSeleccionada,
-            etapa: etapaSeleccionada,
-            nota: notaAdicional || '',
+            producto: descValor,
+            fecha: fechaValor,
+            etapa: etapaValor,
+            nota: notaValor,
             createdAt: new Date().toISOString(),
-        });
+            ean: eanValor,
+            descripcion: descValor,
+            sec: secValor,
+            cantidad: cantValor
+        };
 
+        const itemsActuales = cargarItems();
+        itemsActuales.push(nuevoItem);
         guardarItems(itemsActuales);
         renderizarItems(listaVencimientos, elementoVacio, itemsActuales);
-        cerrarModal(fondoModal, fondoModal);
+        cerrarModal(fondoModal, formularioVenc);
+        enviarVencimientoNube(nuevoItem);
     });
 
     ['f-producto', 'f-fecha'].forEach(idControl => {
@@ -182,4 +193,43 @@ export function inicializarVencimientos() {
         guardarItems(itemsActualizados);
         renderizarItems(listaVencimientos, elementoVacio, itemsActualizados);
     });
+}
+
+export async function enviarVencimientoNube(datosItem) {
+    const usuario = obtenerUsuarioActual();
+
+    if (!usuario) {
+        console.error("No se puede guardar en la nube: No hay usuario logueado.");
+        return;
+    }
+
+    const payload = {
+        action: 'saveVencimiento',
+        email: usuario.email,
+        datos: {
+            sec: datosItem.sec || '',
+            ean: datosItem.ean || '',
+            descripcion: datosItem.producto,
+            cantidad: datosItem.cantidad || 1,
+            fecha_vencimiento: datosItem.fecha,
+            nota: datosItem.nota || '',
+        }
+    };
+
+    try {
+        const respuesta = await fetch(CONFIGURACION.urlApiGoogle, {
+            method: 'POST',
+            body: JSON.stringify(payload)
+        });
+
+        const resultado = await respuesta.json();
+
+        if (resultado.ok) {
+            console.log(`✅ Producto "${datosItem.producto}" guardado en la hoja de ${usuario.email}`);
+        } else {
+            console.error("❌ Error del script de Google:", resultado.error);
+        }
+    } catch (error) {
+        console.error("❌ Error de red al enviar a Google:", error);
+    }
 }

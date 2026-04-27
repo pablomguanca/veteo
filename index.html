@@ -23,395 +23,461 @@
     <link href="https://fonts.googleapis.com/css2?family=Sora:wght@100..800&display=swap" rel="stylesheet">
 
     <link rel="stylesheet" href="./css/styles.css" />
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
 </head>
 
 <body class="protegido">
 
-    <div class="noise" aria-hidden="true"></div>
+    <body>
+        <div id="login-overlay" class="login-overlay">
+            <div class="login-card">
+                <h2>Veteo App</h2>
+                <p>Ingresá con tu cuenta para registrar vencimientos</p>
 
-    <main class="wrap">
-
-        <header class="header" role="banner">
-            <div class="eyebrow">Gestión de Vencimientos</div>
-            <h1 class="site-title">Veteo App</h1>
-
-            <button type="button" id="btn-google-front" class="btn-login-front">
-                <div class="btn-login-front__icon-wrapper">
-                    <svg class="btn-login-front__icon" viewBox="0 0 24 24">
-                        <path
-                            d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"
-                            fill="#4285F4" />
-                        <path
-                            d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"
-                            fill="#34A853" />
-                        <path
-                            d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"
-                            fill="#FBBC05" />
-                        <path
-                            d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"
-                            fill="#EA4335" />
-                    </svg>
-                </div>
-                <span class="btn-login-front__text">Ingresar con Google</span>
-            </button>
-
-            <div id="usuario-info" class="user-profile" hidden>
-                <img id="usuario-foto" src="" alt="foto de perfil" class="user-profile__avatar" />
-                <div class="user-profile__details">
-                    <p id="saludo-usuario" class="eyebrow user-profile__greeting"></p>
-                    <button type="button" id="btn-salir" class="btn-logout">Cerrar sesión</button>
-                </div>
+                <button type="button" id="btn-google-front" class="btn-login-front">
+                    <div class="btn-login-front__icon-wrapper">
+                        <svg class="btn-login-front__icon" viewBox="0 0 24 24">
+                            <path
+                                d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"
+                                fill="#4285F4" />
+                            <path
+                                d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"
+                                fill="#34A853" />
+                            <path
+                                d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"
+                                fill="#FBBC05" />
+                            <path
+                                d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"
+                                fill="#EA4335" />
+                        </svg>
+                    </div>
+                    <span class="btn-login-front__text">Ingresar con Google</span>
+                </button>
+                <p id="error-message" style="color: #ff4d4d; margin-top: 10px;" hidden></p>
             </div>
-        </header>
-
-        <aside class="vdb-alert vdb-alert--critical" id="notif-banner" hidden>
-            <span class="vdb-alert__icon" id="notif-banner-icon" aria-hidden="true">⚠️</span>
-            <span class="vdb-alert__text" id="notif-banner-text"></span>
-            <button class="vdb-alert__btn" id="notif-banner-btn"></button>
-            <button class="vdb-alert__close" id="notif-banner-close" aria-label="Cerrar">✕</button>
-        </aside>
-
-        <section class="today-card a1" role="region" aria-label="Resumen del día">
-            <div class="today-card__indicator">
-                <span class="live-dot live-dot--orange" aria-hidden="true"></span>
-            </div>
-            <div class="today-card__body">
-                <div class="label-tag">Qué hacer hoy</div>
-                <div class="today-msg" id="today-msg">Cargando…</div>
-            </div>
-        </section>
-
-        <div class="top-grid">
-
-            <section class="card a2" aria-label="Accesos rápidos">
-                <div class="card__label">Accesos rápidos</div>
-                <div class="card__title">Links frecuentes</div>
-                <nav class="chips" id="quick-chips" aria-label="Enlaces rápidos">
-                    <a class="chip" href="#tl">
-                        <span class="chip__dot chip__dot--blue"></span>Línea de tiempo
-                    </a>
-                    <a class="chip" href="#" data-link="pch" target="_blank" rel="noopener noreferrer">
-                        <span class="chip__dot chip__dot--green"></span>PCH
-                    </a>
-                    <a class="chip" href="#" data-link="ultimaMilla" target="_blank" rel="noopener noreferrer">
-                        <span class="chip__dot chip__dot--amber"></span>Última Milla
-                    </a>
-                    <a class="chip" href="#" data-link="formPas" target="_blank" rel="noopener noreferrer">
-                        <span class="chip__dot chip__dot--red"></span>Form PAS
-                    </a>
-                    <a class="chip" href="#" data-link="accEspeciales" target="_blank" rel="noopener noreferrer">
-                        <span class="chip__dot chip__dot--purple"></span>Acciones Especiales
-                    </a>
-                    <a class="chip" href="#sup">
-                        <span class="chip__dot chip__dot--violet"></span>Ver todos
-                    </a>
-                </nav>
-            </section>
-
-            <section class="card a3" aria-label="Checklist diario">
-                <div class="card__label">Diario</div>
-                <div class="card__title">Checklist</div>
-                <div class="checklist" id="checklist" role="list">
-                    <label class="ci" data-key="c1" role="listitem">
-                        <input type="checkbox" aria-label="Revisé vencimientos del día" />
-                        <span class="cbox" aria-hidden="true">✓</span>
-                        <span class="clabel">Revisé vencimientos del día</span>
-                    </label>
-                    <label class="ci" data-key="c2" role="listitem">
-                        <input type="checkbox" aria-label="Cargué los formularios necesarios" />
-                        <span class="cbox" aria-hidden="true">✓</span>
-                        <span class="clabel">Cargué los formularios necesarios</span>
-                    </label>
-                    <label class="ci" data-key="c3" role="listitem">
-                        <input type="checkbox" aria-label="Verifiqué pendientes y próximos cierres" />
-                        <span class="cbox" aria-hidden="true">✓</span>
-                        <span class="clabel">Verifiqué pendientes y próximos cierres</span>
-                    </label>
-                </div>
-                <div class="prog-wrap" role="progressbar" aria-valuemin="0" aria-valuemax="3" aria-valuenow="0"
-                    id="prog-bar">
-                    <div class="prog-fill" id="prog-fill"></div>
-                </div>
-                <div class="prog-meta">
-                    <span class="prog-txt" id="prog-txt">0 / 3</span>
-                    <button class="btn-ghost" id="reset-btn">↺ resetear</button>
-                </div>
-            </section>
-
         </div>
+        <div id="app-content" hidden>
+            <div class="noise" aria-hidden="true"></div>
 
-        <section class="card card--wide a3" aria-label="Gestión de vencimientos">
-            <div class="card-row">
-                <div>
-                    <div class="card__label">Gestión manual</div>
-                    <div class="card__title">Vencimientos cargados</div>
-                </div>
-                <div class="card-row__actions">
-                    <div class="card-row__actions-inner">
-                        <button class="btn-icon" id="btn-escanear" aria-label="Escanear producto con cámara">
-                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
-                                stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <main class="wrap">
+
+                <header class="header" role="banner">
+                    <div class="eyebrow">Gestión de Vencimientos</div>
+                    <h1 class="site-title">Veteo App</h1>
+
+                    <button type="button" id="btn-google-front" class="btn-login-front">
+                        <div class="btn-login-front__icon-wrapper">
+                            <svg class="btn-login-front__icon" viewBox="0 0 24 24">
                                 <path
-                                    d="M5.5 11.5V8a2.5 2.5 0 0 1 2.5-2.5h1.5l1.5-2h3l1.5 2H17A2.5 2.5 0 0 1 19.5 8v3.5" />
-                                <path d="M5.5 14.5V17A2.5 2.5 0 0 0 8 19.5h3.5" />
-                                <circle cx="12.5" cy="11.5" r="2.5" fill="currentColor" stroke="none" />
-                                <circle cx="18" cy="18" r="1.75" fill="currentColor" stroke="none" />
+                                    d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"
+                                    fill="#4285F4" />
+                                <path
+                                    d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"
+                                    fill="#34A853" />
+                                <path
+                                    d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"
+                                    fill="#FBBC05" />
+                                <path
+                                    d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"
+                                    fill="#EA4335" />
                             </svg>
-                        </button>
-                        <button class="btn-primary" id="add-venc-btn">+ Agregar</button>
+                        </div>
+                        <span class="btn-login-front__text">Ingresar con Google</span>
+                    </button>
+
+                    <div id="usuario-info" class="user-profile" hidden>
+                        <img id="usuario-foto" src="" alt="foto de perfil" class="user-profile__avatar" />
+                        <div class="user-profile__details">
+                            <p id="saludo-usuario" class="eyebrow user-profile__greeting"></p>
+                            <button type="button" id="btn-salir" class="btn-logout">Cerrar sesión</button>
+                        </div>
                     </div>
-                </div>
-            </div>
-
-            <div class="scrollable-list" id="venc-list" role="list">
-                <div class="venc-empty" id="venc-empty">
-                    <span>Sin vencimientos cargados</span>
-                    <span class="venc-empty__sub">Usá el botón para agregar productos críticos</span>
-                </div>
-            </div>
-        </section>
-
-        <div class="modal-backdrop" id="modal-backdrop" hidden aria-modal="true" role="dialog"
-            aria-label="Agregar vencimiento">
-            <div class="modal">
-                <header class="modal__header">
-                    <h2 class="modal__title">Agregar vencimiento</h2>
-                    <button class="modal__close" id="modal-close" aria-label="Cerrar modal">✕</button>
                 </header>
-                <div class="modal__body">
-                    <div class="field">
-                        <label class="field__label" for="f-producto">EAN</label>
-                        <input class="field__input" id="f-producto" type="text" placeholder="Ingresá el EAN"
-                            autocomplete="off" />
+
+                <aside class="vdb-alert vdb-alert--critical" id="notif-banner" hidden>
+                    <span class="vdb-alert__icon" id="notif-banner-icon" aria-hidden="true">⚠️</span>
+                    <span class="vdb-alert__text" id="notif-banner-text"></span>
+                    <button class="vdb-alert__btn" id="notif-banner-btn"></button>
+                    <button class="vdb-alert__close" id="notif-banner-close" aria-label="Cerrar">✕</button>
+                </aside>
+
+                <section class="today-card a1" role="region" aria-label="Resumen del día">
+                    <div class="today-card__indicator">
+                        <span class="live-dot live-dot--orange" aria-hidden="true"></span>
                     </div>
-                    <div class="field">
-                        <label class="field__label" for="f-descripcion">DESCRIPCIÓN</label>
-                        <input class="field__input" id="f-descripcion" type="text" placeholder="Ingresá la Descripción"
-                            autocomplete="off" />
+                    <div class="today-card__body">
+                        <div class="label-tag">Qué hacer hoy</div>
+                        <div class="today-msg" id="today-msg">Cargando…</div>
                     </div>
-                    <div class="field-row">
-                        <div class="field">
-                            <label class="field__label" for="f-fecha">Fecha de vencimiento</label>
-                            <input class="field__input" id="f-fecha" type="date" />
+                </section>
+
+                <div class="top-grid">
+
+                    <section class="card a2" aria-label="Accesos rápidos">
+                        <div class="card__label">Accesos rápidos</div>
+                        <div class="card__title">Links frecuentes</div>
+                        <nav class="chips" id="quick-chips" aria-label="Enlaces rápidos">
+                            <a class="chip" href="#tl">
+                                <span class="chip__dot chip__dot--blue"></span>Línea de tiempo
+                            </a>
+                            <a class="chip" href="#" data-link="pch" target="_blank" rel="noopener noreferrer">
+                                <span class="chip__dot chip__dot--green"></span>PCH
+                            </a>
+                            <a class="chip" href="#" data-link="ultimaMilla" target="_blank" rel="noopener noreferrer">
+                                <span class="chip__dot chip__dot--amber"></span>Última Milla
+                            </a>
+                            <a class="chip" href="#" data-link="formPas" target="_blank" rel="noopener noreferrer">
+                                <span class="chip__dot chip__dot--red"></span>Form PAS
+                            </a>
+                            <a class="chip" href="#" data-link="accEspeciales" target="_blank"
+                                rel="noopener noreferrer">
+                                <span class="chip__dot chip__dot--purple"></span>Acciones Especiales
+                            </a>
+                            <a class="chip" href="#sup">
+                                <span class="chip__dot chip__dot--violet"></span>Ver todos
+                            </a>
+                        </nav>
+                    </section>
+
+                    <section class="card a3" aria-label="Checklist diario">
+                        <div class="card__label">Diario</div>
+                        <div class="card__title">Checklist</div>
+                        <div class="checklist" id="checklist" role="list">
+                            <label class="ci" data-key="c1" role="listitem">
+                                <input type="checkbox" aria-label="Revisé vencimientos del día" />
+                                <span class="cbox" aria-hidden="true">✓</span>
+                                <span class="clabel">Revisé vencimientos del día</span>
+                            </label>
+                            <label class="ci" data-key="c2" role="listitem">
+                                <input type="checkbox" aria-label="Cargué los formularios necesarios" />
+                                <span class="cbox" aria-hidden="true">✓</span>
+                                <span class="clabel">Cargué los formularios necesarios</span>
+                            </label>
+                            <label class="ci" data-key="c3" role="listitem">
+                                <input type="checkbox" aria-label="Verifiqué pendientes y próximos cierres" />
+                                <span class="cbox" aria-hidden="true">✓</span>
+                                <span class="clabel">Verifiqué pendientes y próximos cierres</span>
+                            </label>
                         </div>
-                        <div class="field">
-                            <label class="field__label" for="f-etapa">Etapa</label>
-                            <select class="field__input field__select" id="f-etapa">
-                                <option value="auto">Automático (por fecha)</option>
-                                <option value="-90">−90 días</option>
-                                <option value="-60">−60 días</option>
-                                <option value="-30">−30 días</option>
-                                <option value="-7">−7 días</option>
-                            </select>
+                        <div class="prog-wrap" role="progressbar" aria-valuemin="0" aria-valuemax="3" aria-valuenow="0"
+                            id="prog-bar">
+                            <div class="prog-fill" id="prog-fill"></div>
+                        </div>
+                        <div class="prog-meta">
+                            <span class="prog-txt" id="prog-txt">0 / 3</span>
+                            <button class="btn-ghost" id="reset-btn">↺ resetear</button>
+                        </div>
+                    </section>
+
+                </div>
+
+                <section class="card card--wide a3" aria-label="Gestión de vencimientos">
+                    <div class="card-row">
+                        <div>
+                            <div class="card__label">Gestión manual</div>
+                            <div class="card__title">Vencimientos cargados</div>
+                        </div>
+                        <div class="card-row__actions">
+                            <div class="card-row__actions-inner">
+                                <button class="btn-icon" id="btn-escanear" aria-label="Escanear producto con cámara">
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
+                                        stroke="currentColor" stroke-width="2.5" stroke-linecap="round"
+                                        stroke-linejoin="round">
+                                        <path
+                                            d="M5.5 11.5V8a2.5 2.5 0 0 1 2.5-2.5h1.5l1.5-2h3l1.5 2H17A2.5 2.5 0 0 1 19.5 8v3.5" />
+                                        <path d="M5.5 14.5V17A2.5 2.5 0 0 0 8 19.5h3.5" />
+                                        <circle cx="12.5" cy="11.5" r="2.5" fill="currentColor" stroke="none" />
+                                        <circle cx="18" cy="18" r="1.75" fill="currentColor" stroke="none" />
+                                    </svg>
+                                </button>
+                                <button class="btn-primary" id="add-venc-btn">+ Agregar</button>
+                            </div>
                         </div>
                     </div>
-                    <div class="field">
-                        <label class="field__label" for="f-nota">Nota (opcional)</label>
-                        <input class="field__input" id="f-nota" type="text" placeholder="Ej: Pasillo de Almacén"
-                            autocomplete="off" />
+
+                    <div class="scrollable-list" id="venc-list" role="list">
+                        <div class="venc-empty" id="venc-empty">
+                            <span>Sin vencimientos cargados</span>
+                            <span class="venc-empty__sub">Usá el botón para agregar productos críticos</span>
+                        </div>
+                    </div>
+                </section>
+
+                <div class="modal-backdrop" id="modal-backdrop" hidden aria-modal="true" role="dialog"
+                    aria-label="Agregar vencimiento">
+                    <div class="modal">
+                        <header class="modal__header">
+                            <h2 class="modal__title">Agregar vencimiento</h2>
+                            <button class="modal__close" id="modal-close" aria-label="Cerrar modal">✕</button>
+                        </header>
+                        <div class="modal__body">
+                            <form id="venc-form">
+                                <div class="field">
+                                    <label class="field__label" for="f-producto">EAN</label>
+                                    <input class="field__input" id="f-producto" type="text" placeholder="Ingresá el EAN"
+                                        autocomplete="off" />
+                                </div>
+
+                                <div class="field">
+                                    <label class="field__label" for="f-descripcion">DESCRIPCIÓN</label>
+                                    <input class="field__input" id="f-descripcion" type="text"
+                                        placeholder="Ingresá la Descripción" autocomplete="off" />
+                                </div>
+
+                                <div class="field-row">
+                                    <div class="field">
+                                        <label class="field__label" for="f-sec">SECCIÓN</label>
+                                        <input class="field__input" id="f-sec" type="number" placeholder="Ej: 102"
+                                            autocomplete="off" />
+                                    </div>
+                                    <div class="field">
+                                        <label class="field__label" for="f-cantidad">CANTIDAD</label>
+                                        <input class="field__input" id="f-cantidad" type="number" value="1" min="1" />
+                                    </div>
+                                </div>
+
+                                <div class="field-row">
+                                    <div class="field">
+                                        <label class="field__label" for="f-fecha">Fecha de vencimiento</label>
+                                        <input class="field__input" id="f-fecha" type="date" />
+                                    </div>
+                                    <div class="field">
+                                        <label class="field__label" for="f-etapa">Etapa</label>
+                                        <select class="field__input field__select" id="f-etapa">
+                                            <option value="auto">Automático (por fecha)</option>
+                                            <option value="-90">−90 días</option>
+                                            <option value="-60">−60 días</option>
+                                            <option value="-30">−30 días</option>
+                                            <option value="-7">−7 días</option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div class="field">
+                                    <label class="field__label" for="f-nota">Nota (opcional)</label>
+                                    <input class="field__input" id="f-nota" type="text"
+                                        placeholder="Ej: Pasillo de Almacén" autocomplete="off" />
+                                </div>
+                            </form>
+                        </div>
+                        <footer class="modal__footer">
+                            <button class="btn-ghost" id="modal-cancel">Cancelar</button>
+                            <button class="btn-primary" id="modal-save">Guardar</button>
+                        </footer>
                     </div>
                 </div>
-                <footer class="modal__footer">
-                    <button class="btn-ghost" id="modal-cancel">Cancelar</button>
-                    <button class="btn-primary" id="modal-save">Guardar</button>
+
+                <section class="card card--wide a3" aria-label="Base de datos de vencimientos" id="vdb-section">
+                    <div class="card-row">
+                        <div class="card__header-text">
+                            <div class="card__label">Génesix → Sheets</div>
+                            <div class="card__title">Vencimientos Importados</div>
+                        </div>
+                        <div class="card__header-actions"> <button class="btn-ghost" id="vdb-refresh-btn">↺
+                                Actualizar</button>
+                            <button class="btn-primary" id="vdb-import-btn">↑ Importar</button>
+                            <input type="file" id="vdb-file-input" accept=".txt" class="u-hidden" />
+                        </div>
+                    </div>
+
+                    <div class="vdb-status" id="vdb-status"></div>
+
+                    <div class="vdb-list" id="vdb-list" role="list">
+                        <div class="venc-empty" id="vdb-empty">
+                            <span>Sin datos importados</span>
+                            <span class="venc-empty__sub">Importá el Listado de Vencimientos</span>
+                        </div>
+                    </div>
+                </section>
+
+                <h2 class="sec-label a4" id="tl">Línea de tiempo operativa</h2>
+                <div class="tl-grid a4">
+
+                    <article class="stage s-violet">
+                        <div class="stag">Anticipación</div>
+                        <div class="sdays">−90</div>
+                        <p class="sdesc">Gestiones iniciales asociadas a PGC de mayor anticipación.</p>
+                        <div class="slinks">
+                            <a class="slink" href="#sup">Ver formularios <span class="sarr">↗</span></a>
+                        </div>
+                    </article>
+
+                    <article class="stage s-green">
+                        <div class="stag">Etapa temprana</div>
+                        <div class="sdays">−60</div>
+                        <p class="sdesc">PCH y acciones de consumo inmediato antes de la ventana crítica.</p>
+                        <div class="slinks">
+                            <a class="slink" href="#" data-link="pch" target="_blank" rel="noopener noreferrer">Abrir
+                                PCH <span class="sarr">↗</span></a>
+                        </div>
+                    </article>
+
+                    <article class="stage s-red">
+                        <div class="stag">Etapa crítica</div>
+                        <div class="sdays">−30</div>
+                        <p class="sdesc">Gestión activa de PAS, bebidas y formularios de operatoria principal.</p>
+                        <div class="slinks">
+                            <a class="slink" href="#" data-link="formPas" target="_blank" rel="noopener noreferrer">Form
+                                PAS
+                                <span class="sarr">↗</span></a>
+                            <a class="slink" href="#" data-link="accEspeciales" target="_blank"
+                                rel="noopener noreferrer">Acciones
+                                Especiales <span class="sarr">↗</span></a>
+                        </div>
+                    </article>
+
+                    <article class="stage s-amber">
+                        <div class="stag">Última instancia</div>
+                        <div class="sdays">−7</div>
+                        <p class="sdesc">Última milla para productos PGC próximos al vencimiento.</p>
+                        <div class="slinks">
+                            <a class="slink" href="#" data-link="ultimaMilla" target="_blank"
+                                rel="noopener noreferrer">Última
+                                Milla <span class="sarr">↗</span></a>
+                        </div>
+                    </article>
+
+                </div>
+
+                <h2 class="sec-label a5" id="sup">Formularios y recursos</h2>
+                <div class="sup-grid a5">
+
+                    <article class="card">
+                        <div class="card__label">Vencimientos</div>
+                        <div class="card__title">Formularios activos</div>
+                        <nav class="llist" aria-label="Enlaces de Vencimientos">
+                            <a class="lcard" href="#" data-link="pch" target="_blank" rel="noopener noreferrer">
+                                <div><strong>PCH</strong><span>PGC de 8 a 60 días. Lunes a viernes hábiles. Solo por
+                                        PC.</span>
+                                </div><span class="larr">↗</span>
+                            </a>
+                            <a class="lcard" href="#" data-link="formPas" target="_blank" rel="noopener noreferrer">
+                                <div><strong>Form PAS</strong><span>Productos PAS exceptuados de PCH. De 8 a 30 días.
+                                        Lunes a
+                                        viernes
+                                        hábiles.</span></div><span class="larr">↗</span>
+                            </a>
+                            <a class="lcard" href="#" data-link="accEspeciales" target="_blank"
+                                rel="noopener noreferrer">
+                                <div><strong>Form Acciones Especiales</strong><span>Bebidas, Carrefour y Bulnez. De 8 a
+                                        30 días.
+                                        Viernes a
+                                        lunes hábiles.</span></div><span class="larr">↗</span>
+                            </a>
+                            <a class="lcard" href="#" data-link="formPft" target="_blank" rel="noopener noreferrer">
+                                <div><strong>Form PFT</strong><span>Productos PFT. Viernes a miércoles hábiles. Sector
+                                        PFT.</span></div>
+                                <span class="larr">↗</span>
+                            </a>
+                            <a class="lcard" href="#" data-link="formPftCarnes" target="_blank"
+                                rel="noopener noreferrer">
+                                <div><strong>Form PFT Carnes</strong><span>Cargas antes de las 14 hs impactan al día
+                                        siguiente.
+                                        Sáb./Dom.
+                                        impactan el martes.</span></div><span class="larr">↗</span>
+                            </a>
+                            <a class="lcard" href="#" data-link="ultimaMilla" target="_blank" rel="noopener noreferrer">
+                                <div><strong>Última Milla</strong><span>PGC de 2 a 7 días previos al vencimiento.
+                                        Lun–Vie 15–11
+                                        hs; Vie 15
+                                        hs → Lun 11 hs.</span></div><span class="larr">↗</span>
+                            </a>
+                        </nav>
+                    </article>
+
+                    <article class="card">
+                        <div class="card__label">Calidad y devoluciones</div>
+                        <div class="card__title">Formularios</div>
+                        <nav class="llist" aria-label="Enlaces de Calidad">
+                            <a class="lcard" href="#" data-link="formCalidad" target="_blank" rel="noopener noreferrer">
+                                <div><strong>Form Calidad</strong><span>Problemas en productos PFT y PGC. Carga
+                                        mensual.</span>
+                                </div><span class="larr">↗</span>
+                            </a>
+                            <a class="lcard" href="#" data-link="formMolinos" target="_blank" rel="noopener noreferrer">
+                                <div><strong>Form Molinos</strong><span>Devoluciones Molinos y La Salteña. Carga
+                                        mensual.</span>
+                                </div><span class="larr">↗</span>
+                            </a>
+                            <a class="lcard" href="#" data-link="formLevex" target="_blank" rel="noopener noreferrer">
+                                <div><strong>Form Levex</strong><span>Devoluciones de levaduras. Carga mensual.</span>
+                                </div>
+                                <span class="larr">↗</span>
+                            </a>
+                        </nav>
+                    </article>
+
+                    <article class="card">
+                        <div class="card__label">Rescates</div>
+                        <div class="card__title">Formularios</div>
+                        <nav class="llist" aria-label="Enlaces de Rescates">
+                            <a class="lcard" href="#" data-link="formRescates" target="_blank"
+                                rel="noopener noreferrer">
+                                <div><strong>Formulario Rescates</strong><span>Disponible del viernes a las 16hs hasta
+                                        el lunes
+                                        a las 9
+                                        hs.</span></div>
+                                <span class="larr">↗</span>
+                            </a>
+                        </nav>
+                    </article>
+
+                </div>
+
+                <section class="card card--wide a6" aria-label="Configuración de notificaciones" id="notif-section">
+                    <div class="card-row">
+                        <div>
+                            <div class="card__label">Alertas automáticas</div>
+                            <div class="card__title">¡Activá las Notificaciones!</div>
+                        </div>
+                        <div class="notif-status" id="notif-status">
+                            <span class="notif-status__dot" id="notif-dot"></span>
+                            <span class="notif-status__text" id="notif-status-text">Sin configurar</span>
+                        </div>
+                    </div>
+                    <p class="card__desc">Recibí recordatorios diarios para optimizar tu gestión. Se enviarán
+                        automáticamente
+                        todos los días a las 08:00 hs.</p>
+                    <div class="notif-controls" id="notif-controls">
+                        <button class="btn-primary" id="notif-enable-btn">Activar notificaciones</button>
+                    </div>
+                    <div class="notif-active" id="notif-active" hidden>
+                        <div class="notif-active__info">
+                            <span class="live-dot live-dot--green" style="width:8px;height:8px"></span>
+                            <span id="notif-active-text">Recordatorio activo de todos los días a las 08:00 hs.</span>
+                        </div>
+                        <button class="btn-ghost btn-ghost--danger" id="notif-disable-btn">Desactivar</button>
+                    </div>
+                </section>
+
+                <footer class="footer a6" role="contentinfo">
+                    <span>Veteo App</span>
+                    <span>Desarrollado por Pablo Guanca</span>
+                    <span class="mono">v1.0</span>
                 </footer>
+
+            </main>
+            <div id="modal-escaner" class="modal-escaner" role="dialog" aria-modal="true"
+                aria-labelledby="titulo-escaner" hidden>
+                <div class="modal-escaner__contenido">
+
+                    <header class="modal-escaner__cabecera">
+                        <h2 id="titulo-escaner" class="modal-escaner__titulo">Escanear Producto</h2>
+                        <button id="btn-cerrar-escaner" class="btn-cerrar"
+                            aria-label="Cerrar cámara de escáner">&times;</button>
+                    </header>
+
+                    <div class="modal-escaner__video-wrapper" aria-hidden="true">
+                        <video id="video-camara" playsinline></video>
+                        <div class="modal-escaner__mirilla"></div>
+                    </div>
+
+                    <p class="modal-escaner__texto">Enfocá el código de barras en el centro</p>
+                </div>
             </div>
         </div>
-
-        <section class="card card--wide a3" aria-label="Base de datos de vencimientos" id="vdb-section">
-            <div class="card-row">
-                <div class="card__header-text">
-                    <div class="card__label">Génesix → Sheets</div>
-                    <div class="card__title">Vencimientos Importados</div>
-                </div>
-                <div class="card__header-actions"> <button class="btn-ghost" id="vdb-refresh-btn">↺ Actualizar</button>
-                    <button class="btn-primary" id="vdb-import-btn">↑ Importar</button>
-                    <input type="file" id="vdb-file-input" accept=".txt" class="u-hidden" />
-                </div>
-            </div>
-
-            <div class="vdb-status" id="vdb-status"></div>
-
-            <div class="vdb-list" id="vdb-list" role="list">
-                <div class="venc-empty" id="vdb-empty">
-                    <span>Sin datos importados</span>
-                    <span class="venc-empty__sub">Importá el Listado de Vencimientos</span>
-                </div>
-            </div>
-        </section>
-
-        <h2 class="sec-label a4" id="tl">Línea de tiempo operativa</h2>
-        <div class="tl-grid a4">
-
-            <article class="stage s-violet">
-                <div class="stag">Anticipación</div>
-                <div class="sdays">−90</div>
-                <p class="sdesc">Gestiones iniciales asociadas a PGC de mayor anticipación.</p>
-                <div class="slinks">
-                    <a class="slink" href="#sup">Ver formularios <span class="sarr">↗</span></a>
-                </div>
-            </article>
-
-            <article class="stage s-green">
-                <div class="stag">Etapa temprana</div>
-                <div class="sdays">−60</div>
-                <p class="sdesc">PCH y acciones de consumo inmediato antes de la ventana crítica.</p>
-                <div class="slinks">
-                    <a class="slink" href="#" data-link="pch" target="_blank" rel="noopener noreferrer">Abrir PCH <span
-                            class="sarr">↗</span></a>
-                </div>
-            </article>
-
-            <article class="stage s-red">
-                <div class="stag">Etapa crítica</div>
-                <div class="sdays">−30</div>
-                <p class="sdesc">Gestión activa de PAS, bebidas y formularios de operatoria principal.</p>
-                <div class="slinks">
-                    <a class="slink" href="#" data-link="formPas" target="_blank" rel="noopener noreferrer">Form PAS
-                        <span class="sarr">↗</span></a>
-                    <a class="slink" href="#" data-link="accEspeciales" target="_blank"
-                        rel="noopener noreferrer">Acciones
-                        Especiales <span class="sarr">↗</span></a>
-                </div>
-            </article>
-
-            <article class="stage s-amber">
-                <div class="stag">Última instancia</div>
-                <div class="sdays">−7</div>
-                <p class="sdesc">Última milla para productos PGC próximos al vencimiento.</p>
-                <div class="slinks">
-                    <a class="slink" href="#" data-link="ultimaMilla" target="_blank" rel="noopener noreferrer">Última
-                        Milla <span class="sarr">↗</span></a>
-                </div>
-            </article>
-
-        </div>
-
-        <h2 class="sec-label a5" id="sup">Formularios y recursos</h2>
-        <div class="sup-grid a5">
-
-            <article class="card">
-                <div class="card__label">Vencimientos</div>
-                <div class="card__title">Formularios activos</div>
-                <nav class="llist" aria-label="Enlaces de Vencimientos">
-                    <a class="lcard" href="#" data-link="pch" target="_blank" rel="noopener noreferrer">
-                        <div><strong>PCH</strong><span>PGC de 8 a 60 días. Lunes a viernes hábiles. Solo por PC.</span>
-                        </div><span class="larr">↗</span>
-                    </a>
-                    <a class="lcard" href="#" data-link="formPas" target="_blank" rel="noopener noreferrer">
-                        <div><strong>Form PAS</strong><span>Productos PAS exceptuados de PCH. De 8 a 30 días. Lunes a
-                                viernes
-                                hábiles.</span></div><span class="larr">↗</span>
-                    </a>
-                    <a class="lcard" href="#" data-link="accEspeciales" target="_blank" rel="noopener noreferrer">
-                        <div><strong>Form Acciones Especiales</strong><span>Bebidas, Carrefour y Bulnez. De 8 a 30 días.
-                                Viernes a
-                                lunes hábiles.</span></div><span class="larr">↗</span>
-                    </a>
-                    <a class="lcard" href="#" data-link="formPft" target="_blank" rel="noopener noreferrer">
-                        <div><strong>Form PFT</strong><span>Productos PFT. Viernes a miércoles hábiles. Sector
-                                PFT.</span></div>
-                        <span class="larr">↗</span>
-                    </a>
-                    <a class="lcard" href="#" data-link="formPftCarnes" target="_blank" rel="noopener noreferrer">
-                        <div><strong>Form PFT Carnes</strong><span>Cargas antes de las 14 hs impactan al día siguiente.
-                                Sáb./Dom.
-                                impactan el martes.</span></div><span class="larr">↗</span>
-                    </a>
-                    <a class="lcard" href="#" data-link="ultimaMilla" target="_blank" rel="noopener noreferrer">
-                        <div><strong>Última Milla</strong><span>PGC de 2 a 7 días previos al vencimiento. Lun–Vie 15–11
-                                hs; Vie 15
-                                hs → Lun 11 hs.</span></div><span class="larr">↗</span>
-                    </a>
-                </nav>
-            </article>
-
-            <article class="card">
-                <div class="card__label">Calidad y devoluciones</div>
-                <div class="card__title">Formularios</div>
-                <nav class="llist" aria-label="Enlaces de Calidad">
-                    <a class="lcard" href="#" data-link="formCalidad" target="_blank" rel="noopener noreferrer">
-                        <div><strong>Form Calidad</strong><span>Problemas en productos PFT y PGC. Carga mensual.</span>
-                        </div><span class="larr">↗</span>
-                    </a>
-                    <a class="lcard" href="#" data-link="formMolinos" target="_blank" rel="noopener noreferrer">
-                        <div><strong>Form Molinos</strong><span>Devoluciones Molinos y La Salteña. Carga mensual.</span>
-                        </div><span class="larr">↗</span>
-                    </a>
-                    <a class="lcard" href="#" data-link="formLevex" target="_blank" rel="noopener noreferrer">
-                        <div><strong>Form Levex</strong><span>Devoluciones de levaduras. Carga mensual.</span></div>
-                        <span class="larr">↗</span>
-                    </a>
-                </nav>
-            </article>
-
-            <article class="card">
-                <div class="card__label">Rescates</div>
-                <div class="card__title">Formularios</div>
-                <nav class="llist" aria-label="Enlaces de Rescates">
-                    <a class="lcard" href="#" data-link="formRescates" target="_blank" rel="noopener noreferrer">
-                        <div><strong>Formulario Rescates</strong><span>Disponible del viernes a las 16hs hasta el lunes
-                                a las 9
-                                hs.</span></div>
-                        <span class="larr">↗</span>
-                    </a>
-                </nav>
-            </article>
-
-        </div>
-
-        <section class="card card--wide a6" aria-label="Configuración de notificaciones" id="notif-section">
-            <div class="card-row">
-                <div>
-                    <div class="card__label">Alertas automáticas</div>
-                    <div class="card__title">¡Activá las Notificaciones!</div>
-                </div>
-                <div class="notif-status" id="notif-status">
-                    <span class="notif-status__dot" id="notif-dot"></span>
-                    <span class="notif-status__text" id="notif-status-text">Sin configurar</span>
-                </div>
-            </div>
-            <p class="card__desc">Recibí recordatorios diarios para optimizar tu gestión. Se enviarán automáticamente
-                todos los días a las 08:00 hs.</p>
-            <div class="notif-controls" id="notif-controls">
-                <button class="btn-primary" id="notif-enable-btn">Activar notificaciones</button>
-            </div>
-            <div class="notif-active" id="notif-active" hidden>
-                <div class="notif-active__info">
-                    <span class="live-dot live-dot--green" style="width:8px;height:8px"></span>
-                    <span id="notif-active-text">Recordatorio activo de todos los días a las 08:00 hs.</span>
-                </div>
-                <button class="btn-ghost btn-ghost--danger" id="notif-disable-btn">Desactivar</button>
-            </div>
-        </section>
-
-        <footer class="footer a6" role="contentinfo">
-            <span>Veteo App</span>
-            <span>Desarrollado por Pablo Guanca</span>
-            <span class="mono">v1.0</span>
-        </footer>
-
-    </main>
-    <div id="modal-escaner" class="modal-escaner" role="dialog" aria-modal="true" aria-labelledby="titulo-escaner"
-        hidden>
-        <div class="modal-escaner__contenido">
-
-            <header class="modal-escaner__cabecera">
-                <h2 id="titulo-escaner" class="modal-escaner__titulo">Escanear Producto</h2>
-                <button id="btn-cerrar-escaner" class="btn-cerrar"
-                    aria-label="Cerrar cámara de escáner">&times;</button>
-            </header>
-
-            <div class="modal-escaner__video-wrapper" aria-hidden="true">
-                <video id="video-camara" playsinline></video>
-                <div class="modal-escaner__mirilla"></div>
-            </div>
-
-            <p class="modal-escaner__texto">Enfocá el código de barras en el centro</p>
-        </div>
-    </div>
-    <script src="https://unpkg.com/@zxing/library@latest/umd/index.min.js"></script>
-    <script src="./js/app.js" type="module"></script>
-</body>
+        <script src="https://unpkg.com/@zxing/library@latest/umd/index.min.js"></script>
+        <script src="./js/app.js" type="module"></script>
+    </body>
 
 </html>

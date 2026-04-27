@@ -14,20 +14,20 @@ async function iniciarEscaneo() {
 
     try {
         const stream = await navigator.mediaDevices.getUserMedia({
-            video: { 
+            video: {
                 facingMode: 'environment',
                 width: { ideal: 1920 },
                 height: { ideal: 1080 },
                 advanced: [{ focusMode: "continuous" }]
             }
         });
-        
+
         videoEscaner.srcObject = stream;
         await videoEscaner.play();
 
         if ('BarcodeDetector' in window) {
             const detector = new window.BarcodeDetector({ formats: ['ean_13', 'ean_8', 'upc_a', 'upc_e', 'code_128'] });
-            
+
             const bucleEscaneo = async () => {
                 if (!escaneando) return;
                 try {
@@ -35,15 +35,15 @@ async function iniciarEscaneo() {
                     if (codigos.length > 0) {
                         detenerEscaneo();
                         abrirModalConEAN(codigos[0].rawValue);
-                        return; 
+                        return;
                     }
                 } catch (e) {
                 }
                 requestAnimationFrame(bucleEscaneo);
             };
-            
+
             bucleEscaneo();
-            
+
         } else {
             if (!lector) lector = new window.ZXing.BrowserMultiFormatReader();
             lector.decodeFromVideoDevice(null, videoEscaner, (resultado, error) => {
@@ -65,14 +65,14 @@ function detenerEscaneo() {
     const videoEscaner = document.getElementById('video-camara');
     const botonEscanear = document.getElementById('btn-escanear');
 
-    escaneando = false; 
+    escaneando = false;
 
     if (videoEscaner && videoEscaner.srcObject) {
         videoEscaner.srcObject.getTracks().forEach(track => track.stop());
         videoEscaner.srcObject = null;
     }
 
-    if (lector) lector.reset(); 
+    if (lector) lector.reset();
 
     contenedor.hidden = true;
     if (botonEscanear) botonEscanear.disabled = false;

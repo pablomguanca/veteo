@@ -1,4 +1,4 @@
-import { cerrarSesion, iniciarSesionGoogle } from './google-auth.js'; // Importamos la función de entrar también
+import { cerrarSesion, iniciarSesionGoogle } from './google-auth.js';
 
 export function inicializarSesionUI() {
     const btnSalir = document.getElementById('btn-salir');
