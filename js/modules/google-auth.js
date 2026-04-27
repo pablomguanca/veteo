@@ -82,9 +82,11 @@ export function inicializarAutenticacionGoogle() {
             const elementoBoton = document.getElementById('btn-google-front');
             if (elementoBoton) {
                 google.accounts.id.renderButton(elementoBoton, {
-                    theme: 'filled_black',
+                    theme: 'filled_blue',
                     size: 'large',
                     shape: 'pill',
+                    text: 'signin_with',
+                    width: 300
                 });
             }
         }
@@ -118,4 +120,8 @@ export function cerrarSesion() {
     localStorage.removeItem(CLAVE_SESION);
     tokenAcceso = null;
     location.reload();
+}
+
+export function obtenerUsuarioActual() {
+    return cargarSesion();
 }
