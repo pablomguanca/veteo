@@ -220,7 +220,7 @@ export function inicializarNotificaciones() {
         establecerEstado(puntoEstado, textoEstado, 'Activo', 'activo');
         if (controles) controles.hidden = true;
         if (panelActivo) panelActivo.hidden = false;
-        if (textoActivo) textoActivo.textContent = 'Recordatorio activo de lunes a viernes a las 08:00 hs.';
+        if (textoActivo) textoActivo.textContent = 'Recibirás recordatorios diarios a las 08:00 hs.';
     }
 
     function mostrarEstadoInactivo() {
