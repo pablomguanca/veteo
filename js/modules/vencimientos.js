@@ -217,7 +217,7 @@ export async function enviarVencimientoNube(datosItem) {
     };
 
     try {
-        const respuesta = await fetch(CONFIGURACION.urlApiGoogle, {
+        const respuesta = await fetch(CONFIGURACION.apiUrl, {
             method: 'POST',
             body: JSON.stringify(payload)
         });

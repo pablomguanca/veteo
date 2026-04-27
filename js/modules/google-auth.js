@@ -106,14 +106,21 @@ export function inicializarAutenticacionGoogle() {
 }
 
 function manejarRespuestaCredenciales(respuesta) {
-    const cargaUtil = JSON.parse(atob(respuesta.credential.split('.')[1]));
+    const base64Url = respuesta.credential.split('.')[1];
+    const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+    const jsonPayload = decodeURIComponent(window.atob(base64).split('').map(function (c) {
+        return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+    }).join(''));
+
+    const cargaUtil = JSON.parse(jsonPayload);
+
     guardarSesion(cargaUtil);
     mostrarUsuario({
         nombre: cargaUtil.given_name,
         foto: cargaUtil.picture,
         email: cargaUtil.email,
     });
-    location.reload();
+    window.location.href = 'index.html';
 }
 
 export function cerrarSesion() {

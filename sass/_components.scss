@@ -1051,3 +1051,32 @@
     width: 100%;
     margin: 16px 0;
 }
+
+.btn-logout {
+    background: rgba(255, 77, 77, 0.1);
+    border: 1px solid rgba(255, 77, 77, 0.25);
+    border-radius: 6px;
+    padding: 5px 12px;
+    margin-top: 4px;
+    width: fit-content;
+
+    color: #ff4d4d;
+    font-size: 0.75rem;
+    font-weight: 600;
+    font-family: inherit;
+    text-decoration: none;
+    cursor: pointer;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+
+    &:hover {
+        background: rgba(255, 77, 77, 0.2);
+        border-color: rgba(255, 77, 77, 0.4);
+        color: #ff6b6b;
+        transform: translateY(-1px);
+    }
+
+    &:active {
+        transform: translateY(0);
+        opacity: 0.8;
+    }
+}
