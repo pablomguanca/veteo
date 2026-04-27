@@ -9,8 +9,11 @@ import { inicializarBaseDatosVencimientos } from './modules/vencimientos-db.js';
 import { inicializarEnlaces } from './modules/enlaces.js';
 import { inicializarEscaner } from './modules/escaner.js';
 import { inicializarSesionUI } from './modules/sesion-ui.js';
+import { inicializarAutenticacionGoogle } from './modules/google-auth.js'; 
 
 document.addEventListener('DOMContentLoaded', () => {
+    inicializarAutenticacionGoogle(); 
+
     inicializarFecha();
     inicializarMensajeDelDia();
     inicializarChecklist();
@@ -21,5 +24,5 @@ document.addEventListener('DOMContentLoaded', () => {
     inicializarBaseDatosVencimientos();
     inicializarEnlaces();
     inicializarEscaner();
-    inicializarSesionUI();
+    inicializarSesionUI(); 
 });
