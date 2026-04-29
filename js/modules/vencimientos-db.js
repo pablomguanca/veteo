@@ -203,7 +203,8 @@ function renderizarTabla(contenedor, elementoVacio, filas) {
         const vto = item.vencimiento || item.VENCIMIENTO;
         const desc = item.descripcion || item.DESCRIPCION;
         const sec = parseInt(item.sec || item.SEC);
-        const cant = item.cantidad || item.CANTIDAD;
+        const cantRaw = item.cantidad || item.CANTIDAD;
+        const cant = ! isNaN(parseFloat(cantRaw)) ? parseFloat(cantRaw).toString().replace('.', ',') : cantRaw;
         const estado = item.ESTADO || 'PENDIENTE';
 
         const dias = obtenerDiasRestantes(vto);
