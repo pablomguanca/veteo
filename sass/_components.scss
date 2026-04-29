@@ -893,6 +893,7 @@
     display: grid;
     grid-template-columns: 60px minmax(0, 1fr) auto;
     align-items: stretch;
+    min-height: 64px;
     background: v.$surface-2;
     border-radius: v.$radius-sm;
     border: 1px solid v.$border;
