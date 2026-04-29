@@ -1,4 +1,5 @@
 import { CONFIGURACION } from './config.js';
+import { iniciarTour } from './tour.js';
 
 const CLAVE_SESION = 'veteo_user';
 let tokenAcceso = null;
@@ -35,8 +36,13 @@ function mostrarUsuario(usuario) {
     if (informacion) informacion.hidden = false;
     if (loginOverlay) loginOverlay.style.display = 'none';
     if (appContent) appContent.hidden = false;
-}
 
+    setTimeout(() => {
+        if (typeof iniciarTour === 'function') {
+            iniciarTour();
+        }
+    }, 2000);
+}
 
 export function obtenerTokenAcceso() {
     return new Promise((resolver, rechazar) => {
