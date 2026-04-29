@@ -1303,7 +1303,7 @@ h3 {
   .vdb-row__name {
     font-size: 14px;
     font-weight: 500;
-    line-height: 1.25;
+    line-height: 1.3;
   }
 }
 .vdb-row__meta {
@@ -1318,6 +1318,7 @@ h3 {
 @media (max-width: 600px) {
   .vdb-row__meta {
     line-height: 1.3;
+    font-size: 12.5px;
   }
 }
 .vdb-row__actions {
