@@ -237,7 +237,7 @@ function renderizarTabla(contenedor, elementoVacio, filas) {
                 <button class="copy-btn" title="Copiar EAN">
                     <div class="copy-icon"></div>
                 </button>
-                <button class="action-btn action-btn--main" id="btn-main-${ean}">${labelPrincipal}</button>
+                <button class="action-btn action-btn--main" id="btn-main-${ean}" data-action="${labelPrincipal}">${labelPrincipal}</button>
                 ${mostrarUM ? `<button class="action-btn action-btn--um">UM</button>` : ''}
             </div>
         `;
