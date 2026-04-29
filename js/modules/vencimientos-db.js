@@ -118,7 +118,7 @@ async function ejecutarCargaCompleta(item, tipo) {
         PAS: { url: "https://docs.google.com/forms/d/e/1FAIpQLSduF5W6fBCrrCTkrMCnPrUgxNSjAE1_VWY3p9c5xVqFf5xM9Q/viewform", id: "entry.1279354663" },
         PFT: { url: "https://docs.google.com/forms/d/e/1FAIpQLSfz_CdCLjbi_Sbjh5KVv2a1BqoLLNuQWpc5sKNTTTgshPofCg/viewform" },
         UM: { url: "https://docs.google.com/forms/d/1dGuyCKKq8ypnkzTzs94OL1KvPKBUFwgMPf0BlQ-ZwOw/viewform", id: "entry.140972296" },
-        S10: { url: "https://docs.google.com/forms/d/e/1FAIpQLSecPY7Wynn_Jqn8rob6F4IY61wLne3fsA_MjnQHiS8_ddMVAw/viewform", id:"entry.1275730876" },
+        S10: { url: "https://docs.google.com/forms/d/e/1FAIpQLSecPY7Wynn_Jqn8rob6F4IY61wLne3fsA_MjnQHiS8_ddMVAw/viewform", id: "entry.1275730876" },
         PCH: { url: "http://10.94.164.15:16000/pch/app/login" }
     };
 
@@ -225,18 +225,21 @@ function renderizarTabla(contenedor, elementoVacio, filas) {
 
         elemento.innerHTML = `
             <div class="vdb-row__left">
-                <span class="venc-badge ${etapa.claseCSS}">${etapa.etiqueta}</span>
-            </div>
-            <div class="vdb-row__info">
-                <div class="vdb-row__name">${escaparHTML(desc)}</div>
-                <div class="vdb-row__meta">
-                    EAN ${escaparHTML(ean)} · SEC ${sec} · ${textoVence} · ${textoDias} · Cant: ${cant}
-                </div>
-            </div>
-            <div class="vdb-row__actions">
                 <button class="copy-btn" title="Copiar EAN">
                     <div class="copy-icon"></div>
                 </button>
+            </div>
+
+            <div class="vdb-row__info">
+                <span class="venc-badge ${etapa.claseCSS}">${etapa.etiqueta}</span>
+                <div class="vdb-row__name">${escaparHTML(desc)}</div>
+                <div class="vdb-row__meta">
+                    EAN ${escaparHTML(ean)} · SEC ${sec} <br>
+                    ${textoVence} · Cant: ${cant}
+                </div>
+            </div>
+
+            <div class="vdb-row__actions">
                 <button class="action-btn action-btn--main" id="btn-main-${ean}">${labelPrincipal}</button>
                 ${mostrarUM ? `<button class="action-btn action-btn--um">UM</button>` : ''}
             </div>
