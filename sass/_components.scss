@@ -1044,6 +1044,34 @@
         opacity: 0.5;
         filter: grayscale(0.5);
     }
+
+    @media (max-width: 600px) {
+        .vdb-row {
+            grid-template-columns: 60px minmax(0, 1fr);
+            grid-template-rows: auto auto;
+
+            &__left {
+                grid-row: 1 / 3;
+                border-right: 1px solid v.$border;
+            }
+
+            &__info {
+                grid-column: 2;
+                grid-row: 1;
+                padding-bottom: 8px;
+            }
+
+            &__actions {
+                grid-column: 2;
+                grid-row: 2;
+                flex-direction: row;
+                justify-content: flex-start;
+                border-left: none;
+                border-top: 1px solid v.$border;
+                padding: 8px 14px;
+            }
+        }
+    }
 }
 
 .estado-btn {
