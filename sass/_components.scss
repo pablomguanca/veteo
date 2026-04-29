@@ -889,7 +889,7 @@
     }
 }
 
-vdb-row {
+.vdb-row {
     display: grid;
     grid-template-columns: auto minmax(0, 1fr) auto;
     background: v.$surface-2;

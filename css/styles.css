@@ -1282,7 +1282,7 @@ h3 {
   border-color: rgba(255, 255, 255, 0.065);
 }
 
-vdb-row {
+.vdb-row {
   display: grid;
   grid-template-columns: auto minmax(0, 1fr) auto;
   background: #17191f;
@@ -1295,12 +1295,12 @@ vdb-row {
   animation: fadeUp 400ms cubic-bezier(0.4, 0, 0.2, 1) both;
 }
 @media (max-width: 600px) {
-  vdb-row {
+  .vdb-row {
     grid-template-columns: auto 1fr;
     gap: 10px;
   }
 }
-vdb-row__meta {
+.vdb-row__meta {
   font-family: "Google Sans Mono", monospace;
   display: flex;
   align-items: center;
@@ -1309,20 +1309,20 @@ vdb-row__meta {
   font-size: 0.75rem;
   color: #71737d;
 }
-vdb-row__actions {
+.vdb-row__actions {
   display: flex;
   align-items: center;
   gap: 8px;
 }
 @media (max-width: 600px) {
-  vdb-row__actions {
+  .vdb-row__actions {
     grid-column: 1/-1;
     justify-content: flex-end;
     padding-top: 12px;
     border-top: 1px solid rgba(255, 255, 255, 0.065);
   }
 }
-vdb-row .copy-btn {
+.vdb-row .copy-btn {
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -1334,12 +1334,12 @@ vdb-row .copy-btn {
   cursor: pointer;
   transition: 0.3s;
 }
-vdb-row .copy-btn .copy-icon {
+.vdb-row .copy-btn .copy-icon {
   position: relative;
   width: 14px;
   height: 14px;
 }
-vdb-row .copy-btn .copy-icon::before, vdb-row .copy-btn .copy-icon::after {
+.vdb-row .copy-btn .copy-icon::before, .vdb-row .copy-btn .copy-icon::after {
   content: "";
   position: absolute;
   width: 10px;
@@ -1347,24 +1347,24 @@ vdb-row .copy-btn .copy-icon::before, vdb-row .copy-btn .copy-icon::after {
   border: 2px solid white;
   border-radius: 2px;
 }
-vdb-row .copy-btn .copy-icon::before {
+.vdb-row .copy-btn .copy-icon::before {
   top: 2px;
   left: 2px;
   opacity: 0.4;
 }
-vdb-row .copy-btn .copy-icon::after {
+.vdb-row .copy-btn .copy-icon::after {
   top: -1px;
   left: -1px;
   background: #0a0b0e;
 }
-vdb-row .copy-btn.copied {
+.vdb-row .copy-btn.copied {
   background: #2e3038;
 }
-vdb-row .copy-btn.copied .copy-icon::before,
-vdb-row .copy-btn.copied .copy-icon::after {
+.vdb-row .copy-btn.copied .copy-icon::before,
+.vdb-row .copy-btn.copied .copy-icon::after {
   border-color: #1e2028;
 }
-vdb-row .action-btn {
+.vdb-row .action-btn {
   padding: 8px 16px;
   height: 32px;
   border-radius: 6px;
@@ -1373,28 +1373,28 @@ vdb-row .action-btn {
   border: none;
   cursor: pointer;
 }
-vdb-row .action-btn:hover {
+.vdb-row .action-btn:hover {
   background-color: rgba(110, 231, 183, 0.13);
   color: #eeeae3;
 }
-vdb-row .action-btn--main {
+.vdb-row .action-btn--main {
   background: #1e2028;
   color: #eeeae3;
 }
-vdb-row .action-btn--main[id*=PAS] {
+.vdb-row .action-btn--main[id*=PAS] {
   border-bottom: 2px solid #22c55e;
 }
-vdb-row .action-btn--main[id*=PFT] {
+.vdb-row .action-btn--main[id*=PFT] {
   border-bottom: 2px solid #ef4444;
 }
-vdb-row .action-btn--main[id*=PCH] {
+.vdb-row .action-btn--main[id*=PCH] {
   border-bottom: 2px solid #3b82f6;
 }
-vdb-row .action-btn--um {
+.vdb-row .action-btn--um {
   background: #f59e0b;
   color: #000;
 }
-vdb-row--done {
+.vdb-row--done {
   opacity: 0.5;
   filter: grayscale(0.5);
 }
