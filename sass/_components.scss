@@ -891,12 +891,12 @@
 
 .vdb-row {
     display: grid;
-    grid-template-columns: 50px minmax(0, 1fr) auto;
+    grid-template-columns: 60px minmax(0, 1fr) auto;
     align-items: stretch;
     background: v.$surface-2;
-    border-radius: 12px;
+    border-radius: v.$radius-sm;
     border: 1px solid v.$border;
-    margin-bottom: 12px;
+    margin-bottom: 10px;
     overflow: hidden;
     transition: border-color v.$duration-fast, opacity 0.3s;
     animation: fadeUp v.$duration-slow v.$ease both;
@@ -913,8 +913,8 @@
         padding: 12px 14px;
         display: flex;
         flex-direction: column;
-        align-items: flex-start;
-        gap: 6px;
+        gap: 5px;
+        min-width: 0;
     }
 
     &__name {
@@ -942,32 +942,37 @@
         justify-content: center;
         padding: 0 12px;
         border-left: 1px solid v.$border;
-        gap: 8px;
+        gap: 6px;
     }
 
     .copy-btn {
         display: inline-flex;
         align-items: center;
         justify-content: center;
-        width: 100%;
-        height: 100%;
-        background: transparent;
-        border: none;
+        width: 28px;
+        height: 28px;
+        background: rgba(255, 255, 255, 0.04);
+        border: 1px solid v.$border;
+        border-radius: v.$radius-xs;
         cursor: pointer;
-        transition: 0.3s;
+        transition: background v.$duration-fast;
+
+        &:hover {
+            background: rgba(255, 255, 255, 0.08);
+        }
 
         .copy-icon {
             position: relative;
-            width: 14px;
-            height: 14px;
+            width: 12px;
+            height: 12px;
 
             &::before,
             &::after {
                 content: "";
                 position: absolute;
-                width: 10px;
-                height: 12px;
-                border: 2px solid white;
+                width: 8px;
+                height: 10px;
+                border: 1.5px solid rgba(255, 255, 255, 0.5);
                 border-radius: 2px;
             }
 
@@ -985,26 +990,29 @@
         }
 
         &.copied {
-            background: v.$dim;
+            background: v.$green-glow;
+            border-color: v.$green-border;
 
             .copy-icon::before,
             .copy-icon::after {
-                border-color: v.$surface-3;
+                border-color: v.$green;
             }
         }
     }
 
     .action-btn {
-        padding: 8px 16px;
+        padding: 6px 14px;
         height: 32px;
-        border-radius: 6px;
+        border-radius: v.$radius-xs;
         font-size: 0.75rem;
         font-weight: 700;
         border: none;
         cursor: pointer;
+        white-space: nowrap;
+        transition: background v.$duration-fast;
 
         &:hover {
-            background-color: v.$green-glow;
+            background: v.$green-glow;
             color: v.$text;
         }
 
