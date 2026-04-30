@@ -14,7 +14,7 @@ export function iniciarTour() {
         steps: [
             {
                 popover: {
-                    title: '¡Bienvenido a Veteo! 🚀',
+                    title: '¡Bienvenido a Veteo App! 🚀',
                     description: 'Te voy a guiar por las funciones principales de la plataforma. ¡Empecemos!'
                 }
             },
