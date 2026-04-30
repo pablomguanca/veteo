@@ -185,16 +185,16 @@
         color: #ffffff !important;
         font-weight: 600 !important;
         font-family: 'Sora' !important;
-        @media (max-width: 560px)  {
-            font-size: 14px;
+        @media (max-width: 500px)  {
+            font-size: 12.5px !important;
         }
     }
 
     &-description {
         color: rgba(255, 255, 255, 0.6) !important;
         font-family: inherit !important;
-        @media (max-width: 560px)  {
-            font-size: 12px;
+        @media (max-width: 500px)  {
+            font-size: 11px !important;
         }
     }
 

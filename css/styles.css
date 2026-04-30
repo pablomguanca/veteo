@@ -1748,18 +1748,18 @@ h3 {
   font-weight: 600 !important;
   font-family: "Sora" !important;
 }
-@media (max-width: 560px) {
+@media (max-width: 500px) {
   .driver-popover-title {
-    font-size: 14px;
+    font-size: 12.5px !important;
   }
 }
 .driver-popover-description {
   color: rgba(255, 255, 255, 0.6) !important;
   font-family: inherit !important;
 }
-@media (max-width: 560px) {
+@media (max-width: 500px) {
   .driver-popover-description {
-    font-size: 12px;
+    font-size: 11px !important;
   }
 }
 .driver-popover-progress-text {
