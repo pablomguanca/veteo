@@ -14,8 +14,8 @@ export function iniciarTour() {
         steps: [
             {
                 popover: {
-                    title: '¡Bienvenido a Veteo! 🚀',
-                    description: 'Te vamos a guiar por las funciones principales de la plataforma. ¡Empecemos!'
+                    title: '¡Bienvenido a Veteo App! 🚀',
+                    description: 'Te voy a guiar por las funciones principales de la plataforma. ¡Empecemos!'
                 }
             },
             {
@@ -26,13 +26,30 @@ export function iniciarTour() {
                     side: "left",
                     align: 'start'
                 }
-
             },
             {
-                element: '#vdb-import-btn',
+                element: '.today-card a1',
                 popover: {
-                    title: 'Importar Vencimientos 📥',
-                    description: 'Desde acá vas a poder subir el archivo TXT que descargás de GNX a través de FTP.',
+                    title: 'Aquí empiemza tu día ☕',
+                    description: 'Revisá la sugerencia del día para empezar tu rutina.',
+                    side: "bottom",
+                    align: 'start'
+                }
+            },
+            {
+                element: '.chip',
+                popover: {
+                    title: 'Enlaces rápidos 🔗',
+                    description: 'Accedé a los links frecuentes que usamos a diario',
+                    side: "right",
+                    align: 'start'
+                }
+            },
+            {
+                element: '.card a3',
+                popover: {
+                    title: 'Tu checklist personal ✅',
+                    description: 'Registrá el paso a paso de tu recorrida',
                     side: "bottom",
                     align: 'start'
                 }
@@ -40,9 +57,54 @@ export function iniciarTour() {
             {
                 element: '.vdb-row',
                 popover: {
-                    title: 'Listado de VTO 🔥',
+                    title: 'Listado de Vencimiento 🔥',
                     description: 'Acá vas a ver todos los productos y podés cargarlos directamente o copiar su EAN a golpe de click',
                     side: "left",
+                    align: 'start'
+                }
+            },
+            {
+                element: '.card card--wide a3',
+                popover: {
+                    title: 'Capturá productos críticos 📸📋',
+                    description: 'Escaneá o tipeá el EAN de cada producto crítico y agregá la info para registrarlo en tu base de datos',
+                    side: "top",
+                    align: 'start'
+                }
+            },
+            {
+                element: '#btn-escanear',
+                popover: {
+                    title: 'Capturá próximos a vencer 📸',
+                    description: 'Usá la scanner o tipeá los EAN que no estén en el lisatdo de GNX para tener mayor seguimiento',
+                    side: "bottom",
+                    align: 'start'
+                }
+            },
+            {
+                element: '.stage',
+                popover: {
+                    title: 'Línea de Tiempo ⏳',
+                    description: 'Guiate con nuestra línea de tiempo operativa para gestionar mejor',
+                    side: "left",
+                    align: 'start'
+                }
+            },
+            {
+                element: '.lcard',
+                popover: {
+                    title: 'Conocé el estado de los formularios 🟢',
+                    description: 'Observá la luz verde para saber si un form está abierto o cerrado',
+                    side: "right",
+                    align: 'start'
+                }
+            },
+            {
+                element: '#notif-enable-btn',
+                popover: {
+                    title: 'Recibí notificaciones diarias! 🛎️',
+                    description: 'Activá las notificaciones para enviarte recordatorios todos los días',
+                    side: "bottom",
                     align: 'start'
                 }
             }

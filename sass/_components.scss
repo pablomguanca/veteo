@@ -1003,29 +1003,13 @@
         cursor: pointer;
 
         &:hover {
-            background-color: v.$green-glow;
+            background-color: v.$dim;
             color: v.$text;
         }
 
         &--main {
             background: v.$surface-3;
             color: v.$text;
-
-            &[data-action*="PAS"] {
-                border-right: 2px solid #f6ff00;
-            }
-
-            &[data-action*="PFT"] {
-                border-right: 2px solid #00bd19;
-            }
-
-            &[data-action*="PCH"] {
-                border-right: 2px solid #002aff;
-            }
-
-            &[data-action*="ACC"] {
-                border-right: 2px solid #8808ea;
-            }
         }
 
         &--um {

@@ -190,6 +190,11 @@ function renderizarTabla(contenedor, elementoVacio, filas) {
     alternarEstadoVacio(elementoVacio, true);
 
     const filasFiltradas = filas.filter(item => {
+        const sec = parseInt(item.sec || item.SEC);
+        if ([30, 31, 32, 33].includes(sec)) {
+            return false;
+        }
+
         const dias = obtenerDiasRestantes(item.vencimiento || item.VENCIMIENTO);
         return dias !== null && dias >= 0;
     });
@@ -201,10 +206,10 @@ function renderizarTabla(contenedor, elementoVacio, filas) {
     filasOrdenadas.forEach(item => {
         const ean = item.ean || item.EAN;
         const vto = item.vencimiento || item.VENCIMIENTO;
-        const desc = item.descripcion || item.DESCRIPCION;
+        const desc = item.descripcion || item.DESCRIPCION || "";
         const sec = parseInt(item.sec || item.SEC);
         const cantRaw = item.cantidad || item.CANTIDAD;
-        const cant = ! isNaN(parseFloat(cantRaw)) ? parseFloat(cantRaw).toString().replace('.', ',') : cantRaw;
+        const cant = !isNaN(parseFloat(cantRaw)) ? parseFloat(cantRaw).toString().replace('.', ',') : cantRaw;
         const estado = item.ESTADO || 'PENDIENTE';
 
         const dias = obtenerDiasRestantes(vto);
@@ -213,13 +218,26 @@ function renderizarTabla(contenedor, elementoVacio, filas) {
         const textoVence = dias === 0 ? 'Vence hoy' : `Vence el ${formatearFecha(vto)}`;
         const textoDias = dias < 0 ? `Vencido hace ${Math.abs(dias)}d` : `${dias}d restantes`;
 
-        let labelPrincipal = "CARGAR";
-        if (sec === 10) labelPrincipal = "ACC";
-        if (sec === 15) labelPrincipal = "PAS";
-        if ([20, 22, 23, 24, 26].includes(sec)) labelPrincipal = "PFT";
-        if (sec === 14) labelPrincipal = "PCH";
+        let labelPrincipal = "";
+        const descMinuscula = desc.toLowerCase();
+        const esPFT = [20, 22, 23, 24, 26].includes(sec);
+
+        if (esPFT) {
+            labelPrincipal = "PFT";
+        } else if (descMinuscula.includes("carrefour")) {
+            labelPrincipal = "ACC";
+        } else if ([10, 34].includes(sec)) {
+            labelPrincipal = "ACC";
+        } else if (sec === 15) {
+            labelPrincipal = "PAS";
+        } else if (sec === 14) {
+            labelPrincipal = "PCH";
+        }
 
         const mostrarUM = (sec === 14 || sec === 15 || sec === 10) && (dias >= 3 && dias <= 7);
+        if (mostrarUM) {
+            labelPrincipal = "";
+        }
 
         const elemento = document.createElement('div');
         elemento.className = `vdb-row ${estado.includes('CARGADO') ? 'vdb-row--done' : ''}`;
@@ -238,13 +256,17 @@ function renderizarTabla(contenedor, elementoVacio, filas) {
                 <button class="copy-btn" title="Copiar EAN">
                     <div class="copy-icon"></div>
                 </button>
-                <button class="action-btn action-btn--main" id="btn-main-${ean}" data-action="${labelPrincipal}">${labelPrincipal}</button>
+                ${labelPrincipal ? `<button class="action-btn action-btn--main" id="btn-main-${ean}" data-action="${labelPrincipal}">${labelPrincipal}</button>` : ''}
                 ${mostrarUM ? `<button class="action-btn action-btn--um">UM</button>` : ''}
             </div>
         `;
 
         elemento.querySelector('.copy-btn').onclick = (e) => copiarEAN(ean, e);
-        elemento.querySelector('.action-btn--main').onclick = () => ejecutarCargaCompleta(item, 'PRINCIPAL');
+
+        const btnMain = elemento.querySelector('.action-btn--main');
+        if (btnMain) {
+            btnMain.onclick = () => ejecutarCargaCompleta(item, 'PRINCIPAL');
+        }
 
         if (mostrarUM) {
             elemento.querySelector('.action-btn--um').onclick = () => ejecutarCargaCompleta(item, 'UM');

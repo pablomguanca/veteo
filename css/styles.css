@@ -1386,24 +1386,12 @@ h3 {
   cursor: pointer;
 }
 .vdb-row .action-btn:hover {
-  background-color: rgba(110, 231, 183, 0.13);
+  background-color: #2e3038;
   color: #eeeae3;
 }
 .vdb-row .action-btn--main {
   background: #1e2028;
   color: #eeeae3;
-}
-.vdb-row .action-btn--main[data-action*=PAS] {
-  border-right: 2px solid #f6ff00;
-}
-.vdb-row .action-btn--main[data-action*=PFT] {
-  border-right: 2px solid #00bd19;
-}
-.vdb-row .action-btn--main[data-action*=PCH] {
-  border-right: 2px solid #002aff;
-}
-.vdb-row .action-btn--main[data-action*=ACC] {
-  border-right: 2px solid #8808ea;
 }
 .vdb-row .action-btn--um {
   background: #f59e0b;
@@ -1757,11 +1745,21 @@ h3 {
 .driver-popover-title {
   color: #ffffff !important;
   font-weight: 600 !important;
-  font-family: inherit !important;
+  font-family: "Sora" !important;
+}
+@media (max-width: 560px) {
+  .driver-popover-title {
+    font-size: 16px;
+  }
 }
 .driver-popover-description {
   color: rgba(255, 255, 255, 0.6) !important;
   font-family: inherit !important;
+}
+@media (max-width: 560px) {
+  .driver-popover-description {
+    font-size: 14px;
+  }
 }
 .driver-popover-progress-text {
   color: rgba(255, 255, 255, 0.5) !important;
