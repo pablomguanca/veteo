@@ -14,7 +14,7 @@ export function iniciarTour() {
         steps: [
             {
                 popover: {
-                    title: '¡Bienvenido a Veteo App! 🚀',
+                    title: '¡Bienvenido a Veteo! 🚀',
                     description: 'Te voy a guiar por las funciones principales de la plataforma. ¡Empecemos!'
                 }
             },
@@ -23,30 +23,30 @@ export function iniciarTour() {
                 popover: {
                     title: 'Menú de perfil 👤',
                     description: 'Desde acá podés ver tu cuenta y cerrar sesión cuando quieras.',
-                    side: "left",
-                    align: 'start'
-                }
-            },
-            {
-                element: '.today-card a1',
-                popover: {
-                    title: 'Aquí empiemza tu día ☕',
-                    description: 'Revisá la sugerencia del día para empezar tu rutina.',
                     side: "bottom",
                     align: 'start'
                 }
             },
             {
-                element: '.chip',
+                element: '#today-msg',
                 popover: {
-                    title: 'Enlaces rápidos 🔗',
-                    description: 'Accedé a los links frecuentes que usamos a diario',
+                    title: 'Aquí empieza tu día ☕',
+                    description: 'Revisá la sugerencia del día para empezar tu rutina.',
                     side: "right",
                     align: 'start'
                 }
             },
             {
-                element: '.card a3',
+                element: '#quick-chips',
+                popover: {
+                    title: 'Enlaces rápidos 🔗',
+                    description: 'Accedé a los links frecuentes que usamos a diario',
+                    side: "left",
+                    align: 'start'
+                }
+            },
+            {
+                element: '#checklist',
                 popover: {
                     title: 'Tu checklist personal ✅',
                     description: 'Registrá el paso a paso de tu recorrida',
@@ -55,28 +55,37 @@ export function iniciarTour() {
                 }
             },
             {
-                element: '.vdb-row',
+                element: '#vdb-import-btn',
                 popover: {
-                    title: 'Listado de Vencimiento 🔥',
-                    description: 'Acá vas a ver todos los productos y podés cargarlos directamente o copiar su EAN a golpe de click',
-                    side: "left",
+                    title: 'Importá tu listado de Vencimientos 📄',
+                    description: 'Subí el archivo (.TXT) que descargás del GNX a través de FTP ¡sin filtrar ni ordenar previamente!😉',
+                    side: "bottom",
                     align: 'start'
                 }
             },
             {
-                element: '.card card--wide a3',
+                element: '.vdb-row',
                 popover: {
-                    title: 'Capturá productos críticos 📸📋',
-                    description: 'Escaneá o tipeá el EAN de cada producto crítico y agregá la info para registrarlo en tu base de datos',
-                    side: "top",
+                    title: 'Donde sucede la magia ✨',
+                    description: 'Acá van a listarse tus productos: ordenados por fecha, etiquetado con su etapa (7, 30, 60, 90) y listos para cargar en su form o copiar su EAN',
+                    side: "right",
+                    align: 'start'
+                }
+            },
+            {
+                element: '#add-venc-btn',
+                popover: {
+                    title: 'Capturá productos críticos 📋',
+                    description: 'Ingresá el EAN de cada producto crítico y agregá la info para registrarlo en tu base de datos',
+                    side: "bottom",
                     align: 'start'
                 }
             },
             {
                 element: '#btn-escanear',
                 popover: {
-                    title: 'Capturá próximos a vencer 📸',
-                    description: 'Usá la scanner o tipeá los EAN que no estén en el lisatdo de GNX para tener mayor seguimiento',
+                    title: 'Escaneá próximos a vencer 📸',
+                    description: 'También podés usar el scanner: activá los permisos de la cámara y escaneá ⚡',
                     side: "bottom",
                     align: 'start'
                 }

@@ -191,7 +191,7 @@ function renderizarTabla(contenedor, elementoVacio, filas) {
 
     const filasFiltradas = filas.filter(item => {
         const sec = parseInt(item.sec || item.SEC);
-        if ([30, 31, 32, 33].includes(sec)) {
+        if ([30, 31, 32, 33, 65, 83].includes(sec)) {
             return false;
         }
 
@@ -230,7 +230,7 @@ function renderizarTabla(contenedor, elementoVacio, filas) {
             labelPrincipal = "ACC";
         } else if (sec === 15) {
             labelPrincipal = "PAS";
-        } else if (sec === 14) {
+        } else if ([11, 14].includes(sec)) {
             labelPrincipal = "PCH";
         }
 
