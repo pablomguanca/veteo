@@ -248,9 +248,9 @@ export function inicializarVencimientos() {
         enviarVencimientoNube(nuevoItem);
     });
 
-    ['f-producto', 'f-fecha'].forEach(idControl => {
+    ['f-producto', 'f-sec', 'f-cantidad'].forEach(idControl => {
         document.getElementById(idControl)?.addEventListener('input', evento => {
-            evento.target.classList.remove('field__input--error');
+            evento.target.value = evento.target.value.replace(/[^0-9]/g, '');
         });
     });
 

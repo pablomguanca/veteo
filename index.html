@@ -175,7 +175,7 @@
                         <form id="venc-form">
                             <div class="field">
                                 <label class="field__label" for="f-producto">EAN</label>
-                                <input class="field__input" id="f-producto" type="text" placeholder="Ingresá el EAN"
+                                <input class="field__input" id="f-producto" type="text" inputmode="numeric" pattern="[0-9]*" placeholder="Ingresá el EAN"
                                     autocomplete="off" />
                             </div>
 
@@ -188,12 +188,12 @@
                             <div class="field-row">
                                 <div class="field">
                                     <label class="field__label" for="f-sec">SECCIÓN</label>
-                                    <input class="field__input" id="f-sec" type="number" placeholder="Ej: 14"
+                                    <input class="field__input" id="f-sec" type="text" inputmode="numeric" pattern="[0-9]*" placeholder="Ej: 14"
                                         autocomplete="off" />
                                 </div>
                                 <div class="field">
                                     <label class="field__label" for="f-cantidad">CANTIDAD</label>
-                                    <input class="field__input" id="f-cantidad" type="number" value="1" min="1" />
+                                    <input class="field__input" id="f-cantidad" type="text" inputmode="numeric" pattern="[0-9]*" value="1" min="1" />
                                 </div>
                             </div>
 
