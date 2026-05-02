@@ -285,22 +285,24 @@ export async function enviarVencimientoNube(datosItem) {
         }
     };
 
+    console.log('Payload guardado:', JSON.stringify(payload.datos));
+
     try {
         const respuesta = await fetch(CONFIGURACION.apiUrl, {
             method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(payload)
         });
 
         const resultado = await respuesta.json();
 
         if (resultado.ok) {
-            console.log(datosItem);
-            console.log(`✅ Producto "${datosItem.producto}" guardado en la hoja de ${usuario.email}`);
+            console.log(`Producto "${datosItem.producto}" guardado en la hoja de ${usuario.email}`);
         } else {
-            console.error("❌ Error del script de Google:", resultado.error);
+            console.error("Error del script de Google:", resultado.error);
         }
     } catch (error) {
-        console.error("❌ Error de red al enviar a Google:", error);
+        console.error("Error de red al enviar a Google:", error);
     }
 }
 
@@ -320,12 +322,12 @@ export async function eliminarVencimientoNube(datosItem) {
         }
     };
 
+    console.log('Payload eliminar:', JSON.stringify(payload.datos));
+
     try {
         const respuesta = await fetch(CONFIGURACION.apiUrl, {
             method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
+            headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(payload)
         });
 
