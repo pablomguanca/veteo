@@ -1,6 +1,8 @@
 import { obtenerUsuarioActual } from './google-auth.js';
 import { CONFIGURACION } from './config.js';
 import { alternarEstadoVacio } from '../utils/ui.js';
+import { copiarEAN } from './vencimientos-db.js';
+import { ejecutarCargaCompleta } from './vencimientos-db.js';
 
 const CLAVE_ALMACENAMIENTO_VENCIMIENTOS = 'veteo_vencimientos_v1';
 
@@ -48,42 +50,106 @@ function formatearFecha(cadenaFecha) {
     return fecha.toLocaleDateString('es-AR', { day: 'numeric', month: 'short', year: 'numeric' });
 }
 
+function obtenerConfiguracionBotones(sec, desc, dias) {
+    let labelPrincipal = "";
+    const descMinuscula = desc.toLowerCase();
+    const esPFT = [20, 21, 22, 23, 24, 26].includes(sec);
+
+    if (esPFT) {
+        labelPrincipal = "PFT";
+    } else if (descMinuscula.includes("carrefour")) {
+        labelPrincipal = "ACC";
+    } else if ([10, 34].includes(sec)) {
+        labelPrincipal = "ACC";
+    } else if (sec === 15) {
+        labelPrincipal = "PAS";
+    } else if (sec === 14) {
+        labelPrincipal = "PCH";
+    }
+
+    const mostrarUM = (sec === 14 || sec === 15 || sec === 10) && (dias >= 3 && dias <= 7);
+
+    if (mostrarUM) {
+        labelPrincipal = "";
+    }
+
+    return { labelPrincipal, mostrarUM };
+}
+
 function renderizarItems(contenedor, elementoVacio, items) {
     contenedor.querySelectorAll('.venc-item').forEach(elemento => elemento.remove());
 
-    const hayItems = items.length > 0;
+    const itemsFiltradosSectores = items.filter(item => {
+        const sec = parseInt(item.sec);
+        return ![30, 31, 32, 33].includes(sec);
+    });
+
+    const hayItems = itemsFiltradosSectores.length > 0;
     alternarEstadoVacio(elementoVacio, hayItems);
 
     if (!hayItems) return;
 
-    const itemsFiltrados = items.filter(item => obtenerDiasRestantes(item.fecha) >= 0);
-    const itemsOrdenados = itemsFiltrados.sort((a, b) => new Date(a.fecha) - new Date(b.fecha));
+    const itemsFinales = itemsFiltradosSectores
+        .filter(item => obtenerDiasRestantes(item.fecha) >= 0)
+        .sort((a, b) => new Date(a.fecha) - new Date(b.fecha));
 
-    itemsOrdenados.forEach(item => {
+    itemsFinales.forEach(item => {
+        const sec = parseInt(item.sec);
+        const dias = obtenerDiasRestantes(item.fecha);
         const etapa = resolverEtapa(item.etapa, item.fecha);
-        const diasFaltantes = obtenerDiasRestantes(item.fecha);
-
-        const textoDias = diasFaltantes < 0
-            ? `Vencido hace ${Math.abs(diasFaltantes)} días`
-            : diasFaltantes === 0
-                ? 'Vence hoy'
-                : `${diasFaltantes} día${diasFaltantes !== 1 ? 's' : ''} restante${diasFaltantes !== 1 ? 's' : ''}`;
+        const config = obtenerConfiguracionBotones(sec, item.producto, dias);
+        const cantRaw = item.cantidad || 1;
+        const cant = !isNaN(parseFloat(cantRaw)) ? parseFloat(cantRaw).toString().replace('.', ',') : cantRaw;
+        const textoVence = dias === 0 ? 'Vence hoy' : `Vence el ${formatearFecha(item.fecha)}`;
+        const textoDias = dias < 0 ? `Vencido hace ${Math.abs(dias)}d` : `${dias}d restantes`;
 
         const elemento = document.createElement('div');
-        elemento.className = 'venc-item';
-        elemento.setAttribute('role', 'listitem');
+        elemento.className = 'venc-item vdb-row';
         elemento.dataset.id = item.id;
 
         elemento.innerHTML = `
-            <span class="venc-item__badge ${etapa.claseCSS}">${etapa.etiqueta}</span>
-            <div class="venc-item__info">
-                <div class="venc-item__name">${escaparHTML(item.producto)}</div>
-                <div class="venc-item__meta">
-                    ${formatearFecha(item.fecha)} · ${textoDias}${item.nota ? ' · ' + escaparHTML(item.nota) : ''}
+            <div class="vdb-row__left">
+                <span class="venc-badge ${etapa.claseCSS}">${etapa.etiqueta}</span>
+            </div>
+            <div class="vdb-row__info">
+                <div class="vdb-row__name">${escaparHTML(item.producto)}</div>
+                <div class="vdb-row__meta">
+                    EAN ${escaparHTML(item.ean || 'N/A')} · SEC ${sec} · ${textoVence} · ${textoDias} · Cant: ${cant}
                 </div>
             </div>
-            <button class="venc-item__delete" aria-label="Eliminar ${escaparHTML(item.producto)}" data-id="${item.id}">✕</button>
+            <div class="vdb-row__actions">
+                <!-- Agregamos el botón de copiar -->
+                <button class="copy-btn" title="Copiar EAN">
+                    <div class="copy-icon"></div>
+                </button>
+                <button class="venc-item__delete" aria-label="Eliminar" data-id="${item.id}">✕</button>
+                ${config.labelPrincipal ? `<button class="action-btn action-btn--main" data-action="${config.labelPrincipal}">${config.labelPrincipal}</button>` : ''}
+                ${config.mostrarUM ? `<button class="action-btn action-btn--um">UM</button>` : ''}
+            </div>
         `;
+
+        elemento.querySelector('.copy-btn').onclick = (e) => copiarEAN(item.ean || '', e);
+
+        const btnMain = elemento.querySelector('.action-btn--main');
+        if (btnMain) {
+            btnMain.onclick = () => {
+                const itemFormateado = { ...item, descripcion: item.producto, vencimiento: item.fecha };
+                ejecutarCargaCompleta(itemFormateado, 'PRINCIPAL');
+            };
+        }
+
+        if (config.mostrarUM) {
+            elemento.querySelector('.action-btn--um').onclick = () => {
+                const itemFormateado = { ...item, descripcion: item.producto, vencimiento: item.fecha };
+                ejecutarCargaCompleta(itemFormateado, 'UM');
+            };
+        }
+
+        elemento.querySelector('.venc-item__delete').onclick = () => {
+            const itemsActualizados = cargarItems().filter(i => i.id !== item.id);
+            guardarItems(itemsActualizados);
+            renderizarItems(contenedor, elementoVacio, itemsActualizados);
+        };
 
         contenedor.appendChild(elemento);
     });
@@ -147,14 +213,17 @@ export function inicializarVencimientos() {
         const eanValor = document.getElementById('f-producto')?.value.trim();
         const descValor = document.getElementById('f-descripcion')?.value.trim();
         const secValor = document.getElementById('f-sec')?.value.trim();
-        const cantValor = document.getElementById('f-cantidad')?.value || 1;
+        const cantValor = parseFloat(document.getElementById('f-cantidad')?.value) || 0;
         const fechaValor = document.getElementById('f-fecha')?.value;
         const etapaValor = document.getElementById('f-etapa')?.value || 'auto';
         const notaValor = document.getElementById('f-nota')?.value.trim();
 
-        if (!descValor || !fechaValor) {
+        if (!eanValor || !descValor || !fechaValor || !secValor || cantValor <= 0) {
+            if (!eanValor) document.getElementById('f-producto')?.classList.add('field__input--error');
             if (!descValor) document.getElementById('f-descripcion')?.classList.add('field__input--error');
             if (!fechaValor) document.getElementById('f-fecha')?.classList.add('field__input--error');
+            if (!secValor) document.getElementById('f-sec')?.classList.add('field__input--error');
+            if (cantValor <= 0) document.getElementById('f-cantidad')?.classList.add('field__input--error');
             return;
         }
 
@@ -231,5 +300,47 @@ export async function enviarVencimientoNube(datosItem) {
         }
     } catch (error) {
         console.error("❌ Error de red al enviar a Google:", error);
+    }
+}
+
+export async function eliminarVencimientoNube(datosItem) {
+    const usuario = obtenerUsuarioActual();
+
+    if (!usuario) {
+        return { success: false, error: 'Usuario no autenticado' };
+    }
+
+    const payload = {
+        action: 'deleteVencimiento',
+        email: usuario.email,
+        datos: {
+            ean: datosItem?.ean || '',
+            fecha_vencimiento: datosItem?.fecha || datosItem?.vencimiento || ''
+        }
+    };
+
+    try {
+        const respuesta = await fetch(CONFIGURACION.apiUrl, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(payload)
+        });
+
+        if (!respuesta.ok) {
+            return { success: false, error: `HTTP ${respuesta.status}` };
+        }
+
+        const resultado = await respuesta.json();
+
+        if (!resultado.ok) {
+            return { success: false, error: resultado.error || 'Error al eliminar' };
+        }
+
+        return { success: true };
+
+    } catch (error) {
+        return { success: false, error: error?.message || 'Error de red' };
     }
 }

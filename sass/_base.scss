@@ -85,10 +85,13 @@ h3 {
 .eyebrow {
     font-family: v.$ff-mono;
     font-size: 10px;
-    text-align: center;
     letter-spacing: 0.2em;
     color: v.$muted;
     text-transform: uppercase;
+
+    @media (max-width: 560px) {
+        text-align: center;
+    }
 }
 
 .label-tag {

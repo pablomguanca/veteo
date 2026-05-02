@@ -109,7 +109,7 @@ function escaparHTML(cadena) {
         .replace(/"/g, '&quot;');
 }
 
-async function ejecutarCargaCompleta(item, tipo) {
+export async function ejecutarCargaCompleta(item, tipo) {
     const sec = parseInt(item.sec || item.SEC);
     const ean = item.ean || item.EAN;
     const vto = item.vencimiento || item.VENCIMIENTO;
@@ -131,7 +131,7 @@ async function ejecutarCargaCompleta(item, tipo) {
     } else {
         if (sec === 15) {
             urlAbrir = `${FORMS.PAS.url}?usp=pp_url&${FORMS.PAS.id}=${ean}`;
-        } else if ([20, 22, 24, 26].includes(sec)) {
+        } else if ([20, 21, 22, 23, 24, 26].includes(sec)) {
             urlAbrir = FORMS.PFT.url;
         } else if (sec === 14) {
             urlAbrir = FORMS.PCH.url;
@@ -159,7 +159,7 @@ async function ejecutarCargaCompleta(item, tipo) {
     }
 }
 
-function copiarEAN(ean, event) {
+export function copiarEAN(ean, event) {
     event.stopPropagation();
     const btn = event.currentTarget;
     const originalIcon = btn.innerHTML;
@@ -211,16 +211,14 @@ function renderizarTabla(contenedor, elementoVacio, filas) {
         const cantRaw = item.cantidad || item.CANTIDAD;
         const cant = !isNaN(parseFloat(cantRaw)) ? parseFloat(cantRaw).toString().replace('.', ',') : cantRaw;
         const estado = item.ESTADO || 'PENDIENTE';
-
         const dias = obtenerDiasRestantes(vto);
         const etapa = obtenerEtapa(dias);
-
         const textoVence = dias === 0 ? 'Vence hoy' : `Vence el ${formatearFecha(vto)}`;
         const textoDias = dias < 0 ? `Vencido hace ${Math.abs(dias)}d` : `${dias}d restantes`;
 
         let labelPrincipal = "";
         const descMinuscula = desc.toLowerCase();
-        const esPFT = [20, 22, 23, 24, 26].includes(sec);
+        const esPFT = [20, 21, 22, 23, 24, 26].includes(sec);
 
         if (esPFT) {
             labelPrincipal = "PFT";

@@ -217,10 +217,14 @@ h3 {
 .eyebrow {
   font-family: "Google Sans Mono", monospace;
   font-size: 10px;
-  text-align: center;
   letter-spacing: 0.2em;
   color: #71737d;
   text-transform: uppercase;
+}
+@media (max-width: 560px) {
+  .eyebrow {
+    text-align: center;
+  }
 }
 
 .label-tag {
@@ -384,7 +388,6 @@ h3 {
 .site-title {
   font-family: "Sora", sans-serif, sans-serif;
   font-size: clamp(2.2rem, 6vw, 4rem);
-  text-align: center;
   font-weight: 800;
   letter-spacing: -0.03em;
   line-height: 1;
@@ -395,6 +398,7 @@ h3 {
 @media (max-width: 560px) {
   .site-title {
     font-size: 2.4rem;
+    text-align: center;
   }
 }
 
@@ -841,8 +845,9 @@ h3 {
   scrollbar-color: #71737d transparent;
 }
 .card .scrollable-list .venc-item {
-  display: flex;
-  align-items: center;
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: stretch;
   gap: 12px;
   padding: 10px 15px;
   border-radius: 10px;
@@ -855,6 +860,7 @@ h3 {
   border-color: rgba(255, 255, 255, 0.115);
 }
 .card .scrollable-list .venc-item__badge {
+  vertical-align: middle;
   padding: 4px 8px;
   border-radius: 4px;
   font-size: 0.7rem;
@@ -888,22 +894,29 @@ h3 {
   border-color: rgba(255, 255, 255, 0.065);
 }
 .card .scrollable-list .venc-item__info {
-  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
   min-width: 0;
 }
 .card .scrollable-list .venc-item__name {
   font-size: 0.875rem;
-  font-weight: 500;
+  font-weight: 600;
   text-transform: uppercase;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+  white-space: normal;
+  word-break: break-word;
 }
 .card .scrollable-list .venc-item__meta {
   font-family: "Google Sans Mono", monospace;
   font-size: 10px;
   color: #71737d;
   margin-top: 1px;
+}
+.card .scrollable-list .venc-item__actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  justify-content: flex-end;
 }
 .card .scrollable-list .venc-item__delete {
   color: #2e3038;
@@ -917,6 +930,13 @@ h3 {
 .card .scrollable-list .venc-item__delete:hover {
   color: #f87171;
   background: rgba(248, 113, 113, 0.15);
+}
+@media (min-width: 641px) {
+  .card .scrollable-list .venc-item {
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    gap: 16px;
+  }
 }
 
 .venc-empty {
@@ -1301,6 +1321,7 @@ h3 {
     padding: 9px 12px;
   }
   .vdb-row__name {
+    text-transform: uppercase;
     font-size: 14px;
     font-weight: 500;
     line-height: 1.3;
