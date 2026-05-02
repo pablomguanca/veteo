@@ -294,6 +294,7 @@ export async function enviarVencimientoNube(datosItem) {
         const resultado = await respuesta.json();
 
         if (resultado.ok) {
+            console.log(datosItem);
             console.log(`✅ Producto "${datosItem.producto}" guardado en la hoja de ${usuario.email}`);
         } else {
             console.error("❌ Error del script de Google:", resultado.error);
