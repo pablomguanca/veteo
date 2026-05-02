@@ -76,7 +76,7 @@ function obtenerConfiguracionBotones(sec, desc, dias) {
     return { labelPrincipal, mostrarUM };
 }
 
-function renderizarItems(contenedor, elementoVacio, items) {
+function renderizarItems(contenedor, elementoVacio, items, onEliminar) {
     contenedor.querySelectorAll('.venc-item').forEach(elemento => elemento.remove());
 
     const itemsFiltradosSectores = items.filter(item => {
@@ -118,7 +118,6 @@ function renderizarItems(contenedor, elementoVacio, items) {
                 </div>
             </div>
             <div class="vdb-row__actions">
-                <!-- Agregamos el botón de copiar -->
                 <button class="copy-btn" title="Copiar EAN">
                     <div class="copy-icon"></div>
                 </button>
@@ -145,10 +144,11 @@ function renderizarItems(contenedor, elementoVacio, items) {
             };
         }
 
-        elemento.querySelector('.venc-item__delete').onclick = () => {
+        elemento.querySelector('.venc-item__delete').onclick = async () => {
             const itemsActualizados = cargarItems().filter(i => i.id !== item.id);
             guardarItems(itemsActualizados);
-            renderizarItems(contenedor, elementoVacio, itemsActualizados);
+            renderizarItems(contenedor, elementoVacio, itemsActualizados, onEliminar);
+            if (onEliminar) await onEliminar(item);
         };
 
         contenedor.appendChild(elemento);
@@ -193,7 +193,7 @@ export function inicializarVencimientos() {
         entradaFecha.min = new Date().toISOString().split('T')[0];
     }
 
-    renderizarItems(listaVencimientos, elementoVacio, cargarItems());
+    renderizarItems(listaVencimientos, elementoVacio, cargarItems(), eliminarVencimientoNube);
 
     botonAgregar.addEventListener('click', () => abrirModal(fondoModal));
 
@@ -243,7 +243,7 @@ export function inicializarVencimientos() {
         const itemsActuales = cargarItems();
         itemsActuales.push(nuevoItem);
         guardarItems(itemsActuales);
-        renderizarItems(listaVencimientos, elementoVacio, itemsActuales);
+        renderizarItems(listaVencimientos, elementoVacio, itemsActuales, eliminarVencimientoNube);
         cerrarModal(fondoModal, document.getElementById('venc-form'));
         enviarVencimientoNube(nuevoItem);
     });
@@ -252,23 +252,6 @@ export function inicializarVencimientos() {
         document.getElementById(idControl)?.addEventListener('input', evento => {
             evento.target.value = evento.target.value.replace(/[^0-9]/g, '');
         });
-    });
-
-    listaVencimientos.addEventListener('click', async evento => {
-        const botonEliminar = evento.target.closest('.venc-item__delete');
-        if (!botonEliminar) return;
-
-        const identificador = botonEliminar.dataset.id;
-        const items = cargarItems();
-        const itemAEliminar = items.find(item => item.id === identificador);
-
-        const itemsActualizados = items.filter(item => item.id !== identificador);
-        guardarItems(itemsActualizados);
-        renderizarItems(listaVencimientos, elementoVacio, itemsActualizados);
-
-        if (itemAEliminar) {
-            await eliminarVencimientoNube(itemAEliminar);
-        }
     });
 }
 
