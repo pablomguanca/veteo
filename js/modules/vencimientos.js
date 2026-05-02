@@ -254,13 +254,21 @@ export function inicializarVencimientos() {
         });
     });
 
-    listaVencimientos.addEventListener('click', evento => {
+    listaVencimientos.addEventListener('click', async evento => {
         const botonEliminar = evento.target.closest('.venc-item__delete');
         if (!botonEliminar) return;
+
         const identificador = botonEliminar.dataset.id;
-        const itemsActualizados = cargarItems().filter(item => item.id !== identificador);
+        const items = cargarItems();
+        const itemAEliminar = items.find(item => item.id === identificador);
+
+        const itemsActualizados = items.filter(item => item.id !== identificador);
         guardarItems(itemsActualizados);
         renderizarItems(listaVencimientos, elementoVacio, itemsActualizados);
+
+        if (itemAEliminar) {
+            await eliminarVencimientoNube(itemAEliminar);
+        }
     });
 }
 
