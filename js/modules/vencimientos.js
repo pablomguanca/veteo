@@ -285,12 +285,9 @@ export async function enviarVencimientoNube(datosItem) {
         }
     };
 
-    console.log('Payload guardado:', JSON.stringify(payload.datos));
-
     try {
         const respuesta = await fetch(CONFIGURACION.apiUrl, {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(payload)
         });
 
@@ -322,12 +319,9 @@ export async function eliminarVencimientoNube(datosItem) {
         }
     };
 
-    console.log('Payload eliminar:', JSON.stringify(payload.datos));
-
     try {
         const respuesta = await fetch(CONFIGURACION.apiUrl, {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(payload)
         });
 
