@@ -148,6 +148,11 @@ function manejarRespuestaCredenciales(respuesta) {
         'pedro_ramirez@carrefour.com',
         'carolina_camargo@carrefour.com',
         'natalia_medina@carrefour.com',
+        'pablo_chaperon@carrefour.com',
+        'navarro_malave_juan_arturo@carrefour.com',
+        'romina_fornes@carrefour.com',
+        'damian_correa@carrefour.com',
+        'julieta_caputto@carrefour.com',
     ];
 
     if (!usuariosPermitidos.includes(emailUsuario)) {

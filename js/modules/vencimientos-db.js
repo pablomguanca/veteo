@@ -129,14 +129,14 @@ export async function ejecutarCargaCompleta(item, tipo) {
         urlAbrir = `${FORMS.UM.url}?usp=pp_url&${FORMS.UM.id}=${ean}`;
         nuevoEstado = "CARGADO UM";
     } else {
-        if (sec === 15) {
-            urlAbrir = `${FORMS.PAS.url}?usp=pp_url&${FORMS.PAS.id}=${ean}`;
-        } else if ([20, 21, 22, 23, 24, 26].includes(sec)) {
+        if ([20, 21, 22, 23, 24, 26].includes(sec)) {
             urlAbrir = FORMS.PFT.url;
-        } else if (sec === 14) {
+        } else if (descMinuscula.includes("carrefour") || [10, 34].includes(sec)) {
+            urlAbrir = `${FORMS.S10.url}?usp=pp_url&${FORMS.S10.id}=${ean}`;
+        } else if (sec === 15) {
+            urlAbrir = `${FORMS.PAS.url}?usp=pp_url&${FORMS.PAS.id}=${ean}`;
+        } else if ([11, 14].includes(sec)) {
             urlAbrir = FORMS.PCH.url;
-        } else if (sec === 10) {
-            urlAbrir = FORMS.S10.url;
         }
     }
 

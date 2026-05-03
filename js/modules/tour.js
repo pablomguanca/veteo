@@ -64,7 +64,7 @@ export function iniciarTour() {
                 }
             },
             {
-                element: '.vdb-row',
+                element: '#vdb-status',
                 popover: {
                     title: 'Donde sucede la magia ✨',
                     description: 'Acá van a listarse tus productos: ordenados por fecha, etiquetado con su etapa (7, 30, 60, 90) y listos para cargar en su form o copiar su EAN',

@@ -1603,6 +1603,17 @@ h3 {
     transition-duration: 0.01ms !important;
   }
 }
+@keyframes scanner-sweep {
+  0% {
+    top: 0;
+  }
+  50% {
+    top: calc(100% - 2px);
+  }
+  100% {
+    top: 0;
+  }
+}
 .modal-escaner {
   position: fixed;
   top: 0;
@@ -1678,16 +1689,55 @@ h3 {
   transform: translate(-50%, -50%);
   width: 75%;
   height: 45%;
-  border: 2px solid #6ee7b7;
-  border-radius: 6px;
   box-shadow: 0 0 0 9999px rgba(10, 11, 14, 0.85);
   pointer-events: none;
 }
-.modal-escaner__video-wrapper .modal-escaner__mirilla::after {
+.modal-escaner__video-wrapper .modal-escaner__mirilla::before, .modal-escaner__video-wrapper .modal-escaner__mirilla::after,
+.modal-escaner__video-wrapper .modal-escaner__mirilla span::before,
+.modal-escaner__video-wrapper .modal-escaner__mirilla span::after {
   content: "";
   position: absolute;
+  width: 20px;
+  height: 20px;
+  border-color: #6ee7b7;
+  border-style: solid;
+}
+.modal-escaner__video-wrapper .modal-escaner__mirilla::before {
+  top: 0;
+  left: 0;
+  border-width: 2px 0 0 2px;
+  border-radius: 6px 0 0 0;
+}
+.modal-escaner__video-wrapper .modal-escaner__mirilla::after {
+  top: 0;
+  right: 0;
+  border-width: 2px 2px 0 0;
+  border-radius: 0 6px 0 0;
+}
+.modal-escaner__video-wrapper .modal-escaner__mirilla span {
+  position: absolute;
   inset: 0;
-  box-shadow: inset 0 0 15px rgba(110, 231, 183, 0.13);
+}
+.modal-escaner__video-wrapper .modal-escaner__mirilla span::before {
+  bottom: 0;
+  left: 0;
+  border-width: 0 0 2px 2px;
+  border-radius: 0 0 0 6px;
+}
+.modal-escaner__video-wrapper .modal-escaner__mirilla span::after {
+  bottom: 0;
+  right: 0;
+  border-width: 0 2px 2px 0;
+  border-radius: 0 0 6px 0;
+}
+.modal-escaner__video-wrapper .modal-escaner__mirilla i {
+  position: absolute;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  background: linear-gradient(to right, transparent, #ff3b3b, transparent);
+  box-shadow: 0 0 6px 1px rgba(255, 59, 59, 0.6);
+  animation: scanner-sweep 2s ease-in-out infinite;
 }
 .modal-escaner__texto {
   text-align: center;
@@ -1771,7 +1821,7 @@ h3 {
 }
 @media (max-width: 500px) {
   .driver-popover-title {
-    font-size: 13.5px !important;
+    font-size: 14px !important;
   }
 }
 .driver-popover-description {
@@ -1780,7 +1830,7 @@ h3 {
 }
 @media (max-width: 500px) {
   .driver-popover-description {
-    font-size: 11.5px !important;
+    font-size: 12px !important;
   }
 }
 .driver-popover-progress-text {
