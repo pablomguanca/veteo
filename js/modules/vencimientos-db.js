@@ -113,6 +113,8 @@ export async function ejecutarCargaCompleta(item, tipo) {
     const sec = parseInt(item.sec || item.SEC);
     const ean = item.ean || item.EAN;
     const vto = item.vencimiento || item.VENCIMIENTO;
+    const desc = item.descripcion || item.DESCRIPCION || "";
+    const descMinuscula = desc.toLowerCase();
 
     const FORMS = {
         PAS: { url: "https://docs.google.com/forms/d/e/1FAIpQLSduF5W6fBCrrCTkrMCnPrUgxNSjAE1_VWY3p9c5xVqFf5xM9Q/viewform", id: "entry.1279354663" },
