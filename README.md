@@ -5,6 +5,7 @@
 ![SCSS](https://img.shields.io/badge/SCSS-BEM_Methodology-hotpink?style=for-the-badge&logo=sass)
 ![JS](https://img.shields.io/badge/JavaScript-ES6+-F7DF1E?style=for-the-badge&logo=javascript&logoColor=black)
 ![Storage](https://img.shields.io/badge/Storage-LocalStorage-orange?style=for-the-badge&logo=googlechrome)
+![Firebase](https://img.shields.io/badge/Firebase-039BE5?style=for-the-badge&logo=firebase&logoColor=white)
 ![Forms](https://img.shields.io/badge/Integración-Google_Forms-4285F4?style=for-the-badge&logo=googleforms)
 
 ![License](https://img.shields.io/badge/License-Privado-red?style=for-the-badge)
@@ -22,13 +23,14 @@ A diferencia de otros métodos, esta herramienta automatiza el flujo de datos de
 
 ## Funcionalidades
 
-- **Vencimientos importados** - sincronización con Google Sheets via Génesix
+- **Vencimientos importados** - archivo (.txt) que se sincroniza con Google Sheets
 - **Scanner Integrado** - carga rápida con fecha, etapa y nota
 - **Línea de tiempo operativa** - guía visual por etapa (−90, −60, −30, −7 días)
 - **Acceso directo a formularios** - PAS, PFT, PCH, Última Milla, Calidad, Rescates
 - **Checklist diario** - seguimiento de tareas con reset automático
-- **Notificaciones Push** - recordatorio diario todos los días a las 08:00 hs
-- **Tour Interactivo** - Onboarding sencillo para los usuarios
+- **Notificaciones Push** - recordatorio diario todos los días a las 08:00 hs a través de Firebase
+- **Tour Interactivo** - onboarding sencillo para los usuarios
+- **Multiusuario** - sesión y base de datos única por usuario gracias a Google OAuth
 
 ## Tecnologías
 
