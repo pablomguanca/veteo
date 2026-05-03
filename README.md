@@ -18,16 +18,17 @@ Hub operativo para la gestión de vencimientos de productos.
 **Veteo App** nace de la necesidad de centralizar y digitalizar la gestión diaria del stock perecedero. Reemplaza el seguimiento manual y disperso por un 
 único lugar donde ver, priorizar y accionar cada producto según su etapa de vencimiento. 
 
-A diferencia de los métodos, esta herramienta automatiza el flujo de datos desde archivos de sistema (`.txt`) hacia una base de datos dinámica en la nube, proporcionando una interfaz de usuario (UI) de alta fidelidad orientada a la eficiencia en dispositivos móviles.
+A diferencia de otros métodos, esta herramienta automatiza el flujo de datos desde archivos de sistema (`.txt`) hacia una base de datos dinámica en la nube, brindando una interfaz de usuario (UI) de alta fidelidad orientada a la eficiencia en dispositivos móviles.
 
 ## Funcionalidades
 
-- **Vencimientos importados** — sincronización con Google Sheets via Génesix
-- **Vencimientos manuales** — carga rápida con fecha, etapa y nota
-- **Línea de tiempo operativa** — guía visual por etapa (−90, −60, −30, −7 días)
-- **Acceso directo a formularios** — PAS, PFT, PCH, Última Milla, Calidad, Rescates
-- **Checklist diario** — seguimiento de tareas con reset automático
-- **Notificaciones Push** — recordatorio diario todos los días a las 08:00 hs
+- **Vencimientos importados** - sincronización con Google Sheets via Génesix
+- **Scanner Integrado** - carga rápida con fecha, etapa y nota
+- **Línea de tiempo operativa** - guía visual por etapa (−90, −60, −30, −7 días)
+- **Acceso directo a formularios** - PAS, PFT, PCH, Última Milla, Calidad, Rescates
+- **Checklist diario** - seguimiento de tareas con reset automático
+- **Notificaciones Push** - recordatorio diario todos los días a las 08:00 hs
+- **Tour Interactivo** - Onboarding sencillo para los usuarios
 
 ## Tecnologías
 
@@ -37,6 +38,7 @@ A diferencia de los métodos, esta herramienta automatiza el flujo de datos desd
 | SCSS + BEM | Estilos y arquitectura CSS |
 | JavaScript ES6+ | Lógica, DOM, módulos |
 | LocalStorage | Persistencia de datos local |
+| Google Apps Scripts | Integración con Sheets y persistencia de datos en la nube |
 | Google Forms | Integración con formularios operativos |
 
 ### Capacidades Principales exhibidas:
@@ -64,12 +66,12 @@ El proyecto se divide en una arquitectura desacoplada:
 
 ## 📊 Resultados e Impacto
 
-- **Reducción de errores:** Eliminación de la carga manual de datos gracias al parser de TXT.
+- **Reducción de errores:** Eliminación de la carga manual de datos gracias al parser de TXT, escaneo y redirecciones efectivas.
 - **Priorización:** Sistema de alertas visuales que enfoca la atención en productos con < 60, < 30, < 7 días de vida.
 - **Omnicanalidad:** Acceso instantáneo desde cualquier dispositivo con sesión de Google activa.
 
 ---
-> Proyecto de uso interno. El código es de autoría propia pero los recursos integrados pertenecen a la organización.
+> Proyecto de uso interno. El código es de autoría propia pero los recursos integrados pertenecen a una organización privada.
 ---
 
 **Desarrollado por Pablo Guanca**
