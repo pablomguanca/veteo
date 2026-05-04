@@ -28,7 +28,7 @@
 </head>
 
 <body>
-    <div id="login-overlay" class="login-overlay">
+    <!-- <div id="login-overlay" class="login-overlay">
         <div class="login-card">
             <h2>Veteo App</h2>
             <p>Ingresá con tu cuenta para registrar vencimientos</p>
@@ -38,8 +38,8 @@
 
             <p id="error-message" style="color: #ff4d4d; margin-top: 10px;" hidden></p>
         </div>
-    </div>
-    <div id="app-content" hidden>
+    </div> -->
+    <div id="app-content">
         <div class="noise" aria-hidden="true"></div>
 
         <main class="wrap">
@@ -155,7 +155,27 @@
                         </div>
                     </div>
                 </div>
-
+                <div class="filtros-wrap">
+                    <button class="filtros-toggle" id="filtros-toggle-venc" aria-expanded="false">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                            <line x1="4" y1="6" x2="20" y2="6" />
+                            <line x1="7" y1="12" x2="17" y2="12" />
+                            <line x1="10" y1="18" x2="14" y2="18" />
+                        </svg>
+                        Filtrar
+                    </button>
+                    <div class="filtros-bar" id="filtros-venc" hidden>
+                        <button class="filtro-chip filtro-chip--active" data-filtro="todos"
+                            data-target="venc">Todos</button>
+                        <button class="filtro-chip" data-filtro="PFT" data-target="venc">PFT</button>
+                        <button class="filtro-chip" data-filtro="ACC" data-target="venc">ACC</button>
+                        <button class="filtro-chip" data-filtro="PAS" data-target="venc">PAS</button>
+                        <button class="filtro-chip" data-filtro="PCH" data-target="venc">PCH</button>
+                        <button class="filtro-chip" data-filtro="UM" data-target="venc">UM</button>
+                        <button class="filtro-chip filtro-chip--pdf" id="print-venc-btn">🖨 Imprimir PDF</button>
+                    </div>
+                </div>
                 <div class="scrollable-list" id="venc-list" role="list">
                     <div class="venc-empty" id="venc-empty">
                         <span>Sin vencimientos cargados</span>
@@ -175,8 +195,8 @@
                         <form id="venc-form">
                             <div class="field">
                                 <label class="field__label" for="f-producto">EAN</label>
-                                <input class="field__input" id="f-producto" type="text" inputmode="numeric" pattern="[0-9]*" placeholder="Ingresá el EAN"
-                                    autocomplete="off" />
+                                <input class="field__input" id="f-producto" type="text" inputmode="numeric"
+                                    pattern="[0-9]*" placeholder="Ingresá el EAN" autocomplete="off" />
                             </div>
 
                             <div class="field">
@@ -188,12 +208,13 @@
                             <div class="field-row">
                                 <div class="field">
                                     <label class="field__label" for="f-sec">SECCIÓN</label>
-                                    <input class="field__input" id="f-sec" type="text" inputmode="numeric" pattern="[0-9]*" placeholder="Ej: 14"
-                                        autocomplete="off" />
+                                    <input class="field__input" id="f-sec" type="text" inputmode="numeric"
+                                        pattern="[0-9]*" placeholder="Ej: 14" autocomplete="off" />
                                 </div>
                                 <div class="field">
                                     <label class="field__label" for="f-cantidad">CANTIDAD</label>
-                                    <input class="field__input" id="f-cantidad" type="text" inputmode="numeric" pattern="[0-9]*" value="1" min="1" />
+                                    <input class="field__input" id="f-cantidad" type="text" inputmode="numeric"
+                                        pattern="[0-9]*" value="1" min="1" />
                                 </div>
                             </div>
 
@@ -242,7 +263,27 @@
                 </div>
 
                 <div class="vdb-status" id="vdb-status"></div>
-
+                <div class="filtros-wrap">
+                    <button class="filtros-toggle" id="filtros-toggle-vdb" aria-expanded="false">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                            <line x1="4" y1="6" x2="20" y2="6" />
+                            <line x1="7" y1="12" x2="17" y2="12" />
+                            <line x1="10" y1="18" x2="14" y2="18" />
+                        </svg>
+                        Filtrar
+                    </button>
+                    <div class="filtros-bar" id="filtros-vdb" hidden>
+                        <button class="filtro-chip filtro-chip--active" data-filtro="todos"
+                            data-target="vdb">Todos</button>
+                        <button class="filtro-chip" data-filtro="PFT" data-target="vdb">PFT</button>
+                        <button class="filtro-chip" data-filtro="ACC" data-target="vdb">ACC</button>
+                        <button class="filtro-chip" data-filtro="PAS" data-target="vdb">PAS</button>
+                        <button class="filtro-chip" data-filtro="PCH" data-target="vdb">PCH</button>
+                        <button class="filtro-chip" data-filtro="UM" data-target="vdb">UM</button>
+                        <button class="filtro-chip filtro-chip--pdf" id="print-vdb-btn">🖨 Imprimir PDF</button>
+                    </div>
+                </div>
                 <div class="vdb-list" id="vdb-list" role="list">
                     <div class="venc-empty" id="vdb-empty">
                         <span>Sin datos importados</span>

@@ -1,0 +1,99 @@
+@use 'variables' as v;
+
+.filtros-wrap {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    padding: 6px 0;
+}
+
+.filtros-toggle {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    align-self: flex-start;
+    padding: 5px 12px;
+    border-radius: v.$radius-sm;
+    border: 1px solid v.$border;
+    background: transparent;
+    color: v.$muted;
+    font-family: v.$ff-body;
+    font-size: 12px;
+    font-weight: 500;
+    cursor: pointer;
+    transition:
+        background v.$duration-fast v.$ease,
+        color v.$duration-fast v.$ease,
+        border-color v.$duration-fast v.$ease;
+
+    svg {
+        flex-shrink: 0;
+    }
+
+    &:hover {
+        background: v.$surface-2;
+        color: v.$text;
+        border-color: v.$border-2;
+    }
+
+    &--active {
+        background: v.$surface-2;
+        border-color: v.$border-2;
+        color: v.$text;
+    }
+
+    &--active--filtrado {
+        border-color: v.$blue;
+        color: v.$blue;
+        background: v.$blue-glow;
+
+        &.filtros-toggle--active {
+            border-color: v.$blue;
+            color: v.$blue;
+        }
+    }
+}
+
+.filtros-bar {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+}
+
+.filtro-chip {
+    padding: 4px 12px;
+    border-radius: 20px;
+    border: 1px solid v.$border;
+    background: transparent;
+    color: v.$muted;
+    font-family: v.$ff-body;
+    font-size: 12px;
+    font-weight: 500;
+    cursor: pointer;
+    transition:
+        background v.$duration-fast v.$ease,
+        color v.$duration-fast v.$ease,
+        border-color v.$duration-fast v.$ease;
+
+    &:hover {
+        background: v.$surface-2;
+        color: v.$text;
+        border-color: v.$border-2;
+    }
+
+    &--active {
+        background: v.$blue-glow;
+        border-color: v.$blue;
+        color: v.$blue;
+    }
+
+    &--pdf {
+        margin-left: auto;
+
+        &:hover {
+            background: v.$surface-2;
+            color: v.$text;
+            border-color: v.$border-2;
+        }
+    }
+}

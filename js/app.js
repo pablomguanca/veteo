@@ -9,11 +9,11 @@ import { inicializarBaseDatosVencimientos } from './modules/vencimientos-db.js';
 import { inicializarEnlaces } from './modules/enlaces.js';
 import { inicializarEscaner } from './modules/escaner.js';
 import { inicializarSesionUI } from './modules/sesion-ui.js';
-import { inicializarAutenticacionGoogle } from './modules/google-auth.js'; 
+import { inicializarAutenticacionGoogle } from './modules/google-auth.js';
+import { inicializarFiltros } from './modules/filtros.js';
 
 document.addEventListener('DOMContentLoaded', () => {
-    inicializarAutenticacionGoogle(); 
-
+    inicializarAutenticacionGoogle();
     inicializarFecha();
     inicializarMensajeDelDia();
     inicializarChecklist();
@@ -24,5 +24,6 @@ document.addEventListener('DOMContentLoaded', () => {
     inicializarBaseDatosVencimientos();
     inicializarEnlaces();
     inicializarEscaner();
-    inicializarSesionUI(); 
+    inicializarSesionUI();
+    inicializarFiltros();
 });

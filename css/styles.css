@@ -1861,4 +1861,87 @@ h3 {
   border-right-color: #17191f !important;
 }
 
+.filtros-wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 6px 0;
+}
+
+.filtros-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  align-self: flex-start;
+  padding: 5px 12px;
+  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.065);
+  background: transparent;
+  color: #71737d;
+  font-family: "Google Sans", sans-serif;
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 150ms cubic-bezier(0.4, 0, 0.2, 1), color 150ms cubic-bezier(0.4, 0, 0.2, 1), border-color 150ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+.filtros-toggle svg {
+  flex-shrink: 0;
+}
+.filtros-toggle:hover {
+  background: #17191f;
+  color: #eeeae3;
+  border-color: rgba(255, 255, 255, 0.115);
+}
+.filtros-toggle--active {
+  background: #17191f;
+  border-color: rgba(255, 255, 255, 0.115);
+  color: #eeeae3;
+}
+.filtros-toggle--active--filtrado {
+  border-color: #93c5fd;
+  color: #93c5fd;
+  background: rgba(147, 197, 253, 0.13);
+}
+.filtros-toggle--active--filtrado.filtros-toggle--active {
+  border-color: #93c5fd;
+  color: #93c5fd;
+}
+
+.filtros-bar {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.filtro-chip {
+  padding: 4px 12px;
+  border-radius: 20px;
+  border: 1px solid rgba(255, 255, 255, 0.065);
+  background: transparent;
+  color: #71737d;
+  font-family: "Google Sans", sans-serif;
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 150ms cubic-bezier(0.4, 0, 0.2, 1), color 150ms cubic-bezier(0.4, 0, 0.2, 1), border-color 150ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+.filtro-chip:hover {
+  background: #17191f;
+  color: #eeeae3;
+  border-color: rgba(255, 255, 255, 0.115);
+}
+.filtro-chip--active {
+  background: rgba(147, 197, 253, 0.13);
+  border-color: #93c5fd;
+  color: #93c5fd;
+}
+.filtro-chip--pdf {
+  margin-left: auto;
+}
+.filtro-chip--pdf:hover {
+  background: #17191f;
+  color: #eeeae3;
+  border-color: rgba(255, 255, 255, 0.115);
+}
+
 /*# sourceMappingURL=styles.css.map */
