@@ -106,6 +106,7 @@ function renderizarItems(contenedor, elementoVacio, items, onEliminar) {
         const elemento = document.createElement('div');
         elemento.className = 'venc-item vdb-row';
         elemento.dataset.id = item.id;
+        elemento.dataset.fecha = item.fecha;
 
         elemento.innerHTML = `
             <div class="vdb-row__left">

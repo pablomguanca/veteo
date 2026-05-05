@@ -32,7 +32,7 @@ function generarPDF(target) {
 
     const titulo = target === 'venc' ? 'Vencimientos Cargados' : 'Vencimientos Importados';
     const fecha  = new Date().toLocaleDateString('es-AR', { day: '2-digit', month: '2-digit', year: 'numeric' });
-    const cssUrl = new URL('/css/styles.css', window.location.origin).href;
+    const cssUrl = new URL('/css/pdf.css', window.location.origin).href;
 
     const rows  = [...contenedor.querySelectorAll('.vdb-row')].filter(r => r.style.display !== 'none');
     const filas = rows.map(row => {
@@ -46,17 +46,16 @@ function generarPDF(target) {
         const sec  = secMatch  ? secMatch[1]  : '—';
         const ean  = eanMatch  ? eanMatch[1]  : '—';
         const cant = cantMatch ? cantMatch[1] : '—';
+        const fechaRaw = row.dataset.fecha || '';
+        let fechaTexto = '—';
 
-        const hoy = new Date().toLocaleDateString('es-AR', { day: '2-digit', month: '2-digit', year: 'numeric' });
-        let fechaTexto = hoy;
-        if (!meta.includes('Vence hoy')) {
-            const fechaMatch = meta.match(/Vence el\s+(.+?)\s+·/);
-            if (fechaMatch) {
-                const d = new Date(fechaMatch[1]);
-                fechaTexto = isNaN(d)
-                    ? fechaMatch[1]
-                    : d.toLocaleDateString('es-AR', { day: '2-digit', month: '2-digit', year: 'numeric' });
-            }
+        const isoMatch = fechaRaw.match(/^(\d{4})-(\d{2})-(\d{2})/);
+        const dmaMatch = fechaRaw.match(/^(\d{2})\/(\d{2})\/(\d{4})/);
+
+        if (isoMatch) {
+            fechaTexto = `${isoMatch[3]}/${isoMatch[2]}/${isoMatch[1]}`;
+        } else if (dmaMatch) {
+            fechaTexto = fechaRaw;
         }
 
         return `<tr>

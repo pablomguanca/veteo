@@ -245,6 +245,7 @@ function renderizarTabla(contenedor, elementoVacio, filas) {
 
         const elemento = document.createElement('div');
         elemento.className = `vdb-row ${estado.includes('CARGADO') ? 'vdb-row--done' : ''}`;
+        elemento.dataset.fecha =vto;
 
         elemento.innerHTML = `
             <div class="vdb-row__left">

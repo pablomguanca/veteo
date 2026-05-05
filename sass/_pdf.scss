@@ -77,3 +77,26 @@
         margin: 0;
     }
 }
+
+.filtro-chip--pdf {
+    padding: 4px 12px;
+    border-radius: 20px;
+    border: 1px solid v.$border;
+    background: transparent;
+    color: v.$muted;
+    font-family: v.$ff-body;
+    font-size: 12px;
+    font-weight: 500;
+    cursor: pointer;
+    margin-left: auto;
+    transition:
+        background v.$duration-fast v.$ease,
+        color v.$duration-fast v.$ease,
+        border-color v.$duration-fast v.$ease;
+
+    &:hover {
+        background: v.$surface-2;
+        color: v.$text;
+        border-color: v.$border-2;
+    }
+}
