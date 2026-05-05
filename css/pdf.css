@@ -72,6 +72,18 @@
 .pdf-body .pdf-table tr:nth-child(even) td {
   background: #fafafa;
 }
+.pdf-body .pdf-table th:nth-child(4), .pdf-body .pdf-table th:nth-child(5),
+.pdf-body .pdf-table td:nth-child(4),
+.pdf-body .pdf-table td:nth-child(5) {
+  text-align: right;
+}
+.pdf-body .pdf-table th:nth-child(3),
+.pdf-body .pdf-table td:nth-child(3) {
+  font-size: 10px;
+  max-width: 280px;
+  white-space: normal;
+  word-break: break-word;
+}
 .pdf-body .pdf-footer {
   display: flex;
   flex-direction: column;
