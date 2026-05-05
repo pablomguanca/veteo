@@ -1,35 +1,14 @@
-function obtenerDias(fecha) {
-    const objetivo = new Date((fecha || '').replace(/(\d{2})\/(\d{2})\/(\d{4})/, '$3-$2-$1') + 'T00:00:00');
-    const hoy = new Date(); hoy.setHours(0, 0, 0, 0);
-    const diff = Math.round((objetivo - hoy) / 86400000);
-    return isNaN(diff) ? 999 : diff;
-}
-
-const REGLAS_FILTRO = {
-    PFT: (sec) => [20, 21, 22, 23, 24, 26].includes(sec),
-    ACC: (sec, desc) => [10, 34].includes(sec) || desc.toLowerCase().includes('carrefour'),
-    PAS: (sec) => sec === 15,
-    PCH: (sec) => [11, 14].includes(sec),
-    UM: (sec, desc, dias) => [10, 14, 15].includes(sec) && dias >= 3 && dias <= 7,
-};
-
-function resolverForm(sec, desc, dias) {
-    for (const [form, fn] of Object.entries(REGLAS_FILTRO)) {
-        if (fn(sec, desc, dias)) return form;
-    }
-    return null;
-}
-
 function filtrarRows(rows, filtro) {
     if (filtro === 'todos') return rows;
     return rows.filter(row => {
-        const meta = row.querySelector('.vdb-row__meta')?.textContent || '';
-        const secMatch = meta.match(/SEC\s+(\d+)/);
-        const sec = secMatch ? parseInt(secMatch[1]) : 0;
-        const desc = row.querySelector('.vdb-row__name')?.textContent || '';
-        const diasMatch = meta.match(/(\d+)d restantes/);
-        const dias = diasMatch ? parseInt(diasMatch[1]) : 999;
-        return resolverForm(sec, desc, dias) === filtro;
+        if (filtro === 'PCH') {
+            const meta = row.querySelector('.vdb-row__meta')?.textContent || '';
+            const secMatch = meta.match(/SEC\s+(\d+)/);
+            const sec = secMatch ? parseInt(secMatch[1]) : 0;
+            return [11, 14].includes(sec);
+        }
+        const botones = [...row.querySelectorAll('.action-btn')];
+        return botones.some(btn => btn.textContent.trim() === filtro);
     });
 }
 
@@ -66,28 +45,38 @@ function generarPDF(target) {
         </tr>`;
     }).join('');
 
-    const html = `
-    <!DOCTYPE html><html lang="es"><head>
+    const html = `<!DOCTYPE html>
+<html lang="es">
+<head>
     <meta charset="UTF-8"/>
     <title>${titulo} · ${fecha}</title>
-    <style>
-        body { font-family: Arial, sans-serif; font-size: 11px; color: #111; margin: 24px; }
-        h1 { font-size: 16px; margin-bottom: 4px; }
-        .sub { color: #666; font-size: 10px; margin-bottom: 16px; }
-        table { width: 100%; border-collapse: collapse; }
-        th { background: #f0f0f0; text-align: left; padding: 6px 8px; font-size: 10px; border-bottom: 2px solid #ccc; }
-        td { padding: 5px 8px; border-bottom: 1px solid #e8e8e8; vertical-align: top; }
-        td:first-child { font-weight: bold; white-space: nowrap; width: 60px; }
-        tr:nth-child(even) td { background: #fafafa; }
-    </style>
-    </head><body>
-    <h1>${titulo}</h1>
-    <div class="sub">Generado el ${fecha} · Veteo App</div>
-    <table>
-        <thead><tr><th>Etapa</th><th>Producto</th><th>Detalle</th></tr></thead>
+    <link rel="stylesheet" href="${cssUrl}"/>
+</head>
+<body class="pdf-body">
+    <header class="pdf-header">
+        <div class="pdf-header__brand">Veteo App</div>
+        <div class="pdf-header__meta">
+            ${titulo}<br/>
+            Generado el ${fecha}
+        </div>
+    </header>
+    <table class="pdf-table">
+        <thead>
+            <tr>
+                <th>Sección</th>
+                <th>EAN</th>
+                <th>Descripción</th>
+                <th>Unidades a vencer</th>
+                <th>Fecha de vencimiento</th>
+            </tr>
+        </thead>
         <tbody>${filas}</tbody>
     </table>
-    </body></html>`;
+    <footer class="pdf-footer">
+        <h3>Desarrollado por Pablo Guanca<h3>
+    </footer>
+</body>
+</html>`;
 
     const ventana = window.open('', '_blank');
     ventana.document.write(html);

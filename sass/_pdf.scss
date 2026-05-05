@@ -1,0 +1,75 @@
+@use 'variables' as v;
+
+.pdf-body {
+    font-family: 'Google Sans Display';
+    font-size: 11px;
+    color: v.$surface;
+    margin: 32px;
+
+    .pdf-header {
+        display: flex;
+        align-items: flex-end;
+        font-family: 'Sora';
+        justify-content: space-between;
+        margin-bottom: 20px;
+        padding-bottom: 12px;
+        border-bottom: 2px solid v.$surface;
+
+        &__brand {
+            font-size: 22px;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+        }
+
+        &__meta {
+            font-family: 'Google Sans Mono';
+            font-size: 10px;
+            color: v.$muted;
+            text-align: right;
+            line-height: 1.6;
+        }
+    }
+
+    .pdf-table {
+        width: 100%;
+        border-collapse: collapse;
+
+        th {
+            background: #f0f0f0;
+            text-align: left;
+            padding: 6px 8px;
+            font-size: 10px;
+            font-weight: 700;
+            border-bottom: 2px solid #ccc;
+            white-space: nowrap;
+        }
+
+        td {
+            padding: 5px 8px;
+            border-bottom: 1px solid #e8e8e8;
+            vertical-align: top;
+        }
+
+        tr:nth-child(even) {
+            td {
+                background: #fafafa;
+            }
+        }
+    }
+    .pdf-footer {
+        display: flex;
+        flex-direction: column;
+        align-items: end;
+        color: v.$muted;
+        font-style: italic;
+        font-family: 'Google Sans Display';
+        font-weight: 300;
+        text-align: end;
+    }
+}
+
+@media print {
+    .pdf-body {
+        margin: 0;
+    }
+}

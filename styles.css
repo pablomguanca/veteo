@@ -1945,19 +1945,18 @@ h3 {
 }
 
 .pdf-body {
-  font-family: "Google Sans Display";
+  font-family: Arial, sans-serif;
   font-size: 11px;
-  color: #111216;
+  color: #111;
   margin: 32px;
 }
 .pdf-body .pdf-header {
   display: flex;
   align-items: flex-end;
-  font-family: "Sora";
   justify-content: space-between;
   margin-bottom: 20px;
   padding-bottom: 12px;
-  border-bottom: 2px solid #111216;
+  border-bottom: 2px solid #111;
 }
 .pdf-body .pdf-header__brand {
   font-size: 22px;
@@ -1965,9 +1964,8 @@ h3 {
   letter-spacing: -0.5px;
 }
 .pdf-body .pdf-header__meta {
-  font-family: "Google Sans Mono";
   font-size: 10px;
-  color: #71737d;
+  color: #666;
   text-align: right;
   line-height: 1.6;
 }
@@ -1991,16 +1989,6 @@ h3 {
 }
 .pdf-body .pdf-table tr:nth-child(even) td {
   background: #fafafa;
-}
-.pdf-body .pdf-footer {
-  display: flex;
-  flex-direction: column;
-  align-items: end;
-  color: #71737d;
-  font-style: italic;
-  font-family: "Google Sans Display";
-  font-weight: 300;
-  text-align: end;
 }
 
 @media print {
