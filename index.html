@@ -28,7 +28,7 @@
 </head>
 
 <body>
-    <div id="login-overlay" class="login-overlay">
+    <!-- <div id="login-overlay" class="login-overlay">
         <div class="login-card">
             <h2>Veteo App</h2>
             <p>Ingresá con tu cuenta para registrar vencimientos</p>
@@ -38,8 +38,8 @@
 
             <p id="error-message" style="color: #ff4d4d; margin-top: 10px;" hidden></p>
         </div>
-    </div>
-    <div id="app-content" hidden>
+    </div> -->
+    <div id="app-content">
         <div class="noise" aria-hidden="true"></div>
 
         <main class="wrap">
@@ -291,6 +291,37 @@
                     </div>
                 </div>
             </section>
+
+            <section class="card card--wide a3" aria-label="Top productos de la semana">
+                <div class="card-row">
+                    <div>
+                        <div class="card__label">Actividad global</div>
+                        <div class="card__title">Top 5 productos cargados</div>
+                    </div>
+                    <span class="top-fecha" id="top-fecha"></span>
+                </div>
+
+                <div class="top-list" id="top-list">
+                    <div class="venc-empty" id="top-empty" hidden>
+                        <span>Sin actividad registrada esta semana</span>
+                    </div>
+                </div>
+            </section>
+
+            <article class="card card--wide a3" aria-label="Ranking de usuarios de la semana">
+                <div class="card-row">
+                    <div>
+                        <div class="card__label">Gamificación</div>
+                        <div class="card__title">Ranking semanal</div>
+                    </div>
+                    <span class="ranking-fecha" id="ranking-fecha"></span>
+                </div>
+                <div class="scrollable-list" id="ranking-list" role="list">
+                    <div class="venc-empty" id="ranking-empty" hidden>
+                        <span>Sin actividad registrada esta semana</span>
+                    </div>
+                </div>
+            </article>
 
             <h2 class="sec-label a4" id="tl">Línea de tiempo operativa</h2>
             <div class="tl-grid a4">

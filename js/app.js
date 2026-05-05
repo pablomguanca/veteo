@@ -11,6 +11,8 @@ import { inicializarEscaner } from './modules/escaner.js';
 import { inicializarSesionUI } from './modules/sesion-ui.js';
 import { inicializarAutenticacionGoogle } from './modules/google-auth.js';
 import { inicializarFiltros } from './modules/filtros.js';
+import { inicializarTopProductos } from './modules/top-productos.js';
+import { inicializarRankingUsuarios } from './modules/ranking-usuarios.js';
 
 document.addEventListener('DOMContentLoaded', () => {
     inicializarAutenticacionGoogle();
@@ -26,4 +28,6 @@ document.addEventListener('DOMContentLoaded', () => {
     inicializarEscaner();
     inicializarSesionUI();
     inicializarFiltros();
+    inicializarTopProductos();
+    inicializarRankingUsuarios();
 });

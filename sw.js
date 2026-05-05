@@ -19,19 +19,25 @@ const URLS_CACHE = [
     './manifest.json',
     './css/styles.css',
     './js/app.js',
-    './js/modules/config.js',
     './js/modules/checklist.js',
+    './js/modules/config.js',
     './js/modules/enlaces.js',
+    './js/modules/escaner.js',
     './js/modules/estado-formularios.js',
     './js/modules/fecha.js',
+    './js/modules/filtros.js',
     './js/modules/google-auth.js',
     './js/modules/mensaje-diario.js',
     './js/modules/notificaciones.js',
+    './js/modules/ranking-usuarios.js',
+    './js/modules/sesion-ui.js',
     './js/modules/sw-register.js',
-    './js/modules/vencimientos.js',
+    './js/modules/top-productos.js',
+    './js/modules/tour.js',
     './js/modules/vencimientos-db.js',
+    './js/modules/vencimientos.js',
     './assets/img/icon-192.png',
-    './assets/img/icon-512.png'
+    './assets/img/icon-512.png',
 ];
 
 self.addEventListener('install', (evento) => {

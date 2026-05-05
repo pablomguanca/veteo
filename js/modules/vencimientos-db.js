@@ -116,6 +116,7 @@ export async function ejecutarCargaCompleta(item, tipo) {
     const vto = item.vencimiento || item.VENCIMIENTO;
     const desc = item.descripcion || item.DESCRIPCION || "";
     const descMinuscula = desc.toLowerCase();
+    const dias = obtenerDiasRestantes(vto);
 
     const FORMS = {
         PAS: { url: ENLACES_APP.formPas, id: "entry.1279354663" },
@@ -135,7 +136,7 @@ export async function ejecutarCargaCompleta(item, tipo) {
         if (sec === 20 && dias >= 3 && dias <= 7) {
             urlAbrir = FORMS.PCH.url;
         }
-        if ([20, 21, 22, 23, 24, 26].includes(sec)) {
+        else if ([20, 21, 22, 23, 24, 26].includes(sec)) {
             urlAbrir = FORMS.PFT.url;
         } else if (descMinuscula.includes("carrefour") || [10, 34].includes(sec)) {
             urlAbrir = `${FORMS.S10.url}?usp=pp_url&${FORMS.S10.id}=${ean}`;

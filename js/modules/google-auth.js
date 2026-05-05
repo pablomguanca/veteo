@@ -171,6 +171,16 @@ function manejarRespuestaCredenciales(respuesta) {
         email: emailUsuario,
     });
 
+    fetch(CONFIGURACION.apiUrl, {
+        method: 'POST',
+        body: JSON.stringify({
+            action: 'actualizarPerfil',
+            email: emailUsuario,
+            nombre: cargaUtil.given_name,
+            foto: cargaUtil.picture,
+        }),
+    }).catch(() => { });
+
     window.location.href = 'index.html';
 }
 

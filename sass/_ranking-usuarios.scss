@@ -1,0 +1,101 @@
+@use 'variables' as v;
+
+.ranking-fecha {
+    font-family: v.$ff-mono;
+    font-size: 11px;
+    color: v.$muted;
+    align-self: center;
+}
+
+.ranking-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 0;
+    border-bottom: 0.5px solid v.$border;
+
+    &:last-child {
+        border-bottom: none;
+    }
+
+    &--top {
+        .ranking-item__pos {
+            color: v.$amber;
+        }
+    }
+
+    &__pos {
+        font-family: v.$ff-mono;
+        font-size: 13px;
+        font-weight: 500;
+        color: v.$muted;
+        min-width: 28px;
+    }
+
+    &__avatar {
+        width: 36px;
+        height: 36px;
+        border-radius: 50%;
+        overflow: hidden;
+        background: v.$surface-2;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+        border: 2px solid v.$border;
+
+        &--top {
+            border-color: v.$amber;
+        }
+
+        img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        span {
+            font-size: 12px;
+            font-weight: 500;
+            color: v.$muted;
+        }
+    }
+
+    &__info {
+        flex: 1;
+        min-width: 0;
+
+        p {
+            margin: 0;
+        }
+    }
+
+    &__nombre {
+        font-size: 13px;
+        font-weight: 500;
+        color: v.$text;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+
+        &--top {
+            color: v.$amber;
+        }
+    }
+
+    &__email {
+        font-size: 11px;
+        color: v.$muted;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        margin-top: 2px;
+    }
+
+    &__cargas {
+        font-family: v.$ff-mono;
+        font-size: 12px;
+        color: v.$green;
+        white-space: nowrap;
+    }
+}

@@ -1944,4 +1944,137 @@ h3 {
   border-color: rgba(255, 255, 255, 0.115);
 }
 
+.top-fecha {
+  font-family: "Google Sans Mono", monospace;
+  font-size: 11px;
+  color: #71737d;
+  align-self: center;
+}
+
+.top-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.065);
+}
+.top-item:last-child {
+  border-bottom: none;
+}
+.top-item__rank {
+  font-family: "Google Sans Mono", monospace;
+  font-size: 13px;
+  font-weight: 700;
+  color: #fcd34d;
+  min-width: 28px;
+}
+.top-item__info {
+  flex: 1;
+  min-width: 0;
+}
+.top-item__desc {
+  font-size: 13px;
+  font-weight: 500;
+  color: #eeeae3;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.top-item__meta {
+  font-size: 11px;
+  color: #71737d;
+  margin-top: 2px;
+}
+.top-item__total {
+  font-family: "Google Sans Mono", monospace;
+  font-size: 12px;
+  color: #6ee7b7;
+  white-space: nowrap;
+}
+
+.ranking-fecha {
+  font-family: "Google Sans Mono", monospace;
+  font-size: 11px;
+  color: #71737d;
+  align-self: center;
+}
+
+.ranking-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 0;
+  border-bottom: 0.5px solid rgba(255, 255, 255, 0.065);
+}
+.ranking-item:last-child {
+  border-bottom: none;
+}
+.ranking-item--top .ranking-item__pos {
+  color: #fcd34d;
+}
+.ranking-item__pos {
+  font-family: "Google Sans Mono", monospace;
+  font-size: 13px;
+  font-weight: 500;
+  color: #71737d;
+  min-width: 28px;
+}
+.ranking-item__avatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  overflow: hidden;
+  background: #17191f;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  border: 2px solid rgba(255, 255, 255, 0.065);
+}
+.ranking-item__avatar--top {
+  border-color: #fcd34d;
+}
+.ranking-item__avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.ranking-item__avatar span {
+  font-size: 12px;
+  font-weight: 500;
+  color: #71737d;
+}
+.ranking-item__info {
+  flex: 1;
+  min-width: 0;
+}
+.ranking-item__info p {
+  margin: 0;
+}
+.ranking-item__nombre {
+  font-size: 13px;
+  font-weight: 500;
+  color: #eeeae3;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.ranking-item__nombre--top {
+  color: #fcd34d;
+}
+.ranking-item__email {
+  font-size: 11px;
+  color: #71737d;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin-top: 2px;
+}
+.ranking-item__cargas {
+  font-family: "Google Sans Mono", monospace;
+  font-size: 12px;
+  color: #6ee7b7;
+  white-space: nowrap;
+}
+
 /*# sourceMappingURL=styles.css.map */
