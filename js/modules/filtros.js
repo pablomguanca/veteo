@@ -27,21 +27,44 @@ function aplicarFiltroUI(target, filtro) {
 
 function generarPDF(target) {
     const contenedorId = target === 'venc' ? 'venc-list' : 'vdb-list';
-    const contenedor = document.getElementById(contenedorId);
+    const contenedor   = document.getElementById(contenedorId);
     if (!contenedor) return;
 
     const titulo = target === 'venc' ? 'Vencimientos Cargados' : 'Vencimientos Importados';
-    const fecha = new Date().toLocaleDateString('es-AR', { day: '2-digit', month: 'short', year: 'numeric' });
+    const fecha  = new Date().toLocaleDateString('es-AR', { day: '2-digit', month: '2-digit', year: 'numeric' });
+    const cssUrl = new URL('/css/styles.css', window.location.origin).href;
 
-    const rows = [...contenedor.querySelectorAll('.vdb-row')].filter(r => r.style.display !== 'none');
+    const rows  = [...contenedor.querySelectorAll('.vdb-row')].filter(r => r.style.display !== 'none');
     const filas = rows.map(row => {
-        const nombre = row.querySelector('.vdb-row__name')?.textContent || '';
         const meta = row.querySelector('.vdb-row__meta')?.textContent || '';
-        const badge = row.querySelector('.venc-badge')?.textContent || '';
+        const desc = row.querySelector('.vdb-row__name')?.textContent.trim() || '—';
+
+        const secMatch  = meta.match(/SEC\s+(\d+)/);
+        const eanMatch  = meta.match(/EAN\s+(\d+)/);
+        const cantMatch = meta.match(/Cant:\s*([\d,]+)/);
+
+        const sec  = secMatch  ? secMatch[1]  : '—';
+        const ean  = eanMatch  ? eanMatch[1]  : '—';
+        const cant = cantMatch ? cantMatch[1] : '—';
+
+        const hoy = new Date().toLocaleDateString('es-AR', { day: '2-digit', month: '2-digit', year: 'numeric' });
+        let fechaTexto = hoy;
+        if (!meta.includes('Vence hoy')) {
+            const fechaMatch = meta.match(/Vence el\s+(.+?)\s+·/);
+            if (fechaMatch) {
+                const d = new Date(fechaMatch[1]);
+                fechaTexto = isNaN(d)
+                    ? fechaMatch[1]
+                    : d.toLocaleDateString('es-AR', { day: '2-digit', month: '2-digit', year: 'numeric' });
+            }
+        }
+
         return `<tr>
-            <td>${badge}</td>
-            <td>${nombre}</td>
-            <td>${meta}</td>
+            <td>${sec}</td>
+            <td>${ean}</td>
+            <td>${desc}</td>
+            <td>${cant}</td>
+            <td>${fechaTexto}</td>
         </tr>`;
     }).join('');
 
@@ -73,7 +96,7 @@ function generarPDF(target) {
         <tbody>${filas}</tbody>
     </table>
     <footer class="pdf-footer">
-        <h3>Desarrollado por Pablo M. Guanca<h3>
+        <p>Desarrollado por Pablo M. Guanca</p>
     </footer>
 </body>
 </html>`;
