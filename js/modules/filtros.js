@@ -27,24 +27,24 @@ function aplicarFiltroUI(target, filtro) {
 
 function generarPDF(target) {
     const contenedorId = target === 'venc' ? 'venc-list' : 'vdb-list';
-    const contenedor   = document.getElementById(contenedorId);
+    const contenedor = document.getElementById(contenedorId);
     if (!contenedor) return;
 
     const titulo = target === 'venc' ? 'Vencimientos Cargados' : 'Vencimientos Importados';
-    const fecha  = new Date().toLocaleDateString('es-AR', { day: '2-digit', month: '2-digit', year: 'numeric' });
+    const fecha = new Date().toLocaleDateString('es-AR', { day: '2-digit', month: '2-digit', year: 'numeric' });
     const cssUrl = new URL('/css/pdf.css', window.location.origin).href;
 
-    const rows  = [...contenedor.querySelectorAll('.vdb-row')].filter(r => r.style.display !== 'none');
+    const rows = [...contenedor.querySelectorAll('.vdb-row')].filter(r => r.style.display !== 'none');
     const filas = rows.map(row => {
         const meta = row.querySelector('.vdb-row__meta')?.textContent || '';
         const desc = row.querySelector('.vdb-row__name')?.textContent.trim() || '—';
 
-        const secMatch  = meta.match(/SEC\s+(\d+)/);
-        const eanMatch  = meta.match(/EAN\s+(\d+)/);
+        const secMatch = meta.match(/SEC\s+(\d+)/);
+        const eanMatch = meta.match(/EAN\s+(\d+)/);
         const cantMatch = meta.match(/Cant:\s*([\d,]+)/);
 
-        const sec  = secMatch  ? secMatch[1]  : '—';
-        const ean  = eanMatch  ? eanMatch[1]  : '—';
+        const sec = secMatch ? secMatch[1] : '—';
+        const ean = eanMatch ? eanMatch[1] : '—';
         const cant = cantMatch ? cantMatch[1] : '—';
         const fechaRaw = row.dataset.fecha || '';
         let fechaTexto = '—';
@@ -64,6 +64,7 @@ function generarPDF(target) {
             <td>${desc}</td>
             <td>${cant}</td>
             <td>${fechaTexto}</td>
+            <td><input type="checkbox"/></td>
         </tr>`;
     }).join('');
 
@@ -76,7 +77,13 @@ function generarPDF(target) {
 </head>
 <body class="pdf-body">
     <header class="pdf-header">
-        <div class="pdf-header__brand">Veteo App</div>
+        <div class="pdf-header__left">
+            <img src="https://veteo.vercel.app/assets/img/icon-512.png" alt="Veteo App" class="pdf-header__logo"/>
+            <div class="pdf-header__brand">Veteo App</div>
+        </div>
+        <div class="pdf-header__center">
+            <p class="pdf-header__subtitle">Listado de Vencimientos a Controlar</p>
+        </div>
         <div class="pdf-header__meta">
             ${titulo}<br/>
             Generado el ${fecha}
@@ -90,6 +97,7 @@ function generarPDF(target) {
                 <th>Descripción</th>
                 <th>Unidades a vencer</th>
                 <th>Fecha de vencimiento</th>
+                <th>Controlado</th>
             </tr>
         </thead>
         <tbody>${filas}</tbody>

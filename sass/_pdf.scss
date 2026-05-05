@@ -1,31 +1,55 @@
 @use 'variables' as v;
-@import url('https://fonts.googleapis.com/css2?family=Google+Sans+Display:wght@300;400;700&family=Google+Sans+Mono&family=Sora:wght@300;400;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Google+Sans+Code:ital,wght,MONO@0,300..800,1;1,300..800,1&family=Google+Sans:ital,opsz,wght@0,17..18,400..700;1,17..18,400..700&family=Sora:wght@100..800&display=swap');
 
 .pdf-body {
-    font-family: 'Google Sans Display';
+    font-family: 'Google Sans', sans-serif;
     font-size: 11px;
     color: v.$surface;
     margin: 32px;
 
     .pdf-header {
         display: flex;
-        align-items: flex-end;
-        font-family: 'Sora';
+        align-items: center;
         justify-content: space-between;
         margin-bottom: 20px;
         padding-bottom: 12px;
-        border-bottom: 2px solid v.$surface;
+        border-bottom: 2px solid #111;
+
+        &__left {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        &__logo {
+            width: 36px;
+            height: 36px;
+            border-radius: 8px;
+        }
 
         &__brand {
+            font-family: 'Sora';
             font-size: 22px;
             font-weight: 700;
             letter-spacing: -0.5px;
         }
 
+        &__center {
+            flex: 1;
+            text-align: center;
+        }
+
+        &__subtitle {
+            font-size: 13px;
+            font-weight: 700;
+            color: #111;
+            margin: 0;
+        }
+
         &__meta {
-            font-family: 'Google Sans Mono';
+            font-family: 'Google Sans Code';
             font-size: 10px;
-            color: v.$muted;
+            color: #666;
             text-align: right;
             line-height: 1.6;
         }
@@ -49,6 +73,12 @@
             padding: 5px 8px;
             border-bottom: 1px solid #e8e8e8;
             vertical-align: top;
+            font-family: Arial, Helvetica, sans-serif;
+
+            &:last-child {
+                text-align: center;
+                width: 80px;
+            }
         }
 
         tr:nth-child(even) {
@@ -65,8 +95,7 @@
 
         p {
             color: v.$muted;
-            font-style: italic;
-            font-family: 'Google Sans Display';
+            font-family: 'Google Sans Code';
             font-weight: 300;
             text-align: end;
         }
@@ -75,6 +104,6 @@
 
 @media print {
     .pdf-body {
-        margin: 0;
+        margin: 20px;
     }
 }
