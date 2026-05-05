@@ -1996,6 +1996,8 @@ h3 {
   display: flex;
   flex-direction: column;
   align-items: end;
+}
+.pdf-body .pdf-footer h3 {
   color: #71737d;
   font-style: italic;
   font-family: "Google Sans Display";

@@ -56,15 +56,19 @@
             }
         }
     }
+
     .pdf-footer {
         display: flex;
         flex-direction: column;
         align-items: end;
-        color: v.$muted;
-        font-style: italic;
-        font-family: 'Google Sans Display';
-        font-weight: 300;
-        text-align: end;
+
+        h3 {
+            color: v.$muted;
+            font-style: italic;
+            font-family: 'Google Sans Display';
+            font-weight: 300;
+            text-align: end;
+        }
     }
 }
 

@@ -73,7 +73,7 @@ function generarPDF(target) {
         <tbody>${filas}</tbody>
     </table>
     <footer class="pdf-footer">
-        <h3>Desarrollado por Pablo Guanca<h3>
+        <h3>Desarrollado por Pablo M. Guanca<h3>
     </footer>
 </body>
 </html>`;
