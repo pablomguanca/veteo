@@ -159,7 +159,6 @@ export async function ejecutarCargaCompleta(item, tipo) {
                 const p = productosEnMemoria.find(x => (x.ean || x.EAN) === ean && (x.vencimiento || x.VENCIMIENTO) === vto);
                 if (p) p.ESTADO = nuevoEstado;
                 renderizarTabla(document.getElementById('vdb-list'), document.getElementById('vdb-empty'), productosEnMemoria);
-                actualizarBannerAlertas(productosEnMemoria);
                 window.dispatchEvent(new CustomEvent('veteo:productosActualizados', { detail: productosEnMemoria }));
             }
         } catch (e) {
