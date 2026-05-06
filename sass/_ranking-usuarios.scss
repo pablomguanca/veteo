@@ -1,7 +1,13 @@
 @use 'variables' as v;
 
+.card--featured {
+    border: 1px solid v.$amber;
+    border-radius: 4px;
+    padding: 16px;
+}
+
 .ranking-fecha {
-    font-family: v.$ff-mono;
+    font-family: v.$ff-display;
     font-size: 11px;
     color: v.$muted;
     align-self: center;
@@ -76,7 +82,8 @@
         color: v.$text;
         white-space: nowrap;
         overflow: hidden;
-        text-overflow: ellipsis;
+        white-space: normal;
+        word-break: break-word;
 
         &--top {
             color: v.$amber;

@@ -19,7 +19,7 @@ function renderizarRanking(datos) {
         const hoy = new Date();
         const hace7 = new Date(hoy.getTime() - 7 * 24 * 60 * 60 * 1000);
         const fmt = d => d.toLocaleDateString('es-AR', { day: '2-digit', month: 'short' });
-        elementoFecha.textContent = `${fmt(hace7)} → ${fmt(hoy)}`;
+        elementoFecha.textContent = `${fmt(hace7)} - ${fmt(hoy)}`;
     }
 
     contenedor.querySelectorAll('.ranking-item').forEach(el => el.remove());

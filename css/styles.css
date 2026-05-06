@@ -1944,8 +1944,13 @@ h3 {
   border-color: rgba(255, 255, 255, 0.115);
 }
 
+.card--highlight {
+  border: 1px solid #fb923c;
+  border-radius: 4px;
+}
+
 .top-fecha {
-  font-family: "Google Sans Mono", monospace;
+  font-family: "Google Sans Display", "Google Sans", sans-serif;
   font-size: 11px;
   color: #71737d;
   align-self: center;
@@ -1978,7 +1983,8 @@ h3 {
   color: #eeeae3;
   white-space: nowrap;
   overflow: hidden;
-  text-overflow: ellipsis;
+  white-space: normal;
+  word-break: break-word;
 }
 .top-item__meta {
   font-size: 11px;
@@ -1992,8 +1998,14 @@ h3 {
   white-space: nowrap;
 }
 
+.card--featured {
+  border: 1px solid #fcd34d;
+  border-radius: 4px;
+  padding: 16px;
+}
+
 .ranking-fecha {
-  font-family: "Google Sans Mono", monospace;
+  font-family: "Google Sans Display", "Google Sans", sans-serif;
   font-size: 11px;
   color: #71737d;
   align-self: center;
@@ -2057,7 +2069,8 @@ h3 {
   color: #eeeae3;
   white-space: nowrap;
   overflow: hidden;
-  text-overflow: ellipsis;
+  white-space: normal;
+  word-break: break-word;
 }
 .ranking-item__nombre--top {
   color: #fcd34d;
