@@ -150,9 +150,11 @@ export async function ejecutarCargaCompleta(item, tipo) {
     if (urlAbrir) window.open(urlAbrir, '_blank');
 
     const usuario = obtenerUsuarioActual();
+    console.log('[Debug] ean:', ean, 'vto:', vto, 'usuario:', obtenerUsuarioActual());
     if (usuario) {
         try {
             const res = await apiActualizarEstado(ean, vto, nuevoEstado, usuario);
+            console.log('[Debug] respuesta apiActualizarEstado:', res);
             if (res.ok) {
                 const p = productosEnMemoria.find(x => (x.ean || x.EAN) === ean && (x.vencimiento || x.VENCIMIENTO) === vto);
                 if (p) p.ESTADO = nuevoEstado;
