@@ -1,9 +1,7 @@
 @use 'variables' as v;
 
 .card--featured {
-    border: 1px solid v.$amber;
     border-radius: 4px;
-    padding: 16px;
 }
 
 .ranking-fecha {
