@@ -1,11 +1,5 @@
 @use 'variables' as v;
 
-.card--featured {
-    border: 1px solid v.$amber;
-    border-radius: 4px;
-    padding: 16px;
-}
-
 .ranking-fecha {
     font-family: v.$ff-display;
     font-size: 11px;
@@ -80,7 +74,6 @@
         font-size: 13px;
         font-weight: 500;
         color: v.$text;
-        white-space: nowrap;
         overflow: hidden;
         white-space: normal;
         word-break: break-word;
@@ -100,6 +93,60 @@
     }
 
     &__cargas {
+        font-family: v.$ff-mono;
+        font-size: 12px;
+        color: v.$green;
+        white-space: nowrap;
+    }
+}
+
+.top-fecha {
+    font-family: v.$ff-display;
+    font-size: 11px;
+    color: v.$muted;
+    align-self: center;
+}
+
+.top-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 0;
+    border-bottom: 1px solid v.$border;
+
+    &:last-child {
+        border-bottom: none;
+    }
+
+    &__rank {
+        font-family: v.$ff-mono;
+        font-size: 13px;
+        font-weight: 700;
+        color: v.$amber;
+        min-width: 28px;
+    }
+
+    &__info {
+        flex: 1;
+        min-width: 0;
+    }
+
+    &__desc {
+        font-size: 13px;
+        font-weight: 500;
+        color: v.$text;
+        overflow: hidden;
+        white-space: normal;
+        word-break: break-word;
+    }
+
+    &__meta {
+        font-size: 11px;
+        color: v.$muted;
+        margin-top: 2px;
+    }
+
+    &__total {
         font-family: v.$ff-mono;
         font-size: 12px;
         color: v.$green;
