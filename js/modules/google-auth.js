@@ -111,54 +111,36 @@ export function inicializarAutenticacionGoogle() {
     }
 }
 
-function manejarRespuestaCredenciales(respuesta) {
+async function manejarRespuestaCredenciales(respuesta) {
     const base64Url = respuesta.credential.split('.')[1];
     const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
-    const jsonPayload = decodeURIComponent(window.atob(base64).split('').map(function (c) {
+    const jsonPayload = decodeURIComponent(window.atob(base64).split('').map(function(c) {
         return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
     }).join(''));
 
     const cargaUtil = JSON.parse(jsonPayload);
     const emailUsuario = cargaUtil.email.toLowerCase();
-    const usuariosPermitidos = [
-        'pablo.m.guanca@gmail.com',
-        'pablo_guanca@carrefour.com',
-        'pablo_ciancio@carrefour.com',
-        'fernando_porro_falco@carrefour.com',
-        'sergio_gustavo_alfonsin@carrefour.com',
-        'cecilia_serrano@carrefour.com',
-        'cristian_rivas@carrefour.com',
-        'luis_gonzales@carrefour.com',
-        'adrian_falcon@carrefour.com',
-        'daisis_pereira@carrefour.com',
-        'anabel_Gonzalez@carrefour.com',
-        'juan_riquelme@carrefour.com',
-        'pamela_montalvo@carrefour.com',
-        'valeria_lima@carrefour.com',
-        'ariel_hernan_latorre@carrefour.com',
-        'nadin_cespedes@carrefour.com',
-        'claudia_rochelle@carrefour.com',
-        'lorena_estefania_lucero@carrefour.com',
-        'yanina_malagueno@carrefour.com',
-        'ezequiel_mendez@carrefour.com',
-        'lorena_leguiza@carrefour.com',
-        'augusto_leon@carrefour.com',
-        'guillermo_Reynoso@carrefour.com',
-        'celeste_soledad_palavecino@carrefour.com',
-        'pedro_ramirez@carrefour.com',
-        'carolina_camargo@carrefour.com',
-        'natalia_medina@carrefour.com',
-        'pablo_chaperon@carrefour.com',
-        'navarro_malave_juan_arturo@carrefour.com',
-        'romina_fornes@carrefour.com',
-        'damian_correa@carrefour.com',
-        'julieta_caputto@carrefour.com',
-    ];
 
-    if (!usuariosPermitidos.includes(emailUsuario)) {
-        const msjError = document.getElementById('error-message');
+    const msjError = document.getElementById('error-message');
+
+    try {
+        const res = await fetch(CONFIGURACION.apiUrl, {
+            method: 'POST',
+            body: JSON.stringify({ action: 'verificarUsuario', email: emailUsuario })
+        });
+        const datos = await res.json();
+
+        if (!datos.permitido) {
+            if (msjError) {
+                msjError.textContent = "Acceso denegado: Tu cuenta no está autorizada para usar Veteo.";
+                msjError.hidden = false;
+            }
+            return;
+        }
+    } catch (err) {
+        console.error('Error verificando usuario:', err);
         if (msjError) {
-            msjError.textContent = "Acceso denegado: Tu cuenta no está autorizada para usar Veteo.";
+            msjError.textContent = "Error de conexión al verificar acceso.";
             msjError.hidden = false;
         }
         return;
@@ -179,7 +161,7 @@ function manejarRespuestaCredenciales(respuesta) {
             nombre: cargaUtil.given_name,
             foto: cargaUtil.picture,
         }),
-    }).catch(() => { });
+    }).catch(() => {});
 
     window.location.href = 'index.html';
 }
