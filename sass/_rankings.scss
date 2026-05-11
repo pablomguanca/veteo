@@ -92,11 +92,48 @@
         margin-top: 2px;
     }
 
+    &__trofeo {
+        display: inline-block;
+        vertical-align: middle;
+        margin-right: 4px;
+        flex-shrink: 0;
+    }
+
     &__cargas {
         font-family: v.$ff-mono;
         font-size: 12px;
         color: v.$green;
         white-space: nowrap;
+    }
+}
+
+.ranking-mi-posicion {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 14px;
+    margin-bottom: 12px;
+    border-radius: v.$radius-sm;
+    background: v.$violet-glow;
+    border: 1px solid v.$violet-border;
+
+    &__pos {
+        font-family: v.$ff-mono;
+        font-size: 15px;
+        font-weight: 500;
+        color: v.$violet;
+    }
+
+    &__texto {
+        font-size: 12px;
+        color: v.$muted;
+        flex: 1;
+    }
+
+    &__cargas {
+        font-family: v.$ff-mono;
+        font-size: 12px;
+        color: v.$green;
     }
 }
 

@@ -28,7 +28,7 @@
 </head>
 
 <body>
-    <div id="login-overlay" class="login-overlay">
+    <!-- <div id="login-overlay" class="login-overlay">
         <div class="login-card">
             <h2>Veteo App</h2>
             <p>Ingresá con tu cuenta para registrar vencimientos</p>
@@ -38,8 +38,8 @@
 
             <p id="error-message" style="color: #ff4d4d; margin-top: 10px;" hidden></p>
         </div>
-    </div>
-    <div id="app-content" hidden>
+    </div> -->
+    <div id="app-content">
         <div class="noise" aria-hidden="true"></div>
 
         <main class="wrap">
@@ -316,6 +316,11 @@
                             <div class="card__title">Ranking semanal</div>
                         </div>
                         <span class="ranking-fecha" id="ranking-fecha"></span>
+                    </div>
+                    <div class="ranking-mi-posicion" id="ranking-mi-posicion" hidden>
+                        <span class="ranking-mi-posicion__pos" id="ranking-mi-pos"></span>
+                        <span class="ranking-mi-posicion__texto">Tu posición esta semana</span>
+                        <span class="ranking-mi-posicion__cargas" id="ranking-mi-cargas"></span>
                     </div>
                     <div class="scrollable-list" id="ranking-list" role="list">
                         <div class="venc-empty" id="ranking-empty" hidden>

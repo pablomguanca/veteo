@@ -279,8 +279,8 @@ h3 {
 .btn-primary:hover {
   opacity: 0.88;
   transform: translateY(-1px);
-  background-color: #2e3038;
-  color: #fcd34d;
+  background-color: #1d76f2;
+  color: #eeeae3;
 }
 
 .btn-ghost {
@@ -2022,11 +2022,44 @@ h3 {
   text-overflow: ellipsis;
   margin-top: 2px;
 }
+.ranking-item__trofeo {
+  display: inline-block;
+  vertical-align: middle;
+  margin-right: 4px;
+  flex-shrink: 0;
+}
 .ranking-item__cargas {
   font-family: "Google Sans Mono", monospace;
   font-size: 12px;
   color: #6ee7b7;
   white-space: nowrap;
+}
+
+.ranking-mi-posicion {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 14px;
+  margin-bottom: 12px;
+  border-radius: 10px;
+  background: rgba(196, 181, 253, 0.13);
+  border: 1px solid rgba(196, 181, 253, 0.22);
+}
+.ranking-mi-posicion__pos {
+  font-family: "Google Sans Mono", monospace;
+  font-size: 15px;
+  font-weight: 500;
+  color: #c4b5fd;
+}
+.ranking-mi-posicion__texto {
+  font-size: 12px;
+  color: #71737d;
+  flex: 1;
+}
+.ranking-mi-posicion__cargas {
+  font-family: "Google Sans Mono", monospace;
+  font-size: 12px;
+  color: #6ee7b7;
 }
 
 .top-fecha {
