@@ -1,13 +1,25 @@
 function filtrarRows(rows, filtro) {
-    if (filtro === 'todos') return rows;
-    return rows.filter(row => {
-        if (filtro === 'PCH') {
-            const meta = row.querySelector('.vdb-row__meta')?.textContent || '';
+    if (filtro === 'todos') {
+        return rows.filter(r => r.dataset.vencido !== 'true');
+    }
+    if (filtro === 'vencidos') {
+        return rows.filter(r => r.dataset.vencido === 'true');
+    }
+    if (filtro === 'PCH') {
+        const meta = row.querySelector('.vdb-row__meta')?.textContent || '';
+        const secMatch = meta.match(/SEC\s+(\d+)/);
+        const sec = secMatch ? parseInt(secMatch[1]) : 0;
+        return rows.filter(r => {
+            if (r.dataset.vencido === 'true') return false;
+            const meta = r.querySelector('.vdb-row__meta')?.textContent || '';
             const secMatch = meta.match(/SEC\s+(\d+)/);
             const sec = secMatch ? parseInt(secMatch[1]) : 0;
             return [11, 14].includes(sec);
-        }
-        const botones = [...row.querySelectorAll('.action-btn')];
+        });
+    }
+    return rows.filter(r => {
+        if (r.dataset.vencido === 'true') return false;
+        const botones = [...r.querySelectorAll('.action-btn')];
         return botones.some(btn => btn.textContent.trim() === filtro);
     });
 }

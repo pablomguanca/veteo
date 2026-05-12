@@ -199,12 +199,7 @@ function renderizarTabla(contenedor, elementoVacio, filas) {
 
     const filasFiltradas = filas.filter(item => {
         const sec = parseInt(item.sec || item.SEC);
-        if ([30, 31, 32, 33, 65, 83].includes(sec)) {
-            return false;
-        }
-
-        const dias = obtenerDiasRestantes(item.vencimiento || item.VENCIMIENTO);
-        return dias !== null && dias >= 0;
+        return ![30, 31, 32, 33, 65, 83].includes(sec);
     });
 
     const filasOrdenadas = filasFiltradas.sort((a, b) =>
@@ -247,7 +242,7 @@ function renderizarTabla(contenedor, elementoVacio, filas) {
 
         const elemento = document.createElement('div');
         elemento.className = `vdb-row ${estado.includes('CARGADO') ? 'vdb-row--done' : ''}`;
-        elemento.dataset.fecha =vto;
+        elemento.dataset.fecha = vto;
 
         elemento.innerHTML = `
             <div class="vdb-row__left">

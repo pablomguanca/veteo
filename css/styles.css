@@ -1421,7 +1421,7 @@ h3 {
 }
 .vdb-row--done {
   opacity: 0.5;
-  filter: grayscale(0.5);
+  filter: grayscale(0.8);
 }
 
 .estado-btn {
@@ -1942,6 +1942,20 @@ h3 {
   background: #17191f;
   color: #eeeae3;
   border-color: rgba(255, 255, 255, 0.115);
+}
+.filtro-chip[data-filtro=vencidos].filtro-chip--active {
+  background: rgba(252, 165, 165, 0.15);
+  border-color: rgba(252, 165, 165, 0.35);
+  color: #fca5a5;
+}
+
+.vdb-row[data-vencido=true] {
+  opacity: 0.6;
+}
+.vdb-row[data-vencido=true] .venc-badge {
+  background: rgba(252, 165, 165, 0.15);
+  color: #fca5a5;
+  border-color: rgba(252, 165, 165, 0.25);
 }
 
 .ranking-fecha {

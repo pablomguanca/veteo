@@ -90,7 +90,6 @@ function renderizarItems(contenedor, elementoVacio, items, onEliminar) {
     if (!hayItems) return;
 
     const itemsFinales = itemsFiltradosSectores
-        .filter(item => obtenerDiasRestantes(item.fecha) >= 0)
         .sort((a, b) => new Date(a.fecha) - new Date(b.fecha));
 
     itemsFinales.forEach(item => {
@@ -107,6 +106,8 @@ function renderizarItems(contenedor, elementoVacio, items, onEliminar) {
         elemento.className = 'venc-item vdb-row';
         elemento.dataset.id = item.id;
         elemento.dataset.fecha = item.fecha;
+        elemento.dataset.vencido = dias < 0 ? 'true' : 'false';
+        if (dias < 0) elemento.style.display = 'none';
 
         elemento.innerHTML = `
             <div class="vdb-row__left">
