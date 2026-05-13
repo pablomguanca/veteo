@@ -13,6 +13,8 @@ import { inicializarAutenticacionGoogle } from './modules/google-auth.js';
 import { inicializarFiltros } from './modules/filtros.js';
 import { inicializarTopProductos } from './modules/top-productos.js';
 import { inicializarRankingUsuarios } from './modules/ranking-usuarios.js';
+import { inicializarSidebar } from './modules/sidebar.js';
+import { inicializarInstaladorPWA } from './modules/install.js';
 
 document.addEventListener('DOMContentLoaded', () => {
     inicializarAutenticacionGoogle();
@@ -30,4 +32,6 @@ document.addEventListener('DOMContentLoaded', () => {
     inicializarFiltros();
     inicializarTopProductos();
     inicializarRankingUsuarios();
+    inicializarSidebar();
+    inicializarInstaladorPWA();
 });

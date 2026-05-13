@@ -150,11 +150,9 @@ export async function ejecutarCargaCompleta(item, tipo) {
     if (urlAbrir) window.open(urlAbrir, '_blank');
 
     const usuario = obtenerUsuarioActual();
-    console.log('[Debug] ean:', ean, 'vto:', vto, 'usuario:', obtenerUsuarioActual());
     if (usuario) {
         try {
             const res = await apiActualizarEstado(ean, vto, nuevoEstado, usuario);
-            console.log('[Debug] respuesta apiActualizarEstado:', res);
             if (res.ok) {
                 const p = productosEnMemoria.find(x => (x.ean || x.EAN) === ean && (x.vencimiento || x.VENCIMIENTO) === vto);
                 if (p) p.ESTADO = nuevoEstado;
@@ -317,11 +315,19 @@ export async function inicializarBaseDatosVencimientos() {
         try {
             const datosApi = await apiObtenerTodo(usuario);
             if (datosApi.needsSetup) {
-                await apiConfigurarHoja(usuario);
+                const setup = await apiConfigurarHoja(usuario);
+                if (setup.spreadsheetId) {
+                    const url = `https://docs.google.com/spreadsheets/d/${setup.spreadsheetId}`;
+                    localStorage.setItem('veteo_sheets_url', url);
+                }
                 await cargarDatos();
                 return;
             }
             productosEnMemoria = datosApi.rows || [];
+            if (!localStorage.getItem('veteo_sheets_url') && datosApi.spreadsheetId) {
+                const url = `https://docs.google.com/spreadsheets/d/${datosApi.spreadsheetId}`;
+                localStorage.setItem('veteo_sheets_url', url);
+            }
             renderizarTabla(contenedorLista, elementoVacio, productosEnMemoria);
             if (elementoEstado) elementoEstado.textContent = construirEstado(usuario);
             window.dispatchEvent(new CustomEvent('veteo:productosActualizados', { detail: productosEnMemoria }));

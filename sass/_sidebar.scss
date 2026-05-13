@@ -1,0 +1,262 @@
+@use 'variables' as v;
+
+.btn-sidebar-trigger {
+    position: absolute;
+    top: 20px;
+    left: 10px;
+    z-index: 300;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 44px;
+    height: 44px;
+    background: v.$surface-2;
+    border-radius: v.$radius-sm;
+    border: 1px solid v.$border;
+    transition: all v.$duration-base v.$ease;
+
+    @media (min-width: 561px) {
+        top: 33px;
+        left: auto;
+        right: 13.3rem;
+    }
+
+    .hamburger-box {
+        width: 24px;
+        height: 18px;
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+    }
+
+    .hamburger-line {
+        display: block;
+        width: 100%;
+        height: 2px;
+        background-color: v.$text;
+        border-radius: 2px;
+        transition: transform v.$duration-base v.$ease, opacity v.$duration-base v.$ease;
+    }
+
+    &.is-active {
+        background: transparent;
+        border-color: transparent;
+
+        .hamburger-line:nth-child(1) {
+            transform: translateY(8px) rotate(45deg);
+        }
+
+        .hamburger-line:nth-child(2) {
+            opacity: 0;
+            transform: translateX(-10px);
+        }
+
+        .hamburger-line:nth-child(3) {
+            transform: translateY(-8px) rotate(-45deg);
+        }
+    }
+}
+
+.sidebar {
+    position: fixed;
+    top: 0;
+    left: -320px;
+    width: 300px;
+    height: 100%;
+    background: v.$surface;
+    border-right: 1px solid v.$border;
+    z-index: v.$z-modal + 10;
+    transition: left v.$duration-base v.$ease, right v.$duration-base v.$ease;
+    padding: 80px 20px 20px;
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+
+    &--open {
+        left: 0;
+        box-shadow: v.$shadow-lg;
+    }
+
+    @media (min-width: 561px) {
+        left: auto;
+        right: -320px;
+        border-right: none;
+        border-left: 1px solid v.$border;
+
+        &--open {
+            right: 0;
+            left: auto;
+        }
+    }
+
+    &__header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 30px;
+    }
+
+    &__title {
+        font-family: v.$ff-title;
+        font-size: 1.1rem;
+        font-weight: 700;
+        color: v.$text;
+        letter-spacing: -0.01em;
+    }
+
+    &__close {
+        background: transparent;
+        border: none;
+        cursor: pointer;
+        color: v.$muted;
+        font-size: 1.4rem;
+        line-height: 1;
+        padding: 4px;
+        border-radius: v.$radius-xs;
+        transition: color v.$duration-fast v.$ease,
+            background v.$duration-fast v.$ease;
+
+        &:hover {
+            color: v.$text;
+            background: v.$surface-2;
+        }
+    }
+
+    &__link {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 12px 0;
+        color: v.$muted;
+        font-family: v.$ff-body;
+        font-size: 0.9rem;
+        font-weight: 500;
+        text-decoration: none;
+        border-bottom: 1px solid v.$border;
+        transition: color v.$duration-fast v.$ease;
+
+        &:hover {
+            color: v.$text;
+        }
+
+        &:last-child {
+            border-bottom: none;
+        }
+    }
+
+    &__profile {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 16px 0;
+        margin-bottom: 16px;
+        border-bottom: 1px solid v.$border;
+    }
+
+    &__avatar {
+        width: 42px;
+        height: 42px;
+        border-radius: 50%;
+        object-fit: cover;
+        border: 2px solid v.$border-2;
+        flex-shrink: 0;
+    }
+
+    &__user-info {
+        min-width: 0;
+    }
+
+    &__user-name {
+        font-size: 14px;
+        font-weight: 600;
+        color: v.$text;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    &__user-email {
+        font-size: 11px;
+        color: v.$muted;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        margin-top: 2px;
+    }
+
+    &__nav-label {
+        font-size: 10px;
+        font-weight: 600;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        color: v.$muted;
+        margin-bottom: 4px;
+        margin-top: 8px;
+    }
+
+    &__footer {
+        margin-top: auto;
+        padding-top: 16px;
+        border-top: 1px solid v.$border;
+    }
+
+    &__logout {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        width: 100%;
+        padding: 10px 12px;
+        border-radius: v.$radius-xs;
+        border: none;
+        background: transparent;
+        color: v.$muted;
+        font-family: v.$ff-body;
+        font-size: 13px;
+        font-weight: 500;
+        cursor: pointer;
+        transition: background v.$duration-fast v.$ease,
+            color v.$duration-fast v.$ease;
+
+        &:hover {
+            background: v.$danger-muted;
+            color: v.$danger;
+        }
+    }
+}
+
+.sidebar-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.7);
+    backdrop-filter: blur(4px);
+    z-index: v.$z-modal + 5;
+    animation: fadeIn v.$duration-base v.$ease both;
+}
+
+.btn-install {
+    background: v.$blue-glow;
+    color: v.$blue;
+    border: 1px solid v.$border-2;
+    padding: 14px;
+    border-radius: v.$radius-sm;
+    width: 100%;
+    font-family: v.$ff-body;
+    font-size: 0.875rem;
+    font-weight: 700;
+    cursor: pointer;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    justify-content: center;
+    transition: background v.$duration-fast v.$ease,
+        border-color v.$duration-fast v.$ease;
+    animation: pulse-blue 2s infinite;
+
+    &:hover {
+        background: v.$blue;
+        color: white;
+        border-color: v.$blue;
+    }
+}
