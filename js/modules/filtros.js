@@ -1,24 +1,17 @@
 function filtrarRows(rows, filtro) {
-    if (filtro === 'todos') {
-        return rows.filter(r => r.dataset.vencido !== 'true');
-    }
-
     if (filtro === 'vencidos') {
         return rows.filter(r => r.dataset.vencido === 'true');
     }
-
-    if (filtro === 'PCH') {
-        return rows.filter(r => {
-            if (r.dataset.vencido === 'true') return false;
+    return rows.filter(r => {
+        const esVencido = r.dataset.vencido === 'true';
+        if (esVencido) return false;
+        if (filtro === 'todos') return true;
+        if (filtro === 'PCH') {
             const meta = r.querySelector('.vdb-row__meta')?.textContent || '';
             const secMatch = meta.match(/SEC\s+(\d+)/);
             const sec = secMatch ? parseInt(secMatch[1]) : 0;
             return [11, 14].includes(sec);
-        });
-    }
-
-    return rows.filter(r => {
-        if (r.dataset.vencido === 'true') return false;
+        }
         const botones = [...r.querySelectorAll('.action-btn')];
         return botones.some(btn => btn.textContent.trim() === filtro);
     });
@@ -28,11 +21,9 @@ function aplicarFiltroUI(target, filtro) {
     const contenedorId = target === 'venc' ? 'venc-list' : 'vdb-list';
     const contenedor = document.getElementById(contenedorId);
     if (!contenedor) return;
-
     const todasLasRows = [...contenedor.querySelectorAll('.vdb-row')];
     const visibles = filtrarRows(todasLasRows, filtro);
     const ocultas = todasLasRows.filter(r => !visibles.includes(r));
-
     visibles.forEach(r => r.style.display = '');
     ocultas.forEach(r => r.style.display = 'none');
 }
@@ -41,20 +32,16 @@ function generarPDF(target) {
     const contenedorId = target === 'venc' ? 'venc-list' : 'vdb-list';
     const contenedor = document.getElementById(contenedorId);
     if (!contenedor) return;
-
     const titulo = target === 'venc' ? 'Vencimientos Cargados' : 'Vencimientos Importados';
     const fecha = new Date().toLocaleDateString('es-AR', { day: '2-digit', month: '2-digit', year: 'numeric' });
     const cssUrl = new URL('/css/pdf.css', window.location.origin).href;
-
     const rows = [...contenedor.querySelectorAll('.vdb-row')].filter(r => r.style.display !== 'none');
     const filas = rows.map(row => {
         const meta = row.querySelector('.vdb-row__meta')?.textContent || '';
         const desc = row.querySelector('.vdb-row__name')?.textContent.trim() || '—';
-
         const secMatch = meta.match(/SEC\s+(\d+)/);
         const eanMatch = meta.match(/EAN\s+(\d+)/);
         const cantMatch = meta.match(/Cant:\s*([\d,]+)/);
-
         const sec = secMatch ? secMatch[1] : '—';
         const ean = eanMatch ? eanMatch[1] : '—';
         const cant = cantMatch ? cantMatch[1] : '—';

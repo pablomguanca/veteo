@@ -138,7 +138,7 @@ export async function ejecutarCargaCompleta(item, tipo) {
         }
         else if ([20, 21, 22, 23, 24, 26].includes(sec)) {
             urlAbrir = FORMS.PFT.url;
-        } else if (descMinuscula.includes("carrefour") || [10, 34].includes(sec)) {
+        } else if (descMinuscula.includes("carrefour") || descMinuscula.includes("bulnez") || [10, 34].includes(sec)) {
             urlAbrir = `${FORMS.S10.url}?usp=pp_url&${FORMS.S10.id}=${ean}`;
         } else if (sec === 15) {
             urlAbrir = `${FORMS.PAS.url}?usp=pp_url&${FORMS.PAS.id}=${ean}`;
@@ -191,11 +191,11 @@ export function copiarEAN(ean, event) {
 
 function renderizarTabla(contenedor, elementoVacio, filas) {
     contenedor.querySelectorAll('.vdb-row').forEach(el => el.remove());
+
     if (!filas?.length) {
         alternarEstadoVacio(elementoVacio, false);
         return;
     }
-    alternarEstadoVacio(elementoVacio, true);
 
     const filasFiltradas = filas.filter(item => {
         const sec = parseInt(item.sec || item.SEC);
@@ -225,9 +225,7 @@ function renderizarTabla(contenedor, elementoVacio, filas) {
 
         if (esPFT) {
             labelPrincipal = "PFT";
-        } else if (descMinuscula.includes("carrefour")) {
-            labelPrincipal = "ACC";
-        } else if ([10, 34].includes(sec)) {
+        } else if (descMinuscula.includes("carrefour") || descMinuscula.includes("bulnez") || [10, 34].includes(sec)) {
             labelPrincipal = "ACC";
         } else if (sec === 15) {
             labelPrincipal = "PAS";
@@ -243,6 +241,11 @@ function renderizarTabla(contenedor, elementoVacio, filas) {
         const elemento = document.createElement('div');
         elemento.className = `vdb-row ${estado.includes('CARGADO') ? 'vdb-row--done' : ''}`;
         elemento.dataset.fecha = vto;
+        elemento.dataset.vencido = dias < 0 ? 'true' : 'false';
+
+        if (dias < 0) {
+            elemento.style.display = 'none';
+        }
 
         elemento.innerHTML = `
             <div class="vdb-row__left">
@@ -276,6 +279,9 @@ function renderizarTabla(contenedor, elementoVacio, filas) {
 
         contenedor.appendChild(elemento);
     });
+
+    const tieneVisibles = [...contenedor.querySelectorAll('.vdb-row')].some(r => r.style.display !== 'none');
+    alternarEstadoVacio(elementoVacio, tieneVisibles);
 }
 
 function establecerCargando(boton, texto) {

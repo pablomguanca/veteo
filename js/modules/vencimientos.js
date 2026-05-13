@@ -84,11 +84,6 @@ function renderizarItems(contenedor, elementoVacio, items, onEliminar) {
         return ![30, 31, 32, 33].includes(sec);
     });
 
-    const hayItems = itemsFiltradosSectores.length > 0;
-    alternarEstadoVacio(elementoVacio, hayItems);
-
-    if (!hayItems) return;
-
     const itemsFinales = itemsFiltradosSectores
         .sort((a, b) => new Date(a.fecha) - new Date(b.fecha));
 
@@ -107,7 +102,10 @@ function renderizarItems(contenedor, elementoVacio, items, onEliminar) {
         elemento.dataset.id = item.id;
         elemento.dataset.fecha = item.fecha;
         elemento.dataset.vencido = dias < 0 ? 'true' : 'false';
-        if (dias < 0) elemento.style.display = 'none';
+        
+        if (dias < 0) {
+            elemento.style.display = 'none';
+        }
 
         elemento.innerHTML = `
             <div class="vdb-row__left">
@@ -155,6 +153,9 @@ function renderizarItems(contenedor, elementoVacio, items, onEliminar) {
 
         contenedor.appendChild(elemento);
     });
+
+    const tieneVisibles = [...contenedor.querySelectorAll('.vdb-row')].some(r => r.style.display !== 'none');
+    alternarEstadoVacio(elementoVacio, tieneVisibles);
 }
 
 function escaparHTML(cadena) {
