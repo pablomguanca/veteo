@@ -2,13 +2,12 @@ function filtrarRows(rows, filtro) {
     if (filtro === 'todos') {
         return rows.filter(r => r.dataset.vencido !== 'true');
     }
+
     if (filtro === 'vencidos') {
         return rows.filter(r => r.dataset.vencido === 'true');
     }
+
     if (filtro === 'PCH') {
-        const meta = row.querySelector('.vdb-row__meta')?.textContent || '';
-        const secMatch = meta.match(/SEC\s+(\d+)/);
-        const sec = secMatch ? parseInt(secMatch[1]) : 0;
         return rows.filter(r => {
             if (r.dataset.vencido === 'true') return false;
             const meta = r.querySelector('.vdb-row__meta')?.textContent || '';
@@ -17,6 +16,7 @@ function filtrarRows(rows, filtro) {
             return [11, 14].includes(sec);
         });
     }
+
     return rows.filter(r => {
         if (r.dataset.vencido === 'true') return false;
         const botones = [...r.querySelectorAll('.action-btn')];
