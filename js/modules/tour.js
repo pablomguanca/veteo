@@ -109,20 +109,20 @@ export function iniciarTour() {
                 }
             },
             {
-                element: '#top-list',
+                element: '#ranking-list',
                 popover: {
                     title: 'Ranking TOP 10 🏆',
                     description: 'Medí tu desempeño contra el resto del equipo en el ranking semanal',
-                    side: "left",
+                    side: "right",
                     align: 'start'
                 }
             },
             {
-                element: '#ranking-list',
+                element: '#top-list',
                 popover: {
                     title: 'Top EAN más cargados🚦',
                     description: 'Seguí los productos más cargados de la semana como apoyo en tu gestión',
-                    side: "right",
+                    side: "left",
                     align: 'start'
                 }
             },
