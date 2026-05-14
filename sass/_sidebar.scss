@@ -16,7 +16,7 @@
     transition: all v.$duration-base v.$ease;
 
     @media (min-width: 561px) {
-        top: 33px;
+        top: 24px;
         left: auto;
         right: 13.3rem;
     }
@@ -97,30 +97,26 @@
         margin-bottom: 30px;
     }
 
+    &__brand {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+    }
+
+    &__logo {
+        width: 32px;
+        height: 32px;
+        object-fit: contain;
+        border-radius: 6px;
+    }
+
     &__title {
         font-family: v.$ff-title;
         font-size: 1.1rem;
         font-weight: 700;
         color: v.$text;
         letter-spacing: -0.01em;
-    }
-
-    &__close {
-        background: transparent;
-        border: none;
-        cursor: pointer;
-        color: v.$muted;
-        font-size: 1.4rem;
-        line-height: 1;
-        padding: 4px;
-        border-radius: v.$radius-xs;
-        transition: color v.$duration-fast v.$ease,
-            background v.$duration-fast v.$ease;
-
-        &:hover {
-            color: v.$text;
-            background: v.$surface-2;
-        }
+        margin: 0;
     }
 
     &__link {

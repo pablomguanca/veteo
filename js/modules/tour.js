@@ -9,7 +9,7 @@ export function iniciarTour() {
         nextBtnText: 'Siguiente',
         prevBtnText: 'Anterior',
         doneBtnText: '¡Empezar!',
-        allowClose: false,
+        allowClose: true,
 
         steps: [
             {
@@ -104,6 +104,24 @@ export function iniciarTour() {
                 popover: {
                     title: 'Conocé el estado de los formularios 🟢',
                     description: 'Observá la luz verde para saber si un form está abierto o cerrado',
+                    side: "right",
+                    align: 'start'
+                }
+            },
+            {
+                element: '#top-list',
+                popover: {
+                    title: 'Ranking TOP 10 🏆',
+                    description: 'Medí tu desempeño contra el resto del equipo en el ranking semanal',
+                    side: "left",
+                    align: 'start'
+                }
+            },
+            {
+                element: '#ranking-list',
+                popover: {
+                    title: 'Top EAN más cargados🚦',
+                    description: 'Seguí los productos más cargados de la semana como apoyo en tu gestión',
                     side: "right",
                     align: 'start'
                 }

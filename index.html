@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 
 <head>
     <meta charset="UTF-8" />
@@ -525,9 +525,11 @@
     <aside class="sidebar" id="sidebar" aria-label="Menú Veteo">
 
         <header class="sidebar__header">
-            <h2 class="sidebar__title">Menú Veteo</h2>
+            <div class="sidebar__brand">
+                <img src="./assets/img/icon-512.png" alt="Logo Veteo" class="sidebar__logo">
+                <h2 class="sidebar__title">Menú Veteo App</h2>
+            </div>
         </header>
-
         <div class="sidebar__profile" id="sidebar-profile">
             <img class="sidebar__avatar" id="sidebar-avatar" src="" alt="Foto de perfil" />
             <div class="sidebar__user-info">
@@ -548,28 +550,32 @@
 
         <nav class="sidebar__nav" aria-label="Navegación principal">
             <p class="sidebar__nav-label">Navegación</p>
-            <a href="#linea-tiempo" class="sidebar__link">
+            <a href="#tl" class="sidebar__link">
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                     <circle cx="12" cy="12" r="10" />
                     <polyline points="12 6 12 12 16 14" />
                 </svg>
                 Línea de tiempo
             </a>
-            <a href="#formularios" class="sidebar__link">
+            <a href="#sup" class="sidebar__link">
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                     <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
                     <polyline points="14 2 14 8 20 8" />
                 </svg>
                 Formularios y Recursos
             </a>
-            <a href="#notificaciones" class="sidebar__link">
+            <a href="#ranking-list" class="sidebar__link">
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9" />
-                    <path d="M13.73 21a2 2 0 0 1-3.46 0" />
+                    <path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"></path>
+                    <path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"></path>
+                    <path d="M4 22h16"></path>
+                    <path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22"></path>
+                    <path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22"></path>
+                    <path d="M18 2H6v7a6 6 0 0 0 12 0V2Z"></path>
                 </svg>
-                Notificaciones
+                Top 10
             </a>
-            <a href="https://app360.carrefour.com" class="sidebar__link" target="_blank" rel="noopener">
+            <a href="https://carrefour360.carrefour.com.ar/" class="sidebar__link" target="_blank" rel="noopener">
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                     <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 0 2-2h6" />
                     <polyline points="15 3 21 3 21 9" />
@@ -577,7 +583,7 @@
                 </svg>
                 Ir a App 360
             </a>
-            <a href="instructivo.html" class="sidebar__link" target="_blank" rel="noopener">
+            <a href="./instructivo.html" class="sidebar__link" target="_blank" rel="noopener">
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                     <circle cx="12" cy="12" r="10" />
                     <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3" />

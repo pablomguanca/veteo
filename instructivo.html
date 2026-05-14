@@ -1,0 +1,499 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Veteo App - Instructivo</title>
+    <meta name="description" content="Instructivo oficial de Veteo App — gestión de vencimientos y formularios." />
+    <link rel="icon" href="./assets/img/icon-192.png" type="image/png" />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;600;700;800&family=DM+Mono:wght@400;500&display=swap"
+        rel="stylesheet" />
+    <link rel="stylesheet" href="css/instructivo.css" />
+</head>
+
+<body>
+
+    <header class="hero" role="banner">
+        <div class="hero__glow" aria-hidden="true"></div>
+        <div class="hero__glow-2" aria-hidden="true"></div>
+
+        <p class="hero__badge">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+                stroke-linecap="round" stroke-linejoin="round" style="margin-right: 6px;">
+                <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"></path>
+                <rect x="8" y="2" width="8" height="4" rx="1" ry="1"></rect>
+            </svg>
+            Instructivo de Uso
+        </p>
+
+        <div class="hero__logo" aria-label="Logo Veteo App"><img src="./assets/img/icon-512.png" alt="Logo Veteo"
+                class="hero__logo"></div>
+
+        <h1 class="hero__title">
+            Bienvenido a<br><span>Veteo App</span>
+        </h1>
+
+        <p class="hero__subtitle">
+            Tu herramienta operativa para gestionar vencimientos, cargar formularios y sincronizar tu stock próximo a
+            vencer directamente en la nube.
+        </p>
+
+        <nav class="hero__cta" aria-label="Acciones principales">
+            <a href="#que-es" class="btn btn--primary">Empezar a leer ↓</a>
+            <a href="./index.html" class="btn btn--ghost" target="_blank" rel="noopener">Ir a la app →</a>
+        </nav>
+
+        <div class="hero__scroll" aria-hidden="true">
+            <span>scroll</span>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                aria-hidden="true">
+                <path d="M12 5v14M5 12l7 7 7-7" />
+            </svg>
+        </div>
+    </header>
+
+    <hr class="divider" />
+
+    <main>
+
+        <section class="section" id="que-es" aria-labelledby="que-es-title">
+            <p class="section__label">¿Qué es Veteo App?</p>
+            <h2 class="section__title" id="que-es-title">El control de tu sector,<br>en un solo lugar</h2>
+            <p class="section__desc">Veteo digitaliza y automatiza el seguimiento de productos perecederos, conectando
+                tus archivos del GNX directamente con los formularios operativos.</p>
+
+            <ul class="what-grid" role="list">
+                <li class="what-card">
+                    <div class="what-card__icon what-card__icon--blue" aria-hidden="true">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"></path>
+                            <rect x="8" y="2" width="8" height="4" rx="1" ry="1"></rect>
+                        </svg>
+                    </div>
+                    <h3 class="what-card__title">Gestión Inteligente</h3>
+                    <p class="what-card__desc">Importá el TXT del GNX a través de FTP. La app clasifica los productos
+                        por fecha y les
+                        asigna una etapa crítica de alerta (−90d, −60d, −30d, −7d).</p>
+                </li>
+                <li class="what-card">
+                    <div class="what-card__icon what-card__icon--green" aria-hidden="true">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path
+                                d="M17.5 19c.7 0 1.3-.2 1.8-.7s.7-1.1.7-1.8c0-.7-.2-1.3-.7-1.8s-1.1-.7-1.8-.7H16v5h1.5zM9 19c.7 0 1.3-.2 1.8-.7s.7-1.1.7-1.8c0-.7-.2-1.3-.7-1.8s-1.1-.7-1.8-.7H7.5v5H9zM16 8V5c0-1.1-.9-2-2-2H4c-1.1 0-2 .9-2 2v11c0 1.1.9 2 2 2h4">
+                            </path>
+                            <path d="M22 10c0-1.1-.9-2-2-2h-7c-1.1 0-2 .9-2 2v7c0 1.1.9 2 2 2h7c1.1 0 2-.9 2-2v-7z">
+                            </path>
+                        </svg>
+                    </div>
+                    <h3 class="what-card__title">Respaldo en la Nube</h3>
+                    <p class="what-card__desc">Al iniciar sesión, Veteo crea automáticamente una planilla de Google
+                        Sheets privada en tu cuenta para guardar todo tu progreso.</p>
+                </li>
+                <li class="what-card">
+                    <div class="what-card__icon what-card__icon--amber" aria-hidden="true">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="m12 14 4-4"></path>
+                            <path d="M3.34 19a10 10 0 1 1 17.32 0"></path>
+                        </svg>
+                    </div>
+                    <h3 class="what-card__title">Reglas Automáticas</h3>
+                    <p class="what-card__desc">La app sabe qué formulario (PAS, PFT, PCH, UM, Acciones) corresponde a
+                        cada
+                        producto según su sección y los días restantes para su vencimiento.</p>
+                </li>
+                <li class="what-card">
+                    <div class="what-card__icon what-card__icon--violet" aria-hidden="true">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"></path>
+                            <path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"></path>
+                            <path d="M4 22h16"></path>
+                            <path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22"></path>
+                            <path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22"></path>
+                            <path d="M18 2H6v7a6 6 0 0 0 12 0V2Z"></path>
+                        </svg>
+                    </div>
+                    <h3 class="what-card__title">Ranking Top 10</h3>
+                    <p class="what-card__desc">Tus cargas semanales se suman! Medí tu desempeño contra el resto del
+                        equipo en
+                        el ranking semanal</p>
+                </li>
+            </ul>
+        </section>
+
+        <hr class="divider" />
+
+        <section class="section" id="como-empezar" aria-labelledby="pasos-title">
+            <p class="section__label">Primeros pasos</p>
+            <h2 class="section__title" id="pasos-title">Cómo empezar<br>desde cero</h2>
+            <p class="section__desc">Seguí esta ruta y en menos de 2 minutos vas a tener tu sector digitalizado.</p>
+
+            <ol class="steps" role="list">
+                <li class="step">
+                    <div class="step__num-wrap" aria-hidden="true">
+                        <div class="step__num">01</div>
+                        <div class="step__line"></div>
+                    </div>
+                    <div class="step__content">
+                        <span class="step__emoji" aria-hidden="true">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+                                <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+                            </svg>
+                        </span>
+                        <h3 class="step__title">Iniciá sesión con Google</h3>
+                        <p class="step__desc">Entrá a Veteo y tocá <em>"Iniciar sesión con Google"</em>. Usá tu cuenta
+                            corporativa. En tu primer ingreso, la app configurará tu base de datos privada en Google
+                            Drive automáticamente.</p>
+                        <p class="step__tip">💡 Requiere autorización previa del administrador de la app.</p>
+                    </div>
+                </li>
+                <li class="step">
+                    <div class="step__num-wrap" aria-hidden="true">
+                        <div class="step__num">02</div>
+                        <div class="step__line"></div>
+                    </div>
+                    <div class="step__content">
+                        <span class="step__emoji" aria-hidden="true">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                                <polyline points="14 2 14 8 20 8"></polyline>
+                                <line x1="16" y1="13" x2="8" y2="13"></line>
+                                <line x1="16" y1="17" x2="8" y2="17"></line>
+                                <polyline points="10 9 9 9 8 9"></polyline>
+                            </svg>
+                        </span>
+                        <h3 class="step__title">Importá el listado del GNX</h3>
+                        <p class="step__desc">Descargá tu archivo <strong>.TXT</strong> desde el FTP. En Veteo, tocá
+                            <em>"↑ Importar"</em> y elegí el archivo. No hace falta limpiarlo ni ordenarlo; el sistema
+                            extrae EAN, descripción, sección y fechas por vos.
+                        </p>
+                        <p class="step__tip">📁 Los sectores no relevantes (como 30-33, 65, 83) se filtran solos.</p>
+                    </div>
+                </li>
+                <li class="step">
+                    <div class="step__num-wrap" aria-hidden="true">
+                        <div class="step__num">03</div>
+                        <div class="step__line"></div>
+                    </div>
+                    <div class="step__content">
+                        <span class="step__emoji" aria-hidden="true">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <rect x="5" y="2" width="14" height="20" rx="2" ry="2"></rect>
+                                <line x1="12" y1="18" x2="12.01" y2="18"></line>
+                            </svg>
+                        </span>
+                        <h3 class="step__title">Instalá la PWA en tu celular</h3>
+                        <p class="step__desc">Para la mejor experiencia, abrí el menú lateral de Veteo y tocá
+                            <strong>"Instalar App"</strong> (o desde Chrome: menú <abbr
+                                title="menú de opciones">⋮</abbr> → "Agregar a pantalla de inicio"). Podrás usarla a
+                            pantalla completa.
+                        </p>
+                        <p class="step__tip">📱 Funciona más rápido y permite el escaneo con la cámara nativa.</p>
+                    </div>
+                </li>
+                <li class="step">
+                    <div class="step__num-wrap" aria-hidden="true">
+                        <div class="step__num">04</div>
+                        <div class="step__line"></div>
+                    </div>
+                    <div class="step__content">
+                        <span class="step__emoji" aria-hidden="true">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
+                                <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
+                            </svg>
+                        </span>
+                        <h3 class="step__title">Activá las notificaciones</h3>
+                        <p class="step__desc">Navegá hasta el final de la app y tocá <em>"Activar notificaciones"</em>.
+                            Vas a recibir un mensaje estratégico todos los días a las 08:00 hs recordándote qué
+                            formularios vencen ese día.</p>
+                        <p class="step__tip">⏰ Clave para no perder las ventanas del fin de semana.</p>
+                    </div>
+                </li>
+            </ol>
+        </section>
+
+        <hr class="divider" />
+
+        <section class="section" id="funciones" aria-labelledby="funciones-title">
+            <p class="section__label">Funciones avanzadas</p>
+            <h2 class="section__title" id="funciones-title">Conocé todo el<br>poder de tu App</h2>
+            <p class="section__desc">Cada módulo está diseñado para ahorrar tiempo y minimizar errores humanos.</p>
+
+            <ul class="features-grid" role="list">
+                <li class="feature">
+                    <div class="feature__glow feature__glow--blue" aria-hidden="true"></div>
+                    <span class="feature__tag feature__tag--blue">Automatización</span>
+                    <span class="feature__icon" aria-hidden="true">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <polyline points="22 7 13.5 15.5 8.5 10.5 2 17"></polyline>
+                            <polyline points="16 7 22 7 22 13"></polyline>
+                        </svg>
+                    </span>
+                    <h3 class="feature__title">Botones Inteligentes</h3>
+                    <p class="feature__desc">La app lee la sección y los días restantes para mostrarte el botón correcto
+                        (PFT, ACC, UM). Al tocarlo, abre el form de Google con el EAN ya escrito y marca el producto
+                        como "CARGADO".</p>
+                </li>
+                <li class="feature">
+                    <div class="feature__glow feature__glow--green" aria-hidden="true"></div>
+                    <span class="feature__tag feature__tag--green">Estado Real</span>
+                    <span class="feature__icon" aria-hidden="true">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="12" cy="12" r="10"></circle>
+                            <line x1="12" y1="8" x2="12" y2="12"></line>
+                            <line x1="12" y1="16" x2="12.01" y2="16"></line>
+                        </svg>
+                    </span>
+                    <h3 class="feature__title">Semáforo de Formularios</h3>
+                    <p class="feature__desc">En la sección "Formularios y Recursos", un punto verde o gris te indica en
+                        tiempo real si un form está abierto o cerrado según el día y la hora (ej: Rescates cierra los
+                        lunes a las 9hs).</p>
+                </li>
+                <li class="feature">
+                    <div class="feature__glow feature__glow--amber" aria-hidden="true"></div>
+                    <span class="feature__tag feature__tag--amber">Herramientas</span>
+                    <span class="feature__icon" aria-hidden="true">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z">
+                            </path>
+                            <circle cx="12" cy="13" r="4"></circle>
+                        </svg>
+                    </span>
+                    <h3 class="feature__title">Carga Manual y Escáner</h3>
+                    <p class="feature__desc">Si encontrás un producto que no está en el TXT, usá la "Gestión Manual".
+                        Podés tipear los datos o tocar el ícono de la cámara para leer el código de barras al instante.
+                    </p>
+                </li>
+                <li class="feature">
+                    <div class="feature__glow feature__glow--violet" aria-hidden="true"></div>
+                    <span class="feature__tag feature__tag--violet">Organización</span>
+                    <span class="feature__icon" aria-hidden="true">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="11" cy="11" r="8"></circle>
+                            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                        </svg>
+                    </span>
+                    <h3 class="feature__title">Filtros Dinámicos</h3>
+                    <p class="feature__desc">Tocá el botón "Filtrar" para aislar tu vista. Podés ver solo los productos
+                        que van a "Última Milla" o "PCH". Los productos ya vencidos se ocultan automáticamente salvo que
+                        toques el filtro "Vencidos".</p>
+                </li>
+                <li class="feature">
+                    <div class="feature__glow feature__glow--orange" aria-hidden="true"></div>
+                    <span class="feature__tag feature__tag--orange">Operatividad</span>
+                    <span class="feature__icon" aria-hidden="true">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <polyline points="6 9 6 2 18 2 18 9"></polyline>
+                            <path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path>
+                            <rect x="6" y="14" width="12" height="8"></rect>
+                        </svg>
+                    </span>
+                    <h3 class="feature__title">Exportación a PDF</h3>
+                    <p class="feature__desc">Aplicá el filtro que necesites y tocá "Imprimir PDF". Veteo genera al
+                        instante una tabla limpia y profesional con checkboxes, ideal para imprimir y llevarla al piso
+                        de ventas a controlar.</p>
+                </li>
+                <li class="feature">
+                    <div class="feature__glow feature__glow--red" aria-hidden="true"></div>
+                    <span class="feature__tag feature__tag--red">Rutina</span>
+                    <span class="feature__icon" aria-hidden="true">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="12" cy="12" r="10"></circle>
+                            <polyline points="12 6 12 12 16 14"></polyline>
+                        </svg>
+                    </span>
+                    <h3 class="feature__title">Línea de Tiempo Operativa</h3>
+                    <p class="feature__desc">Una guía visual por colores que te indica qué hacer según los días
+                        faltantes: −90d (Anticipación), −60d (Temprana), −30d (Crítica, foco en PAS/ACC) y −7d (Última
+                        Milla).</p>
+                </li>
+            </ul>
+        </section>
+
+        <hr class="divider" />
+
+        <section class="section" id="tips" aria-labelledby="tips-title">
+            <p class="section__label">Consejos Pro</p>
+            <h2 class="section__title" id="tips-title">Tips de uso<br>cotidiano</h2>
+            <p class="section__desc">Secretos de la plataforma para agilizar tu rutina.</p>
+
+            <ul class="tips-grid" role="list">
+                <li class="tip">
+                    <span class="tip__emoji" aria-hidden="true">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"
+                            style="color: var(--blue, #93c5fd);">
+                            <path d="M12 2v2"></path>
+                            <path d="m4.93 4.93 1.41 1.41"></path>
+                            <path d="M20 12h2"></path>
+                            <path d="m19.07 4.93-1.41 1.41"></path>
+                            <path d="M15.947 12.65a4 4 0 0 0-5.925 5.073"></path>
+                            <path d="M3.5 21h17"></path>
+                            <path d="M12 16c1.1 0 2 .9 2 2s-.9 2-2 2-2-.9-2-2 .9-2 2-2Z"></path>
+                        </svg>
+                    </span>
+                    <div class="tip__text">
+                        <strong>Empezá el día con Veteo</strong>
+                        Importá el TXT a primera hora para tener el listado actualizado antes de arrancar la recorrida.
+                    </div>
+                </li>
+                <li class="tip">
+                    <span class="tip__emoji" aria-hidden="true">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"
+                            style="color: var(--red, #fca5a5);">
+                            <circle cx="12" cy="12" r="10"></circle>
+                            <line x1="12" y1="8" x2="12" y2="12"></line>
+                            <line x1="12" y1="16" x2="12.01" y2="16"></line>
+                        </svg>
+                    </span>
+                    <div class="tip__text">
+                        <strong>Prestá atención a los −7d</strong>
+                        Los productos con etiqueta roja vencen en menos de 7 días. Son prioridad absoluta — cargalos
+                        primero.
+                    </div>
+                </li>
+                <li class="tip">
+                    <span class="tip__emoji" aria-hidden="true">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"
+                            style="color: var(--violet, #c4b5fd);">
+                            <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"></path>
+                            <rect x="8" y="2" width="8" height="4" rx="1" ry="1"></rect>
+                        </svg>
+                    </span>
+                    <div class="tip__text">
+                        <strong>Usá el PDF para recorrer</strong>
+                        Antes de salir al piso, imprimí el PDF filtrado por el form del día. Marcás con el checkbox
+                        mientras recorrés.
+                    </div>
+                </li>
+                <li class="tip">
+                    <span class="tip__emoji" aria-hidden="true">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"
+                            style="color: var(--blue, #93c5fd);">
+                            <rect x="5" y="2" width="14" height="20" rx="2" ry="2"></rect>
+                            <line x1="12" y1="18" x2="12.01" y2="18"></line>
+                        </svg>
+                    </span>
+                    <div class="tip__text">
+                        <strong>Instalá la app en tu celu</strong>
+                        Desde Chrome → menú → "Agregar a pantalla de inicio". Así la tenés siempre a mano como una app
+                        normal.
+                    </div>
+                </li>
+                <li class="tip">
+                    <span class="tip__emoji" aria-hidden="true">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"
+                            style="color: var(--amber, #fcd34d);">
+                            <path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"></path>
+                            <path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"></path>
+                            <path d="M4 22h16"></path>
+                            <path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22"></path>
+                            <path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22"></path>
+                            <path d="M18 2H6v7a6 6 0 0 0 12 0V2Z"></path>
+                        </svg>
+                    </span>
+                    <div class="tip__text">
+                        <strong>Seguí el ranking semanal</strong>
+                        Cada form que cargás suma al ranking. Al final de la semana se reinicia — ¡intentá llegar al top
+                        10!
+                    </div>
+                </li>
+                <li class="tip">
+                    <span class="tip__emoji" aria-hidden="true">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"
+                            style="color: var(--amber, #fcd34d);">
+                            <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
+                            <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
+                        </svg>
+                    </span>
+                    <div class="tip__text">
+                        <strong>Activá las notificaciones</strong>
+                        El recordatorio de las 8:00 hs te dice exactamente qué forms corresponden ese día según el día
+                        de la semana.
+                    </div>
+                </li>
+                <li class="tip">
+                    <span class="tip__emoji" aria-hidden="true">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"
+                            style="color: var(--violet, #c4b5fd);">
+                            <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                            <line x1="16" y1="2" x2="16" y2="6"></line>
+                            <line x1="8" y1="2" x2="8" y2="6"></line>
+                            <line x1="3" y1="10" x2="21" y2="10"></line>
+                        </svg>
+                    </span>
+                    <div class="tip__text">
+                        <strong>Mirá la línea de tiempo</strong>
+                        La sección "Línea de tiempo operativa" te muestra las etapas: −90, −60, −30 y −7 días para
+                        planificar con anticipación.
+                    </div>
+                </li>
+                <li class="tip">
+                    <span class="tip__emoji" aria-hidden="true">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"
+                            style="color: var(--green, #6ee7b7);">
+                            <path d="M21 2v6h-6"></path>
+                            <path d="M3 12a9 9 0 0 1 15-6.7L21 8"></path>
+                            <path d="M3 22v-6h6"></path>
+                            <path d="M21 12a9 9 0 0 1-15 6.7L3 16"></path>
+                        </svg>
+                    </span>
+                    <div class="tip__text">
+                        <strong>Reimportá sin miedo</strong>
+                        Si importás un TXT nuevo sobre uno viejo, los productos ya cargados mantienen su estado. No
+                        perdés el historial.
+                    </div>
+                </li>
+            </ul>
+        </section>
+
+    </main>
+
+    <hr class="divider" />
+
+    <footer class="footer" role="contentinfo">
+        <div class="footer__logo" aria-label="Logo Veteo App"><img src="./assets/img/icon-512.png" alt="Logo Veteo"
+                class="hero__logo"></div>
+        <p class="footer__title">Veteo App</p>
+        <p class="footer__sub">
+            Desarrollado por
+            <a href="https://www.linkedin.com/in/pablo-guanca" target="_blank" rel="noopener" class="footer__linkedin">
+                Pablo M. Guanca
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+                    <path
+                        d="M4.98 3.5A1.75 1.75 0 1 0 5 7a1.75 1.75 0 0 0-.02-3.5ZM3.5 8h3V20h-3V8Zm5 0h2.88v1.64h.04c.4-.76 1.38-1.64 2.84-1.64 3.04 0 3.6 2 3.6 4.59V20h-3v-6.2c0-1.48-.03-3.38-2.06-3.38-2.06 0-2.38 1.6-2.38 3.27V20h-3V8Z" />
+                </svg>
+            </a>
+        </p>
+        <a href="https://veteo.vercel.app" class="btn btn--primary" target="_blank" rel="noopener">Ir a la app →</a>
+    </footer>
+
+    <script type="module" src="js/instructivo.js"></script>
+
+</body>
+
+</html>
