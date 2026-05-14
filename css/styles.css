@@ -1808,57 +1808,64 @@ h3 {
 }
 
 .driver-popover {
-  background-color: #17191f !important;
-  color: #eeeae3 !important;
-  border: 1px solid rgba(255, 255, 255, 0.08) !important;
-  border-radius: 12px !important;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5) !important;
+  background-color: #17191f;
+  color: #eeeae3;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 12px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
 }
 .driver-popover-title {
-  color: #ffffff !important;
-  font-weight: 600 !important;
-  font-family: "Sora" !important;
+  color: #ffffff;
+  font-weight: 600;
+  font-family: "Sora";
 }
 @media (max-width: 500px) {
   .driver-popover-title {
-    font-size: 14px !important;
+    font-size: 14px;
   }
 }
 .driver-popover-description {
-  color: rgba(255, 255, 255, 0.6) !important;
-  font-family: inherit !important;
+  color: rgba(255, 255, 255, 0.6);
+  font-family: inherit;
 }
 @media (max-width: 500px) {
   .driver-popover-description {
-    font-size: 12px !important;
+    font-size: 12px;
   }
 }
 .driver-popover-progress-text {
-  color: rgba(255, 255, 255, 0.5) !important;
+  color: rgba(255, 255, 255, 0.5);
 }
 .driver-popover-footer button {
-  background-color: rgba(255, 255, 255, 0.05) !important;
-  color: #eeeae3 !important;
-  border: 1px solid rgba(255, 255, 255, 0.1) !important;
-  border-radius: 6px !important;
-  text-shadow: none !important;
-  font-family: inherit !important;
-  transition: background-color 0.2s !important;
+  background-color: rgba(255, 255, 255, 0.05);
+  color: #eeeae3;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 6px;
+  text-shadow: none;
+  font-family: inherit;
+  transition: background-color 0.2s;
 }
 .driver-popover-footer button:hover {
-  background-color: rgba(255, 255, 255, 0.1) !important;
+  background-color: rgba(255, 255, 255, 0.1);
 }
 .driver-popover-arrow[data-side=bottom] {
-  border-bottom-color: #17191f !important;
+  border-bottom-color: #17191f;
 }
 .driver-popover-arrow[data-side=top] {
-  border-top-color: #17191f !important;
+  border-top-color: #17191f;
 }
 .driver-popover-arrow[data-side=left] {
-  border-left-color: #17191f !important;
+  border-left-color: #17191f;
 }
 .driver-popover-arrow[data-side=right] {
-  border-right-color: #17191f !important;
+  border-right-color: #17191f;
+}
+.driver-popover-close-btn {
+  width: 38px;
+  height: 28px;
+  font-size: 20px;
+  font-weight: 300;
+  color: #ffffff;
 }
 
 .filtros-wrap {
