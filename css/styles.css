@@ -2187,8 +2187,8 @@ h3 {
 .sidebar {
   position: fixed;
   top: 0;
-  left: -320px;
-  width: 300px;
+  left: -300px;
+  width: 200px;
   height: 100%;
   background: #111216;
   border-right: 1px solid rgba(255, 255, 255, 0.065);
