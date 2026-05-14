@@ -137,10 +137,8 @@ export function iniciarTour() {
             }
         ],
         onDestroyStarted: () => {
-            if (!driver.hasNextStep() || confirm("¿Seguro que querés saltear el tutorial?")) {
-                localStorage.setItem('veteo_tour_completado', 'true');
-                driver.destroy();
-            }
+            localStorage.setItem('veteo_tour_completado', 'true');
+            driver.destroy();
         }
     });
 
