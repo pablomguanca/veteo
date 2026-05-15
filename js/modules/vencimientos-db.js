@@ -220,7 +220,6 @@ function renderizarTabla(contenedor, elementoVacio, filas) {
         let labelPrincipal = "";
         const descMinuscula = desc.toLowerCase();
         const esPFT = [20, 21, 22, 23, 24, 26].includes(sec);
-
         if (esPFT) {
             labelPrincipal = "PFT";
         } else if (descMinuscula.includes("carrefour") || descMinuscula.includes("bulnez") || [10, 34].includes(sec)) {
@@ -233,6 +232,11 @@ function renderizarTabla(contenedor, elementoVacio, filas) {
 
         const mostrarUM = (sec === 14 || sec === 15 || sec === 10) && (dias >= 3 && dias <= 7);
         if (mostrarUM) {
+            labelPrincipal = "";
+        }
+
+        const mostrarPCH = (sec === 20) && (dias >= 3 && dias <= 7);
+        if (mostrarPCH) {
             labelPrincipal = "";
         }
 
