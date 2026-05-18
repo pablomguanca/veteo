@@ -1,0 +1,83 @@
+@use 'variables' as v;
+
+.impact {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    margin-top: 16px;
+
+    &__grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 12px;
+    }
+
+    &__box {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 14px;
+        background: v.$surface-2;
+        border: 1px solid v.$border;
+        border-radius: v.$radius-sm;
+        transition: transform v.$duration-fast v.$ease;
+
+        &--blue {
+            .impact__icon {
+                color: v.$blue;
+                background: v.$blue-glow;
+            }
+        }
+
+        &--amber {
+            .impact__icon {
+                color: v.$amber;
+                background: v.$amber-glow;
+            }
+        }
+    }
+
+    &__icon {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 36px;
+        height: 36px;
+        border-radius: 8px;
+        flex-shrink: 0;
+    }
+
+    &__data {
+        display: flex;
+        flex-direction: column;
+    }
+
+    &__value {
+        font-family: v.$ff-title;
+        font-size: 18px;
+        font-weight: 700;
+        color: v.$text;
+        line-height: 1.1;
+    }
+
+    &__label {
+        font-size: 11px;
+        color: v.$muted;
+        font-weight: 500;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        margin-top: 2px;
+    }
+
+    &__msg {
+        text-align: center;
+        font-family: v.$ff-body;
+        font-size: 13px;
+        font-weight: 600;
+        color: v.$green;
+        padding: 8px;
+        background: v.$green-glow;
+        border-radius: v.$radius-xs;
+        border: 1px solid v.$green-border;
+    }
+}

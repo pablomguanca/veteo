@@ -1,81 +1,62 @@
-const CLAVE_ALMACENAMIENTO = 'veteo_checklist_v1';
-const TOTAL_ITEMS = 3;
-
 export function inicializarChecklist() {
-    const elementoRelleno = document.getElementById('prog-fill');
-    const elementoTexto = document.getElementById('prog-txt');
-    const barraProgreso = document.getElementById('prog-bar');
-    const items = document.querySelectorAll('.ci');
-    const botonReinicio = document.getElementById('reset-btn');
+    renderizarImpacto();
+}
 
-    if (!elementoRelleno || !items.length) return;
+export function sumarCargaGamificacion() {
+    const hoy = new Date().toDateString();
+    const guardado = JSON.parse(localStorage.getItem('veteo_impacto_diario')) || {};
+    
+    if (guardado.fecha !== hoy) {
+        guardado.fecha = hoy;
+        guardado.cargas = 0;
+    }
+    
+    guardado.cargas++;
+    localStorage.setItem('veteo_impacto_diario', JSON.stringify(guardado));
+    renderizarImpacto();
+}
 
-    function cargarEstado() {
-        try {
-            const datosCrudos = localStorage.getItem(CLAVE_ALMACENAMIENTO);
-            return datosCrudos ? JSON.parse(datosCrudos) : {};
-        } catch {
-            return {};
+export function actualizarPosicionGamificacion(posicion) {
+    localStorage.setItem('veteo_impacto_posicion', posicion);
+    renderizarImpacto();
+}
+
+function renderizarImpacto() {
+    const hoy = new Date().toDateString();
+    const guardado = JSON.parse(localStorage.getItem('veteo_impacto_diario')) || {};
+    const cargasHoy = guardado.fecha === hoy ? guardado.cargas : 0;
+    const posicionTop = localStorage.getItem('veteo_impacto_posicion') || '-';
+
+    const elCargas = document.getElementById('impact-cargas');
+    const elPos = document.getElementById('impact-pos');
+    const elStatus = document.getElementById('impact-status');
+
+    if (elCargas) elCargas.textContent = cargasHoy;
+    if (elPos) elPos.textContent = posicionTop !== '-' ? `#${posicionTop}` : '-';
+
+    if (elStatus) {
+        elStatus.style.display = 'flex';
+        elStatus.style.alignItems = 'center';
+        elStatus.style.justifyContent = 'center';
+        elStatus.style.gap = '6px';
+
+        const svgRayo = `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>`;
+        const svgFuego = `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 2.5z"/></svg>`;
+        const svgCohete = `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 0 0-2.91-.09z"/><path d="m12 15-3-3a22 22 0 0 1 2-3.95A12.88 12.88 0 0 1 22 2c0 2.72-.78 7.5-6 11a22.35 22.35 0 0 1-4 2z"/><path d="M9 12H4s.55-3.03 2-4c1.62-1.08 5 0 5 0"/><path d="M12 15v5s3.03-.55 4-2c1.08-1.62 0-5 0-5"/></svg>`;
+
+        if (cargasHoy === 0) {
+            elStatus.innerHTML = `${svgRayo} <span>¡Hacé tu primera carga!</span>`;
+            elStatus.style.color = "var(--muted)";
+            elStatus.style.background = "transparent";
+            elStatus.style.border = "none";
+        } else if (cargasHoy < 5) {
+            elStatus.innerHTML = `${svgFuego} <span>¡En racha!</span>`;
+            elStatus.style.color = "var(--orange)";
+            elStatus.style.background = "var(--orange-glow)";
+        } else {
+            elStatus.innerHTML = `${svgCohete} <span>¡Sos imparable!</span>`;
+            elStatus.style.color = "var(--green)";
+            elStatus.style.background = "var(--green-glow)";
         }
     }
-
-    function guardarEstado(estado) {
-        localStorage.setItem(CLAVE_ALMACENAMIENTO, JSON.stringify(estado));
-    }
-
-    function verificarReinicioDiario() {
-        const hoy = new Date().toDateString();
-        const ultimaVisita = localStorage.getItem('veteo_ultima_visita');
-        if (ultimaVisita !== hoy) {
-            localStorage.removeItem(CLAVE_ALMACENAMIENTO);
-            localStorage.setItem('veteo_ultima_visita', hoy);
-            return true;
-        }
-        return false;
-    }
-
-    function contarSeleccionados() {
-        return [...document.querySelectorAll('.ci input')].filter(checkbox => checkbox.checked).length;
-    }
-
-    function actualizarBarra(cantidad) {
-        const porcentaje = (cantidad / TOTAL_ITEMS) * 100;
-        elementoRelleno.style.width = `${porcentaje}%`;
-        elementoTexto.textContent = `${cantidad} / ${TOTAL_ITEMS}`;
-        if (barraProgreso) {
-            barraProgreso.setAttribute('aria-valuenow', cantidad);
-        }
-    }
-
-    function limpiarTodo() {
-        items.forEach(item => {
-            item.querySelector('input').checked = false;
-        });
-        localStorage.removeItem(CLAVE_ALMACENAMIENTO);
-        actualizarBarra(0);
-    }
-
-    const fueReiniciado = verificarReinicioDiario();
-    const estadoActual = fueReiniciado ? {} : cargarEstado();
-    let cantidadSeleccionada = 0;
-
-    items.forEach(item => {
-        const checkbox = item.querySelector('input');
-        const identificador = item.dataset.id;
-
-        if (estadoActual[identificador]) {
-            checkbox.checked = true;
-            cantidadSeleccionada++;
-        }
-
-        checkbox.addEventListener('change', () => {
-            const estado = cargarEstado();
-            estado[identificador] = checkbox.checked;
-            guardarEstado(estado);
-            actualizarBarra(contarSeleccionados());
-        });
-    });
-
-    actualizarBarra(cantidadSeleccionada);
-    botonReinicio?.addEventListener('click', limpiarTodo);
 }

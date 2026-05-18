@@ -3,6 +3,7 @@ import { CONFIGURACION } from './config.js';
 import { alternarEstadoVacio } from '../utils/ui.js';
 import { copiarEAN } from './vencimientos-db.js';
 import { ejecutarCargaCompleta } from './vencimientos-db.js';
+import { sumarCargaGamificacion } from './checklist.js';
 
 const CLAVE_ALMACENAMIENTO_VENCIMIENTOS = 'veteo_vencimientos_v1';
 
@@ -97,12 +98,16 @@ function renderizarItems(contenedor, elementoVacio, items, onEliminar) {
         const textoVence = dias === 0 ? 'Vence hoy' : `Vence el ${formatearFecha(item.fecha)}`;
         const textoDias = dias < 0 ? `Vencido hace ${Math.abs(dias)}d` : `${dias}d restantes`;
 
+        const estado = item.estado || 'PENDIENTE';
+
         const elemento = document.createElement('div');
-        elemento.className = 'venc-item vdb-row';
+
+        elemento.className = `venc-item vdb-row ${estado.includes('CARGADO') ? 'vdb-row--done' : ''}`;
+
         elemento.dataset.id = item.id;
         elemento.dataset.fecha = item.fecha;
         elemento.dataset.vencido = dias < 0 ? 'true' : 'false';
-        
+
         if (dias < 0) {
             elemento.style.display = 'none';
         }
@@ -129,19 +134,29 @@ function renderizarItems(contenedor, elementoVacio, items, onEliminar) {
 
         elemento.querySelector('.copy-btn').onclick = (e) => copiarEAN(item.ean || '', e);
 
+        const procesarCargaManual = (tipo, label) => {
+            const itemFormateado = { ...item, descripcion: item.producto, vencimiento: item.fecha };
+
+            ejecutarCargaCompleta(itemFormateado, tipo);
+
+            const todosLosItems = cargarItems();
+            const index = todosLosItems.findIndex(i => i.id === item.id);
+            if (index !== -1) {
+                todosLosItems[index].estado = `CARGADO ${label}`;
+                guardarItems(todosLosItems);
+                renderizarItems(contenedor, elementoVacio, todosLosItems, onEliminar);
+            }
+
+            sumarCargaGamificacion();
+        };
+
         const btnMain = elemento.querySelector('.action-btn--main');
         if (btnMain) {
-            btnMain.onclick = () => {
-                const itemFormateado = { ...item, descripcion: item.producto, vencimiento: item.fecha };
-                ejecutarCargaCompleta(itemFormateado, 'PRINCIPAL');
-            };
+            btnMain.onclick = () => procesarCargaManual('PRINCIPAL', config.labelPrincipal);
         }
 
         if (config.mostrarUM) {
-            elemento.querySelector('.action-btn--um').onclick = () => {
-                const itemFormateado = { ...item, descripcion: item.producto, vencimiento: item.fecha };
-                ejecutarCargaCompleta(itemFormateado, 'UM');
-            };
+            elemento.querySelector('.action-btn--um').onclick = () => procesarCargaManual('UM', 'UM');
         }
 
         elemento.querySelector('.venc-item__delete').onclick = async () => {

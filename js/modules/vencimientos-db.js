@@ -2,6 +2,7 @@ import { alternarEstadoVacio } from '../utils/ui.js';
 import { obtenerUsuarioActual } from './google-auth.js';
 import { CONFIGURACION } from './config.js';
 import { ENLACES_APP } from './enlaces.js';
+import { sumarCargaGamificacion } from './checklist.js';
 
 let productosEnMemoria = [];
 
@@ -154,6 +155,7 @@ export async function ejecutarCargaCompleta(item, tipo) {
         try {
             const res = await apiActualizarEstado(ean, vto, nuevoEstado, usuario);
             if (res.ok) {
+                sumarCargaGamificacion();
                 const p = productosEnMemoria.find(x => (x.ean || x.EAN) === ean && (x.vencimiento || x.VENCIMIENTO) === vto);
                 if (p) p.ESTADO = nuevoEstado;
                 renderizarTabla(document.getElementById('vdb-list'), document.getElementById('vdb-empty'), productosEnMemoria);

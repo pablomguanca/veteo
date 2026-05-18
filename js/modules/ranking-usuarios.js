@@ -1,5 +1,6 @@
 import { CONFIGURACION } from './config.js';
 import { obtenerUsuarioActual } from './google-auth.js';
+import { actualizarPosicionGamificacion } from './checklist.js';
 
 async function fetchRanking() {
     const params = new URLSearchParams({ action: 'getTopUsuarios' });
@@ -32,7 +33,6 @@ function renderizarRanking(datos) {
 
     if (elementoVacio) elementoVacio.hidden = true;
 
-    // Banner mi posición
     const usuario = obtenerUsuarioActual();
     const miPosicionEl = document.getElementById('ranking-mi-posicion');
     const miPosEl = document.getElementById('ranking-mi-pos');
@@ -40,6 +40,8 @@ function renderizarRanking(datos) {
 
     if (usuario && miPosicionEl) {
         const miIndex = datos.findIndex(u => u.email === usuario.email);
+        const posicionReal = miIndex !== -1 ? miIndex + 1 : '-';
+        actualizarPosicionGamificacion(posicionReal);
         const estaEnTop10 = miIndex !== -1 && miIndex < 10;
 
         if (!estaEnTop10 && miIndex !== -1) {
@@ -67,9 +69,9 @@ function renderizarRanking(datos) {
             <span class="ranking-item__pos">${i < 10 ? `#${i + 1}` : `#${i + 1}`}</span>
             <div class="ranking-item__avatar${esTop ? ' ranking-item__avatar--top' : ''}">
                 ${usuario.foto
-                    ? `<img src="${usuario.foto}" alt="${usuario.nombre}" />`
-                    : `<span>${iniciales}</span>`
-                }
+                ? `<img src="${usuario.foto}" alt="${usuario.nombre}" />`
+                : `<span>${iniciales}</span>`
+            }
             </div>
             <div class="ranking-item__info">
                 <p class="ranking-item__nombre${esTop ? ' ranking-item__nombre--top' : ''}">

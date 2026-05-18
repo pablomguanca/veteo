@@ -2363,4 +2363,73 @@ h3 {
   border-color: #93c5fd;
 }
 
+.impact {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin-top: 16px;
+}
+.impact__grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+.impact__box {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px;
+  background: #17191f;
+  border: 1px solid rgba(255, 255, 255, 0.065);
+  border-radius: 10px;
+  transition: transform 150ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+.impact__box--blue .impact__icon {
+  color: #93c5fd;
+  background: rgba(147, 197, 253, 0.13);
+}
+.impact__box--amber .impact__icon {
+  color: #fcd34d;
+  background: rgba(252, 211, 77, 0.13);
+}
+.impact__icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 8px;
+  flex-shrink: 0;
+}
+.impact__data {
+  display: flex;
+  flex-direction: column;
+}
+.impact__value {
+  font-family: "Sora", sans-serif;
+  font-size: 18px;
+  font-weight: 700;
+  color: #eeeae3;
+  line-height: 1.1;
+}
+.impact__label {
+  font-size: 11px;
+  color: #71737d;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-top: 2px;
+}
+.impact__msg {
+  text-align: center;
+  font-family: "Google Sans", sans-serif;
+  font-size: 13px;
+  font-weight: 600;
+  color: #6ee7b7;
+  padding: 8px;
+  background: rgba(110, 231, 183, 0.13);
+  border-radius: 6px;
+  border: 1px solid rgba(110, 231, 183, 0.22);
+}
+
 /*# sourceMappingURL=styles.css.map */
