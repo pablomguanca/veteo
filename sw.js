@@ -11,8 +11,7 @@ firebase.initializeApp({
 });
 
 const mensajeria = firebase.messaging();
-
-const NOMBRE_CACHE = 'veteo-v1';
+const NOMBRE_CACHE = 'veteo-v2';
 const URLS_CACHE = [
     './',
     './index.html',
@@ -44,7 +43,6 @@ self.addEventListener('install', (evento) => {
     evento.waitUntil(
         caches.open(NOMBRE_CACHE).then((cache) => cache.addAll(URLS_CACHE))
     );
-    self.skipWaiting();
 });
 
 self.addEventListener('activate', (evento) => {
@@ -109,4 +107,10 @@ mensajeria.onBackgroundMessage((cargaUtil) => {
         icon: './assets/img/icon-512.png'
     };
     self.registration.showNotification(titulo, opciones);
+});
+
+self.addEventListener('message', (evento) => {
+    if (evento.data && evento.data.type === 'SKIP_WAITING') {
+        self.skipWaiting();
+    }
 });
