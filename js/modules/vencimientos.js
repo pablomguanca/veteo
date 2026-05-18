@@ -3,7 +3,7 @@ import { CONFIGURACION } from './config.js';
 import { alternarEstadoVacio } from '../utils/ui.js';
 import { copiarEAN } from './vencimientos-db.js';
 import { ejecutarCargaCompleta } from './vencimientos-db.js';
-import { recalcularGamificacionTotal } from './checklist.js';
+import { sincronizarImpacto, sumarCargaGamificacion, recalcularGamificacionTotal } from './checklist.js';
 
 const CLAVE_ALMACENAMIENTO_VENCIMIENTOS = 'veteo_vencimientos_v1';
 
@@ -147,7 +147,7 @@ function renderizarItems(contenedor, elementoVacio, items, onEliminar) {
                 renderizarItems(contenedor, elementoVacio, todosLosItems, onEliminar);
             }
 
-            recalcularGamificacionTotal();
+            sumarCargaGamificacion();
         };
 
         const btnMain = elemento.querySelector('.action-btn--main');

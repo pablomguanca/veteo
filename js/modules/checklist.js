@@ -1,34 +1,19 @@
-import { obtenerProductosEnMemoria } from './vencimientos-db.js';
-
 export function inicializarChecklist() {
     renderizarImpacto();
 }
 
+export function sincronizarImpacto(cargasReales) {
+    localStorage.setItem('veteo_impacto_diario', cargasReales);
+    renderizarImpacto();
+}
+
+export function sumarCargaGamificacion() {
+    let cargas = parseInt(localStorage.getItem('veteo_impacto_diario')) || 0;
+    localStorage.setItem('veteo_impacto_diario', cargas + 1);
+    renderizarImpacto();
+}
+
 export function recalcularGamificacionTotal() {
-    const hoy = new Date();
-    const strHoy = `${String(hoy.getDate()).padStart(2, '0')}/${String(hoy.getMonth() + 1).padStart(2, '0')}/${hoy.getFullYear()}`;
-    let cargasHoy = 0;
-
-    const filasDB = obtenerProductosEnMemoria();
-    if (filasDB && filasDB.length) {
-        cargasHoy += filasDB.filter(item => {
-            const estado = item.ESTADO || '';
-            const fechaCarga = String(item.CARGADO_EL || '').trim();
-            return estado.includes('CARGADO') && fechaCarga === strHoy;
-        }).length;
-    }
-
-    try {
-        const manuales = JSON.parse(localStorage.getItem('veteo_vencimientos_v1')) || [];
-        const strHoyISO = hoy.toISOString().split('T')[0];
-        cargasHoy += manuales.filter(item => {
-            const estado = item.estado || '';
-            const createdAt = item.createdAt || '';
-            return estado.includes('CARGADO') && createdAt.startsWith(strHoyISO);
-        }).length;
-    } catch (e) {}
-
-    localStorage.setItem('veteo_impacto_diario', cargasHoy);
     renderizarImpacto();
 }
 
