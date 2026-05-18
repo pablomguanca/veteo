@@ -3,7 +3,7 @@ import { CONFIGURACION } from './config.js';
 import { alternarEstadoVacio } from '../utils/ui.js';
 import { copiarEAN } from './vencimientos-db.js';
 import { ejecutarCargaCompleta } from './vencimientos-db.js';
-import { sumarCargaGamificacion } from './checklist.js';
+import { recalcularGamificacionTotal } from './checklist.js';
 
 const CLAVE_ALMACENAMIENTO_VENCIMIENTOS = 'veteo_vencimientos_v1';
 
@@ -136,18 +136,18 @@ function renderizarItems(contenedor, elementoVacio, items, onEliminar) {
 
         const procesarCargaManual = (tipo, label) => {
             const itemFormateado = { ...item, descripcion: item.producto, vencimiento: item.fecha };
-
             ejecutarCargaCompleta(itemFormateado, tipo);
 
             const todosLosItems = cargarItems();
             const index = todosLosItems.findIndex(i => i.id === item.id);
             if (index !== -1) {
                 todosLosItems[index].estado = `CARGADO ${label}`;
+                todosLosItems[index].createdAt = new Date().toISOString();
                 guardarItems(todosLosItems);
                 renderizarItems(contenedor, elementoVacio, todosLosItems, onEliminar);
             }
 
-            sumarCargaGamificacion();
+            recalcularGamificacionTotal();
         };
 
         const btnMain = elemento.querySelector('.action-btn--main');
