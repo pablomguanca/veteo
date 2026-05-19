@@ -4,6 +4,7 @@ import { alternarEstadoVacio } from '../utils/ui.js';
 import { copiarEAN } from './vencimientos-db.js';
 import { ejecutarCargaCompleta } from './vencimientos-db.js';
 import { sincronizarImpacto, sumarCargaGamificacion, recalcularGamificacionTotal } from './checklist.js';
+import { trackearEvento } from './analytics.js';
 
 const CLAVE_ALMACENAMIENTO_VENCIMIENTOS = 'veteo_vencimientos_v1';
 
@@ -263,6 +264,10 @@ export function inicializarVencimientos() {
         guardarItems(itemsActuales);
         renderizarItems(listaVencimientos, elementoVacio, itemsActuales, eliminarVencimientoNube);
         cerrarModal(fondoModal, document.getElementById('venc-form'));
+        trackearEvento('ingreso_manual', {
+            etapa: etapaValor,
+            tiene_ean: eanValor ? 'si' : 'no'
+        });
         enviarVencimientoNube(nuevoItem);
     });
 

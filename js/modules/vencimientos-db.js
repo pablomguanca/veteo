@@ -3,6 +3,7 @@ import { obtenerUsuarioActual } from './google-auth.js';
 import { CONFIGURACION } from './config.js';
 import { ENLACES_APP } from './enlaces.js';
 import { sincronizarImpacto, sumarCargaGamificacion, recalcularGamificacionTotal } from './checklist.js';
+import { trackearEvento } from './analytics.js';
 
 let productosEnMemoria = [];
 
@@ -156,6 +157,10 @@ export async function ejecutarCargaCompleta(item, tipo) {
             const res = await apiActualizarEstado(ean, vto, nuevoEstado, usuario);
             if (res.ok) {
                 sumarCargaGamificacion();
+                trackearEvento('carga_completada', {
+                    tipo_carga: tipo,
+                    ean_producto: ean
+                });
                 const p = productosEnMemoria.find(x => (x.ean || x.EAN) === ean && (x.vencimiento || x.VENCIMIENTO) === vto);
                 if (p) {
                     p.ESTADO = nuevoEstado;
@@ -372,6 +377,9 @@ export async function inicializarBaseDatosVencimientos() {
             if (filas.length > 0) {
                 const res = await apiImportarTxt(filas, usuario);
                 if (res.ok) await cargarDatos();
+                trackearEvento('importacion_txt', {
+                    cantidad_productos: filas.length
+                });
             }
             restablecerBoton(botonImportar, '↑ Importar TXT');
             entradaArchivo.value = '';
