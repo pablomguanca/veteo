@@ -1,0 +1,69 @@
+@use '../variables' as v;
+
+.label-tag {
+    font-family: v.$ff-mono;
+    font-size: 9px;
+    letter-spacing: 0.18em;
+    color: v.$muted;
+    text-transform: uppercase;
+    margin-bottom: 5px;
+}
+
+.sec-label {
+    font-family: v.$ff-mono;
+    font-size: 9px;
+    letter-spacing: 0.22em;
+    color: v.$muted;
+    text-transform: uppercase;
+    margin-bottom: 12px;
+}
+
+.mono {
+    font-family: v.$ff-mono;
+}
+
+.eyebrow {
+    font-family: v.$ff-mono;
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    color: v.$muted;
+    text-transform: uppercase;
+
+    @media (max-width: 560px) {
+        text-align: center;
+    }
+}
+
+.site-title {
+    font-family: v.$ff-title, sans-serif;
+    font-size: clamp(2.2rem, 6vw, 4rem);
+    font-weight: 800;
+    letter-spacing: -0.03em;
+    line-height: 1;
+    background: linear-gradient(130deg, #eeeae3 35%, #555760 100%);
+    background-clip: text;
+    color: transparent;
+
+    @media (max-width: 560px) {
+        font-size: 2.4rem;
+        text-align: center;
+    }
+}
+
+.site-sub {
+    font-size: 0.9rem;
+    color: v.$muted;
+    font-weight: 400;
+    max-width: 520px;
+    line-height: 1.55;
+    margin-top: 4px;
+}
+
+.vdb-status {
+    font-family: v.$ff-mono;
+    font-size: 10px;
+    color: v.$muted;
+    letter-spacing: 0.06em;
+    min-height: 16px;
+    margin-bottom: 8px;
+}

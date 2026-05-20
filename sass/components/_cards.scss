@@ -1,0 +1,165 @@
+@use '../variables' as v;
+
+.card {
+    background: v.$surface;
+    border: 1px solid v.$border;
+    border-radius: v.$radius-lg;
+    padding: 20px;
+    overflow: hidden;
+    transition:
+        border-color v.$duration-base v.$ease,
+        box-shadow v.$duration-base v.$ease,
+        transform v.$duration-base v.$ease;
+
+    &:hover {
+        border-color: v.$border-2;
+        box-shadow: v.$shadow-md;
+        transform: translateY(-1px);
+    }
+
+    &--wide {
+        grid-column: 1 / -1;
+        width: 100%;
+    }
+
+    &__label {
+        font-family: v.$ff-mono;
+        font-size: 0.7rem;
+        font-weight: 600;
+        letter-spacing: 0.08em;
+        color: v.$muted;
+        text-transform: uppercase;
+        margin-bottom: 8px;
+    }
+
+    &__title {
+        font-family: v.$ff-display;
+        font-size: 1.1rem;
+        font-weight: 700;
+        color: v.$text;
+        letter-spacing: -0.01em;
+        margin-bottom: 14px;
+    }
+
+    &__desc {
+        font-size: 0.85rem;
+        color: v.$muted;
+        line-height: 1.55;
+        font-weight: 400;
+        margin-bottom: 16px;
+    }
+
+    &__header-actions {
+        display: flex;
+        gap: 10px;
+
+        @media (max-width: 560px) {
+            display: grid;
+        }
+
+        .btn-ghost,
+        .btn-primary {
+            @media (max-width: 560px) {
+                margin-left: 2.5rem;
+            }
+        }
+    }
+
+    &-row {
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+        gap: 12px;
+
+        &__actions {
+            flex-shrink: 0;
+
+            &-inner {
+                display: flex;
+                align-items: center;
+                gap: 8px;
+            }
+        }
+    }
+}
+
+.today-card {
+    background: v.$surface;
+    border: 1px solid v.$border;
+    border-radius: v.$radius-lg;
+    padding: 18px 22px;
+    display: flex;
+    gap: 14px;
+    align-items: flex-start;
+    transition: border-color v.$duration-base v.$ease;
+
+    &:hover {
+        border-color: v.$border-2;
+    }
+
+    &__indicator {
+        margin-top: 3px;
+        flex-shrink: 0;
+    }
+}
+
+.today-msg {
+    font-size: 0.95rem;
+    line-height: 1.55;
+    color: v.$text;
+    font-weight: 400;
+}
+
+.lcard {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 10px;
+    padding: 13px 15px;
+    border: 1px solid v.$border;
+    border-radius: v.$radius-sm;
+    background: v.$surface-2;
+    transition:
+        background v.$duration-fast,
+        border-color v.$duration-fast,
+        transform v.$duration-fast;
+
+    &:hover {
+        background: v.$surface-3;
+        border-color: v.$border-2;
+        transform: translateX(2px);
+
+        .larr {
+            color: v.$muted;
+        }
+    }
+
+    strong {
+        display: block;
+        font-size: 0.875rem;
+        font-weight: 500;
+        margin-bottom: 3px;
+    }
+
+    span {
+        font-size: 0.775rem;
+        color: v.$muted;
+        line-height: 1.4;
+        font-weight: 400;
+    }
+}
+
+.llist {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.larr {
+    font-family: v.$ff-mono;
+    font-size: 0.75rem;
+    color: v.$dim;
+    flex-shrink: 0;
+    margin-top: 2px;
+    transition: color v.$duration-fast;
+}

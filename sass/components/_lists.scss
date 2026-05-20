@@ -1,0 +1,206 @@
+@use '../variables' as v;
+
+.vdb-row {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr) auto;
+    background: v.$surface-2;
+    align-items: start;
+    padding: 12px 15px;
+    gap: 20px;
+    border-radius: v.$radius-sm;
+    border: 1px solid v.$border;
+    transition: border-color v.$duration-fast, opacity 0.3s;
+    animation: fadeUp v.$duration-slow v.$ease both;
+
+    @media (max-width: 600px) {
+        grid-template-columns: auto 1fr;
+        gap: 6px;
+        padding: 9px 12px;
+
+        &__name {
+            text-transform: uppercase;
+            font-size: 14px;
+            font-weight: 500;
+            line-height: 1.3;
+            margin-bottom: 8px;
+        }
+
+    }
+
+    &__meta {
+        font-family: v.$ff-mono;
+        display: flex;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 6px;
+        font-size: 0.75rem;
+        color: v.$muted;
+
+        @media (max-width: 600px) {
+            line-height: 1.3;
+            font-size: 11.5px;
+        }
+    }
+
+    &__actions {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+
+        @media (max-width: 600px) {
+            grid-column: 1 / -1;
+            justify-content: flex-end;
+            padding-top: 8px;
+            border-top: 1px solid v.$border;
+        }
+    }
+
+    &--done {
+        opacity: 0.5;
+        filter: grayscale(0.8);
+    }
+}
+
+.vdb-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    min-height: 100px;
+    max-height: 400px;
+    overflow-y: auto;
+    padding-right: 6px;
+    scrollbar-width: thin;
+    scrollbar-color: rgba(255, 255, 255, 0.1) transparent;
+}
+
+.scrollable-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    min-height: 100px;
+    max-height: 300px;
+    overflow-y: auto;
+    margin-top: 15px;
+    padding-right: 8px;
+    scrollbar-width: thin;
+    scrollbar-color: v.$dim transparent;
+}
+
+.venc-item {
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    align-items: stretch;
+    gap: 12px;
+    padding: 10px 15px;
+    border-radius: v.$radius-sm;
+    border: 1px solid v.$border;
+    background: #17191f;
+    transition: border-color v.$duration-fast;
+    animation: fadeUp v.$duration-slow v.$ease both;
+
+    &:hover {
+        border-color: v.$border-2;
+    }
+
+    &__badge {
+        vertical-align: middle;
+        padding: 4px 8px;
+        border-radius: 4px;
+        font-size: 0.7rem;
+        font-weight: 700;
+        white-space: nowrap;
+        border: 1px solid transparent;
+
+        &--7 {
+            background: v.$amber-glow;
+            color: v.$amber;
+            border-color: v.$amber-border;
+        }
+
+        &--30 {
+            background: v.$red-glow;
+            color: v.$red;
+            border-color: v.$red-border;
+        }
+
+        &--60 {
+            background: v.$green-glow;
+            color: v.$green;
+            border-color: v.$green-border;
+        }
+
+        &--90 {
+            background: v.$violet-glow;
+            color: v.$violet;
+            border-color: v.$violet-border;
+        }
+
+        &--unknown {
+            background: v.$surface-3;
+            color: v.$muted;
+            border-color: v.$border;
+        }
+    }
+
+    &__info {
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+        min-width: 0;
+    }
+
+    &__name {
+        font-size: 0.875rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        white-space: normal;
+        word-break: break-word;
+    }
+
+    &__meta {
+        font-family: v.$ff-mono;
+        font-size: 10px;
+        color: v.$muted;
+        margin-top: 1px;
+    }
+
+    &__actions {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        justify-content: flex-end;
+    }
+
+    &__delete {
+        color: v.$dim;
+        font-size: 0.8rem;
+        padding: 4px 8px;
+        border-radius: v.$radius-xs;
+        transition: all v.$duration-fast;
+        flex-shrink: 0;
+        cursor: pointer;
+
+        &:hover {
+            color: v.$danger;
+            background: v.$danger-muted;
+        }
+    }
+
+    @media (min-width: 641px) {
+        display: grid;
+        grid-template-columns: auto 1fr auto;
+        gap: 16px;
+    }
+}
+
+@media (max-width: 640px) {
+    .vdb-row {
+        grid-template-columns: auto 1fr;
+
+        &__right {
+            grid-column: 2 / 3;
+            justify-self: start;
+            margin-top: 4px;
+        }
+    }
+}

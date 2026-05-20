@@ -1,0 +1,140 @@
+@use '../variables' as v;
+
+.chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 14px;
+    border-radius: 999px;
+    border: 1px solid v.$border;
+    background: v.$surface-2;
+    font-size: 0.8rem;
+    font-weight: 500;
+    color: v.$text;
+    transition:
+        background v.$duration-fast v.$ease,
+        border-color v.$duration-fast v.$ease,
+        transform v.$duration-fast v.$ease;
+
+    &:hover {
+        background: v.$surface-3;
+        border-color: v.$border-2;
+        transform: translateY(-1px);
+    }
+
+    &__dot {
+        width: 6px;
+        height: 6px;
+        border-radius: 50%;
+        flex-shrink: 0;
+
+        &--blue {
+            background-color: #3b82f6;
+        }
+
+        &--green {
+            background-color: #22c55e;
+        }
+
+        &--amber {
+            background-color: v.$orange;
+        }
+
+        &--red {
+            background-color: #ef4444;
+        }
+
+        &--purple {
+            background-color: v.$violet;
+        }
+
+        &--violet {
+            background-color: #8b5cf6;
+        }
+    }
+
+}
+
+.venc-badge {
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 0.7rem;
+    font-weight: 700;
+    white-space: nowrap;
+    border: 1px solid transparent;
+
+    &--7 {
+        background: v.$amber-glow;
+        color: v.$amber;
+        border-color: v.$amber-border;
+    }
+
+    &--30 {
+        background: v.$red-glow;
+        color: v.$red;
+        border-color: v.$red-border;
+    }
+
+    &--60 {
+        background: v.$green-glow;
+        color: v.$green;
+        border-color: v.$green-border;
+    }
+
+    &--90 {
+        background: v.$violet-glow;
+        color: v.$violet;
+        border-color: v.$violet-border;
+    }
+
+    &--unknown {
+        background: v.$surface-3;
+        color: v.$muted;
+        border-color: v.$border;
+    }
+}
+
+.estado-btn {
+    font-family: v.$ff-mono;
+    font-size: 9px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    padding: 4px 10px;
+    border-radius: 999px;
+    border: 1px solid v.$border;
+    cursor: pointer;
+    transition: all v.$duration-fast v.$ease;
+    white-space: nowrap;
+
+    &:hover {
+        transform: translateY(-1px);
+        opacity: 0.85;
+    }
+}
+
+
+.live-dot {
+    display: inline-block;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    flex-shrink: 0;
+
+    &--green {
+        background: v.$green;
+        box-shadow: 0 0 10px v.$green;
+        animation: pulse-green 2.2s ease-in-out infinite;
+    }
+
+    &--orange {
+        background: v.$orange;
+        box-shadow: 0 0 10px v.$orange-glow;
+        animation: pulse-orange 2s ease-in-out infinite;
+    }
+}

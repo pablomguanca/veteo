@@ -1,0 +1,90 @@
+@use '../variables' as v;
+
+.field {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+
+    &--inline {
+        flex-direction: row;
+        align-items: center;
+    }
+
+    &__label {
+        font-family: v.$ff-mono;
+        font-size: 10px;
+        letter-spacing: 0.12em;
+        color: v.$muted;
+        text-transform: uppercase;
+    }
+
+    &__input {
+        background: v.$surface-2;
+        border: 1px solid v.$border;
+        border-radius: v.$radius-sm;
+        padding: 10px 13px;
+        color: v.$text;
+        font-size: 0.9rem;
+        outline: none;
+        transition: border-color v.$duration-fast v.$ease, box-shadow v.$duration-fast v.$ease;
+        width: 100%;
+
+        &:focus {
+            border-color: v.$blue;
+            box-shadow: 0 0 0 3px rgba(147, 197, 253, 0.12);
+        }
+
+        &--sm {
+            width: auto;
+            min-width: 120px;
+        }
+
+        &--error {
+            border-color: v.$red !important;
+            box-shadow: 0 0 0 3px rgba(252, 165, 165, 0.12) !important;
+        }
+    }
+
+    &__select {
+        appearance: none;
+        cursor: pointer;
+    }
+}
+
+.field-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+}
+
+.form-status-badge {
+    display: inline-flex;
+    align-items: center;
+    margin-left: 8px;
+    vertical-align: middle;
+}
+
+.form-dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    flex-shrink: 0;
+
+    &--active {
+        background: v.$green;
+        box-shadow: 0 0 6px v.$green;
+        animation: pulse-green 2.2s ease-in-out infinite;
+
+        +.form-status-label {
+            color: v.$green;
+        }
+    }
+
+    &--inactive {
+        background: v.$dim;
+    }
+}
+
+.form-status-label {
+    display: none;
+}

@@ -1,4 +1,5 @@
 import { obtenerUsuarioActual, cerrarSesion } from './google-auth.js';
+import { trackearEvento } from './analytics.js';
 
 function cargarLinkSheets(linkEl) {
     try {
