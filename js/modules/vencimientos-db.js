@@ -122,7 +122,7 @@ export async function ejecutarCargaCompleta(item, tipo) {
 
     const FORMS = {
         PAS: { url: ENLACES_APP.formPas, id: "entry.1279354663" },
-        PFT: { url: ENLACES_APP.formPft },
+        PFT: { url: ENLACES_APP.formPft, id: "entry.849574475"},
         UM: { url: ENLACES_APP.ultimaMilla, id: "entry.140972296" },
         S10: { url: ENLACES_APP.accEspeciales, id: "entry.1275730876" },
         PCH: { url: ENLACES_APP.pch }
