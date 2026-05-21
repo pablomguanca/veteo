@@ -140,7 +140,7 @@ export async function ejecutarCargaCompleta(item, tipo) {
         }
         else if ([20, 21, 22, 23, 24, 26].includes(sec)) {
             urlAbrir = FORMS.PFT.url;
-        } else if (descMinuscula.includes("carrefour") || descMinuscula.includes("bulnez") || [10, 34].includes(sec)) {
+        } else if (descMinuscula.includes("carrefour") || descMinuscula.includes("bulnez") || [10, 11, 14, 15, 34].includes(sec)) {
             urlAbrir = `${FORMS.S10.url}?usp=pp_url&${FORMS.S10.id}=${ean}`;
         } else if (sec === 15) {
             urlAbrir = `${FORMS.PAS.url}?usp=pp_url&${FORMS.PAS.id}=${ean}`;
@@ -231,14 +231,14 @@ function renderizarTabla(contenedor, elementoVacio, filas) {
         let labelPrincipal = "";
         const descMinuscula = desc.toLowerCase();
 
-        if ([11, 14].includes(sec) || (sec === 20 && dias >= 3 && dias <= 7)) {
+        if (descMinuscula.includes("carrefour") || descMinuscula.includes("bulnez") || [10, 11, 14, 15, 34].includes(sec)) {
+            labelPrincipal = "ACC";
+        }
+        else if ([11, 14].includes(sec) || (sec === 20 && dias >= 3 && dias <= 7)) {
             labelPrincipal = "PCH";
         }
         else if ([20, 21, 22, 23, 24, 26].includes(sec)) {
             labelPrincipal = "PFT";
-        }
-        else if (descMinuscula.includes("carrefour") || descMinuscula.includes("bulnez") || [10, 34].includes(sec)) {
-            labelPrincipal = "ACC";
         }
         else if (sec === 15) {
             labelPrincipal = "PAS";
