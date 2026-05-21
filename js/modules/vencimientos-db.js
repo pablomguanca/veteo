@@ -122,8 +122,8 @@ export async function ejecutarCargaCompleta(item, tipo) {
 
     const FORMS = {
         PAS: { url: ENLACES_APP.formPas, id: "entry.1279354663" },
-        PFT: { url: ENLACES_APP.formPft, id: "entry.849574475"},
-        UM: { url: ENLACES_APP.ultimaMilla, id: "entry.140972296" },
+        PFT: { url: ENLACES_APP.formPft, id: "entry.849574475" },
+        UM: { url: ENLACES_APP.ultimaMilla, idEan: "entry.140972296", idDesc: "entry.315963851" },
         S10: { url: ENLACES_APP.accEspeciales, id: "entry.1275730876" },
         PCH: { url: ENLACES_APP.pch }
     };
@@ -132,7 +132,7 @@ export async function ejecutarCargaCompleta(item, tipo) {
     let nuevoEstado = "CARGADO";
 
     if (tipo === 'UM') {
-        urlAbrir = `${FORMS.UM.url}?usp=pp_url&${FORMS.UM.id}=${ean}`;
+        urlAbrir = `${FORMS.UM.url}?usp=pp_url&${FORMS.UM.idEan}=${ean}&${FORMS.UM.idDesc}=${encodeURIComponent(desc)}`;
         nuevoEstado = "CARGADO UM";
     } else {
         if (sec === 20 && dias >= 3 && dias <= 7) {
