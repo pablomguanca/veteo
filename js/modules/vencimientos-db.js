@@ -137,10 +137,11 @@ export async function ejecutarCargaCompleta(item, tipo) {
     } else {
         if (sec === 20 && dias >= 3 && dias <= 7) {
             urlAbrir = FORMS.PCH.url;
-        }
-        else if ([20, 21, 22, 23, 24, 26].includes(sec)) {
+        } else if ([20, 21, 22, 23, 24, 26].includes(sec)) {
             urlAbrir = FORMS.PFT.url;
-        } else if (descMinuscula.includes("carrefour") || descMinuscula.includes("bulnez") || [10, 11, 14, 15, 34].includes(sec)) {
+        } else if (descMinuscula.includes("carrefour") || descMinuscula.includes("bulnez")) {
+            urlAbrir = `${FORMS.S10.url}?usp=pp_url&${FORMS.S10.id}=${ean}`;
+        } else if ([10, 34].includes(sec)) {
             urlAbrir = `${FORMS.S10.url}?usp=pp_url&${FORMS.S10.id}=${ean}`;
         } else if (sec === 15) {
             urlAbrir = `${FORMS.PAS.url}?usp=pp_url&${FORMS.PAS.id}=${ean}`;
@@ -231,20 +232,21 @@ function renderizarTabla(contenedor, elementoVacio, filas) {
         let labelPrincipal = "";
         const descMinuscula = desc.toLowerCase();
 
-        if (descMinuscula.includes("carrefour") || descMinuscula.includes("bulnez") || [10, 11, 14, 15, 34].includes(sec)) {
+        if (sec === 20 && dias >= 3 && dias <= 7) {
+            labelPrincipal = "PCH";
+        } else if ([20, 21, 22, 23, 24, 26].includes(sec)) {
+            labelPrincipal = "PFT";
+        } else if (descMinuscula.includes("carrefour") || descMinuscula.includes("bulnez")) {
             labelPrincipal = "ACC";
-        }
-        else if ([11, 14].includes(sec) || (sec === 20 && dias >= 3 && dias <= 7)) {
+        } else if ([10, 34].includes(sec)) {
+            labelPrincipal = "ACC";
+        } else if (sec === 15) {
+            labelPrincipal = "PAS";
+        } else if ([11, 14].includes(sec)) {
             labelPrincipal = "PCH";
         }
-        else if ([20, 21, 22, 23, 24, 26].includes(sec)) {
-            labelPrincipal = "PFT";
-        }
-        else if (sec === 15) {
-            labelPrincipal = "PAS";
-        }
 
-        const mostrarUM = (sec === 14 || sec === 15 || sec === 10) && (dias >= 3 && dias <= 7);
+        const mostrarUM = [10, 14, 15].includes(sec) && dias >= 3 && dias <= 7;
         if (mostrarUM) {
             labelPrincipal = "";
         }
