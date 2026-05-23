@@ -976,6 +976,9 @@ h3 {
   color: #93c5fd;
 }
 .filtro-chip--pdf {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
   margin-left: auto;
 }
 .filtro-chip--pdf:hover {
@@ -983,7 +986,14 @@ h3 {
   color: #eeeae3;
   border-color: rgba(255, 255, 255, 0.115);
 }
+.filtro-chip--pdf svg {
+  position: relative;
+  top: 1px;
+}
 .filtro-chip--excel {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
   color: #6ee7b7;
   border-color: rgba(110, 231, 183, 0.25);
   background: rgba(110, 231, 183, 0.05);
@@ -992,6 +1002,10 @@ h3 {
   background: rgba(110, 231, 183, 0.15);
   border-color: #6ee7b7;
   color: #6ee7b7;
+}
+.filtro-chip--excel svg {
+  position: relative;
+  top: 1px;
 }
 .filtro-chip[data-filtro=vencidos].filtro-chip--active {
   background: rgba(252, 165, 165, 0.15);

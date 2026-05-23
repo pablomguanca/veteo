@@ -88,6 +88,9 @@
     }
 
     &--pdf {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
         margin-left: auto;
 
         &:hover {
@@ -95,9 +98,16 @@
             color: v.$text;
             border-color: v.$border-2;
         }
+
+        svg {
+            position: relative;
+        }
     }
 
     &--excel {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
         color: v.$green;
         border-color: rgba(110, 231, 183, 0.25);
         background: rgba(110, 231, 183, 0.05);
@@ -106,6 +116,10 @@
             background: rgba(110, 231, 183, 0.15);
             border-color: v.$green;
             color: v.$green;
+        }
+
+        svg {
+            position: relative;
         }
     }
 
