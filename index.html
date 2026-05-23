@@ -196,6 +196,8 @@
                         <button class="filtro-chip" data-filtro="UM" data-target="venc">UM</button>
                         <button class="filtro-chip" data-filtro="vencidos" data-target="venc">Vencidos</button>
                         <button class="filtro-chip filtro-chip--pdf" id="print-venc-btn">🖨 Imprimir PDF</button>
+                        <button class="filtro-chip filtro-chip--excel" id="excel-venc-btn" style="display: none;">📊
+                            Exportar PCH</button>
                     </div>
                 </div>
                 <div class="scrollable-list" id="venc-list" role="list">
@@ -305,6 +307,7 @@
                         <button class="filtro-chip" data-filtro="UM" data-target="vdb">UM</button>
                         <button class="filtro-chip" data-filtro="vencidos" data-target="vdb">Vencidos</button>
                         <button class="filtro-chip filtro-chip--pdf" id="print-vdb-btn">🖨 Imprimir PDF</button>
+                        <button class="filtro-chip filtro-chip--excel" id="excel-vdb-btn">📊 Exportar PCH</button>
                     </div>
                 </div>
                 <div class="vdb-list" id="vdb-list" role="list">
@@ -631,6 +634,8 @@
         </div>
 
     </aside>
+    <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="https://unpkg.com/@zxing/library@latest/umd/index.min.js"></script>
     <script src="./js/app.js" type="module"></script>
     <script src="https://cdn.jsdelivr.net/npm/driver.js@1.3.1/dist/driver.js.iife.js"></script>

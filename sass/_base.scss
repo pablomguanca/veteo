@@ -47,6 +47,13 @@ a {
     text-decoration: none;
 }
 
+button {
+    font-family: v.$ff-body;
+    cursor: pointer;
+    border: none;
+    background: none;
+}
+
 input,
 select {
     font-family: v.$ff-body;

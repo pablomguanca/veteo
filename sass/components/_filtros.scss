@@ -97,6 +97,18 @@
         }
     }
 
+    &--excel {
+        color: v.$green;
+        border-color: rgba(110, 231, 183, 0.25);
+        background: rgba(110, 231, 183, 0.05);
+
+        &:hover {
+            background: rgba(110, 231, 183, 0.15);
+            border-color: v.$green;
+            color: v.$green;
+        }
+    }
+
     &[data-filtro="vencidos"] {
         &.filtro-chip--active {
             background: rgba(252, 165, 165, 0.15);

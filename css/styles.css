@@ -138,6 +138,13 @@ a {
   text-decoration: none;
 }
 
+button {
+  font-family: "Google Sans", sans-serif;
+  cursor: pointer;
+  border: none;
+  background: none;
+}
+
 input,
 select {
   font-family: "Google Sans", sans-serif;
@@ -975,6 +982,16 @@ h3 {
   background: #17191f;
   color: #eeeae3;
   border-color: rgba(255, 255, 255, 0.115);
+}
+.filtro-chip--excel {
+  color: #6ee7b7;
+  border-color: rgba(110, 231, 183, 0.25);
+  background: rgba(110, 231, 183, 0.05);
+}
+.filtro-chip--excel:hover {
+  background: rgba(110, 231, 183, 0.15);
+  border-color: #6ee7b7;
+  color: #6ee7b7;
 }
 .filtro-chip[data-filtro=vencidos].filtro-chip--active {
   background: rgba(252, 165, 165, 0.15);
