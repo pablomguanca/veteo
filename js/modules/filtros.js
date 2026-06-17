@@ -19,6 +19,8 @@ function aplicarFiltroUI(target, filtro) {
     const contenedor = document.getElementById(contenedorId);
     if (!contenedor) return;
 
+    contenedor.dataset.filtroActivo = filtro;
+
     const todasLasRows = [...contenedor.querySelectorAll('.vdb-row')];
     const visibles = filtrarRows(todasLasRows, filtro);
     const ocultas = todasLasRows.filter(r => !visibles.includes(r));

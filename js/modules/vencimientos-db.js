@@ -296,6 +296,19 @@ function renderizarTabla(contenedor, elementoVacio, filas) {
     const tieneVisibles = [...contenedor.querySelectorAll('.vdb-row')].some(r => r.style.display !== 'none');
     alternarEstadoVacio(elementoVacio, tieneVisibles);
 
+    const filtroActivo = contenedor.dataset.filtroActivo;
+    if (filtroActivo && filtroActivo !== 'todos') {
+        const todasLasRows = [...contenedor.querySelectorAll('.vdb-row')];
+        todasLasRows.forEach(r => {
+            const esVencido = r.dataset.vencido === 'true';
+            const botones = [...r.querySelectorAll('.action-btn')];
+            const coincide = filtroActivo === 'vencidos'
+                ? esVencido
+                : !esVencido && botones.some(btn => btn.textContent.trim() === filtroActivo);
+            r.style.display = coincide ? '' : 'none';
+        });
+    }
+
     recalcularGamificacionTotal();
 }
 
