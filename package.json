@@ -1,5 +1,6 @@
 {
   "dependencies": {
-    "xlsx": "^0.18.5"
+    "@google/genai": "^2.9.0",
+    "exceljs": "^4.4.0"
   }
 }
