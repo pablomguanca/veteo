@@ -1,4 +1,3 @@
-// api/procesar-merma.js
 const XLSX = require('xlsx');
 
 module.exports = async (req, res) => {
