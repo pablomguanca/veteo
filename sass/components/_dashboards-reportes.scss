@@ -1,0 +1,251 @@
+@use '../variables' as v;
+
+.dashboard-reports {
+    background-color: v.$surface;
+    border: 1px solid v.$border;
+    border-radius: v.$radius;
+    padding: 2.5rem;
+    max-width: 720px;
+    margin: 2rem auto;
+    box-shadow: v.$shadow-md;
+    font-family: v.$ff-body;
+    color: v.$text;
+
+    &__section {
+        padding: 0.5rem 0;
+    }
+
+    &__header {
+        margin-bottom: 1.75rem;
+    }
+
+    &__title {
+        font-family: v.$ff-title;
+        font-size: 1.4rem;
+        font-weight: 600;
+        color: v.$violet;
+        margin: 0 0 0.5rem 0;
+        letter-spacing: -0.025em;
+    }
+
+    &__subtitle {
+        font-size: 0.9rem;
+        color: v.$muted;
+        margin: 0;
+        line-height: 1.6;
+    }
+
+    &__badge {
+        background-color: v.$surface-3;
+        border: 1px solid v.$border-2;
+        padding: 0.15rem 0.4rem;
+        border-radius: v.$radius-xs;
+        font-family: v.$ff-mono;
+        font-size: 0.75rem;
+        color: v.$violet;
+    }
+
+    &__divider {
+        border: 0;
+        height: 1px;
+        background: v.$border-2;
+        margin: 2.5rem 0;
+    }
+
+    &__form {
+        display: flex;
+        flex-direction: column;
+        gap: 1.25rem;
+    }
+
+    &__field {
+        display: flex;
+        flex-direction: column;
+        gap: 0.6rem;
+    }
+
+    &__label {
+        font-size: 0.85rem;
+        font-weight: 500;
+        color: v.$text;
+    }
+
+    &__file-wrapper {
+        position: relative;
+        display: block;
+        width: 100%;
+        height: 46px;
+        cursor: pointer;
+
+        &--dropzone {
+            height: 150px;
+            background-color: v.$surface-2;
+            border: 2px dashed v.$border-2;
+            border-radius: v.$radius-sm;
+            transition: all v.$duration-base v.$ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+        }
+    }
+
+    &__input {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        opacity: 0;
+        cursor: pointer;
+        z-index: 2;
+
+        &:hover~.dashboard-reports__file-custom {
+            border-color: v.$violet-border;
+            background-color: v.$surface-3;
+            box-shadow: inset 0 0 12px v.$violet-glow;
+            color: v.$text;
+
+            .dashboard-reports__icon-file {
+                color: v.$violet;
+            }
+        }
+
+        &:hover~.dashboard-reports__dropzone-content {
+            color: v.$text;
+
+            .dashboard-reports__icon-dropzone {
+                color: v.$violet;
+                transform: translateY(-6px);
+            }
+        }
+    }
+
+    &__icon-file {
+        width: 18px;
+        height: 18px;
+        color: v.$muted;
+        margin-right: 0.75rem;
+        flex-shrink: 0;
+        transition: all v.$duration-fast v.$ease;
+
+        &--green {
+            color: v.$green-border;
+
+            .dashboard-reports__input:hover~.dashboard-reports__file-custom & {
+                color: v.$green;
+                filter: drop-shadow(0 0 4px v.$green-glow);
+                transform: scale(1.05);
+            }
+        }
+    }
+
+    &__dropzone-result {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.5rem;
+        color: v.$text;
+        font-family: v.$ff-mono;
+        font-size: 0.875rem;
+
+        .dashboard-reports__icon-file--violet {
+            color: v.$violet;
+            filter: drop-shadow(0 0 6px v.$violet-glow);
+            margin-right: 0;
+            width: 20px;
+            height: 20px;
+        }
+    }
+
+    &__file-custom {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: v.$surface-2;
+        border: 1px solid v.$border-2;
+        border-radius: v.$radius-sm;
+        padding: 0 1.25rem;
+        display: flex;
+        align-items: center;
+        font-family: v.$ff-mono;
+        font-size: 0.85rem;
+        color: v.$muted;
+        transition: all v.$duration-base v.$ease;
+        z-index: 1;
+    }
+
+    &__icon-dropzone {
+        width: 32px;
+        height: 32px;
+        color: v.$muted;
+        transition: transform v.$duration-base v.$ease-spring, color v.$duration-fast v.$ease;
+    }
+
+    &__dropzone-content {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 0.75rem;
+        padding: 1.5rem;
+        color: v.$muted;
+        transition: color v.$duration-fast v.$ease;
+        z-index: 1;
+    }
+
+    &__dropzone-text {
+        font-size: 0.875rem;
+        line-height: 1.4;
+    }
+
+    &__actions {
+        margin-top: 0.5rem;
+        display: flex;
+        justify-content: flex-end;
+    }
+
+    &__btn {
+        padding: 0.85rem 1.6rem;
+        font-family: v.$ff-display;
+        font-size: 0.9rem;
+        font-weight: 600;
+        border: 1px solid transparent;
+        border-radius: 30px;
+        cursor: pointer;
+        transition: all v.$duration-fast v.$ease;
+
+        &--primary {
+            background-color: v.$blue-bg;
+            color: #ffffff;
+            box-shadow: 0 4px 12px rgba(29, 118, 242, 0.15);
+
+            &:hover {
+                background-color: lighten(v.$blue-bg, 5%);
+                box-shadow: 0 6px 16px rgba(29, 118, 242, 0.3);
+                transform: translateY(-1px);
+            }
+        }
+
+        &--green {
+            background-color: v.$surface-3;
+            border-color: v.$green-border;
+            color: v.$green;
+            box-shadow: 0 4px 12px v.$green-glow;
+
+            &:hover {
+                background-color: v.$green;
+                color: v.$surface;
+                box-shadow: 0 6px 20px rgba(110, 231, 183, 0.4);
+                transform: translateY(-1px);
+            }
+        }
+    }
+}
+
+.dashboard-reports__file-wrapper--dropzone:hover {
+    border-color: v.$violet-border;
+    box-shadow: 0 0 24px v.$violet-glow;
+    background-color: v.$surface-3;
+}

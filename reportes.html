@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Veteo App - Análisis de Mermas</title>
+    <link rel="icon" href="./assets/img/icon-192.png" type="image/png" />
+    <link rel="stylesheet" href="css/styles.css" />
+</head>
+
+<body class="veteo-layout">
+
+    <div class="veteo-container">
+
+        <aside class="sidebar" id="sidebar-component"></aside>
+
+        <main class="veteo-main">
+
+            <div class="dashboard-reports">
+
+                <section class="dashboard-reports__section">
+                    <div class="dashboard-reports__header">
+                        <h1 class="dashboard-reports__title">Cruce de Inventarios Rápido</h1>
+                        <p class="dashboard-reports__subtitle">
+                            Sube los dos períodos de inventario (.txt) para descargar una planilla comparativa
+                            instantánea.
+                        </p>
+                    </div>
+
+                    <div class="dashboard-reports__form">
+
+                        <div class="dashboard-reports__field">
+                            <label for="inv-periodo-1" class="dashboard-reports__label">Inventario Período 1
+                                (Actual)</label>
+                            <div class="dashboard-reports__file-wrapper">
+                                <input type="file" id="inv-periodo-1" class="dashboard-reports__input" accept=".txt" />
+                                <span class="dashboard-reports__file-custom">
+                                    <svg class="dashboard-reports__icon-file" viewBox="0 0 24 24" fill="none"
+                                        stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                        stroke-linejoin="round">
+                                        <path
+                                            d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z" />
+                                        <polyline points="14 2 14 8 20 8" />
+                                    </svg>
+                                    <span class="dashboard-reports__file-text">Seleccionar .txt Inventario A</span>
+                                </span>
+                            </div>
+                        </div>
+
+                        <div class="dashboard-reports__field">
+                            <label for="inv-periodo-2" class="dashboard-reports__label">Inventario Período 2
+                                (Comparativo)</label>
+                            <div class="dashboard-reports__file-wrapper">
+                                <input type="file" id="inv-periodo-2" class="dashboard-reports__input" accept=".txt" />
+                                <span class="dashboard-reports__file-custom">
+                                    <svg class="dashboard-reports__icon-file" viewBox="0 0 24 24" fill="none"
+                                        stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                        stroke-linejoin="round">
+                                        <path
+                                            d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z" />
+                                        <polyline points="14 2 14 8 20 8" />
+                                    </svg>
+                                    <span class="dashboard-reports__file-text">Seleccionar .txt Inventario B</span>
+                                </span>
+                            </div>
+                        </div>
+
+                        <div class="dashboard-reports__actions">
+                            <button id="btn-procesar-cruce-rapido"
+                                class="dashboard-reports__btn dashboard-reports__btn--green">
+                                Descargar Cruce (.xlsx)
+                            </button>
+                        </div>
+                    </div>
+                </section>
+
+                <hr class="dashboard-reports__divider" />
+
+                <section class="dashboard-reports__section">
+                    <div class="dashboard-reports__header">
+                        <h2 class="dashboard-reports__title">Compilador Analítico de Mermas</h2>
+                        <p class="dashboard-reports__subtitle">
+                            Sube en lote cualquier combinación de archivos analíticos de Genesix (<span
+                                class="dashboard-reports__badge">VTO</span>, <span
+                                class="dashboard-reports__badge">REG</span>, <span
+                                class="dashboard-reports__badge">ROT</span>, <span
+                                class="dashboard-reports__badge">ROB</span>, <span
+                                class="dashboard-reports__badge">AFT</span>, <span
+                                class="dashboard-reports__badge">INV</span>). Veteo los clasificará automáticamente.
+                        </p>
+                    </div>
+
+                    <div class="dashboard-reports__form">
+                        <div class="dashboard-reports__field">
+                            <label for="analytics-lote" class="dashboard-reports__label">Carga de archivos en
+                                lote</label>
+
+                            <div class="dashboard-reports__file-wrapper dashboard-reports__file-wrapper--dropzone">
+                                <input type="file" id="analytics-lote" class="dashboard-reports__input" accept=".txt"
+                                    multiple />
+                                <div class="dashboard-reports__dropzone-content">
+                                    <svg class="dashboard-reports__icon-dropzone" viewBox="0 0 24 24" fill="none"
+                                        stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
+                                        stroke-linejoin="round">
+                                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                                        <polyline points="17 8 12 3 7 8" />
+                                        <line x1="12" y1="3" x2="12" y2="15" />
+                                    </svg>
+                                    <span id="dropzone-text" class="dashboard-reports__dropzone-text">
+                                        Arrastra múltiples archivos .txt o haz clic para buscarlos
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="dashboard-reports__actions">
+                            <button id="btn-procesar-consolidado"
+                                class="dashboard-reports__btn dashboard-reports__btn--primary">
+                                Compilar Libro Maestro
+                            </button>
+                        </div>
+                    </div>
+                </section>
+
+            </div>
+        </main>
+    </div>
+
+    <script type="module" src="js/app.js"></script>
+</body>
+
+</html>

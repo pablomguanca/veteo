@@ -15,6 +15,7 @@ import { inicializarTopProductos } from './modules/top-productos.js';
 import { inicializarRankingUsuarios } from './modules/ranking-usuarios.js';
 import { inicializarSidebar } from './modules/sidebar.js';
 import { inicializarInstaladorPWA } from './modules/install.js';
+import { inicializarReportes } from './modules/reportes.js';
 
 document.addEventListener('DOMContentLoaded', () => {
     inicializarAutenticacionGoogle();
@@ -34,4 +35,5 @@ document.addEventListener('DOMContentLoaded', () => {
     inicializarRankingUsuarios();
     inicializarSidebar();
     inicializarInstaladorPWA();
+    inicializarReportes();
 });
