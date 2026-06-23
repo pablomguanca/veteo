@@ -3,7 +3,7 @@ export async function enviarCruceRapido() {
     const inputP2 = document.getElementById('inv-periodo-2').files[0];
 
     if (!inputP1 || !inputP2) {
-        alert("Por favor, selecciona los dos inventarios base para realizar el cruce rápido.");
+        alert("Por favor, selecciona los dos inventarios base para realizar el Cruce de Inventarios.");
         return;
     }
 
@@ -24,7 +24,7 @@ export async function enviarCruceRapido() {
     try {
         if (typeof mostrarSpinner === 'function') mostrarSpinner(true);
 
-        const respuesta = await fetch('/api/procesar-merma', {
+        const respuesta = await fetch('/api/cruce-rapido', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(payload)
@@ -112,6 +112,7 @@ export function inicializarReportes() {
     if (btnConsolidado) {
         btnConsolidado.addEventListener('click', enviarLoteMermas);
     }
+
     const inputLote = document.getElementById('analytics-lote');
     const textDropzone = document.getElementById('dropzone-text');
 
@@ -121,34 +122,34 @@ export function inicializarReportes() {
 
             if (total === 1) {
                 textDropzone.innerHTML = `
-            <div class="dashboard-reports__dropzone-result">
-                <svg class="dashboard-reports__icon-file dashboard-reports__icon-file--violet" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/>
-                    <polyline points="14 2 14 8 20 8"/>
-                </svg>
-                <span><strong>Archivo cargado:</strong> ${e.target.files[0].name}</span>
-            </div>
-        `;
+                    <div class="dashboard-reports__dropzone-result">
+                        <svg class="dashboard-reports__icon-file dashboard-reports__icon-file--violet" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/>
+                            <polyline points="14 2 14 8 20 8"/>
+                        </svg>
+                        <span><strong>Archivo cargado:</strong> ${e.target.files[0].name}</span>
+                    </div>
+                `;
             } else if (total > 1) {
                 textDropzone.innerHTML = `
-            <div class="dashboard-reports__dropzone-result">
-                <svg class="dashboard-reports__icon-file dashboard-reports__icon-file--violet" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M17 21h4a2 2 0 0 0 2-2V5a2 2 0 0 0-2-2H9a2 2 0 0 0-2 2v2" />
-                    <path d="M14.5 7H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V12.5L14.5 7z"/>
-                    <polyline points="14 7 14 13 20 13"/>
-                </svg>
-                <span><strong>Lote listo:</strong> ${total} archivos detectados</span>
-            </div>
-        `;
+                    <div class="dashboard-reports__dropzone-result">
+                        <svg class="dashboard-reports__icon-file dashboard-reports__icon-file--violet" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M17 21h4a2 2 0 0 0 2-2V5a2 2 0 0 0-2-2H9a2 2 0 0 0-2 2v2" />
+                            <path d="M14.5 7H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V12.5L14.5 7z"/>
+                            <polyline points="14 7 14 13 20 13"/>
+                        </svg>
+                        <span><strong>Lote listo:</strong> ${total} archivos detectados</span>
+                    </div>
+                `;
             } else {
                 textDropzone.innerHTML = `
-            <svg class="dashboard-reports__icon-dropzone" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
-                <polyline points="17 8 12 3 7 8" />
-                <line x1="12" y1="3" x2="12" y2="15" />
-            </svg>
-            <span class="dashboard-reports__dropzone-text">Arrastra múltiples archivos .txt o haz clic para buscarlos</span>
-        `;
+                    <svg class="dashboard-reports__icon-dropzone" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                        <polyline points="17 8 12 3 7 8" />
+                        <line x1="12" y1="3" x2="12" y2="15" />
+                    </svg>
+                    <span class="dashboard-reports__dropzone-text">Arrastra múltiples archivos .txt o haz clic para buscarlos</span>
+                `;
             }
         });
     }

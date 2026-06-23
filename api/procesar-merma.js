@@ -5,13 +5,8 @@ module.exports = async (req, res) => {
     res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
     res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
 
-    if (req.method === 'OPTIONS') {
-        return res.status(200).end();
-    }
-
-    if (req.method !== 'POST') {
-        return res.status(405).json({ error: 'Método no permitido' });
-    }
+    if (req.method === 'OPTIONS') return res.status(200).end();
+    if (req.method !== 'POST') return res.status(405).json({ error: 'Método no permitido' });
 
     try {
         const { archivos } = req.body;
@@ -34,12 +29,12 @@ module.exports = async (req, res) => {
                     const movIdx = partes.findIndex(p => ['INV', 'VTO', 'REG', 'ROB', 'ROT', 'AFT'].includes(p));
 
                     if (movIdx !== -1 && partes.length > movIdx + 4) {
-                        const mov = partes[mov_idx];
-                        const sec = partes[mov_idx - 1];
-                        const sku = partes[mov_idx + 1];
-                        const ean = partes[mov_idx + 2];
+                        const mov = partes[movIdx];
+                        const sec = partes[movIdx - 1];
+                        const sku = partes[movIdx + 1];
+                        const ean = partes[movIdx + 2];
 
-                        const descCompleta = partes.slice(mov_idx + 3, partes.length - 3).join(' ');
+                        const descCompleta = partes.slice(movIdx + 3, partes.length - 3).join(' ');
                         const descripcion = descCompleta.replace(/\s(UNI|KIL)\s?$/i, '').trim();
 
                         const unidades = parseFloat(partes[partes.length - 2].replace(/,/g, ''));
@@ -47,10 +42,7 @@ module.exports = async (req, res) => {
 
                         if (!mapaMaestro.has(ean)) {
                             mapaMaestro.set(ean, {
-                                SEC: sec,
-                                SKU: sku,
-                                EAN: ean,
-                                Descripción: descripcion,
+                                SEC: sec, SKU: sku, EAN: ean, Descripción: descripcion,
                                 VTO_Unidades: 0, VTO_Importe: 0,
                                 REG_Unidades: 0, REG_Importe: 0,
                                 ROT_Unidades: 0, ROT_Importe: 0,
@@ -62,20 +54,15 @@ module.exports = async (req, res) => {
                         const registro = mapaMaestro.get(ean);
 
                         if (mov === 'VTO') {
-                            registro.VTO_Unidades += unidades;
-                            registro.VTO_Importe += importe;
+                            registro.VTO_Unidades += unidades; registro.VTO_Importe += importe;
                         } else if (mov === 'REG') {
-                            registro.REG_Unidades += unidades;
-                            registro.REG_Importe += importe;
+                            registro.REG_Unidades += unidades; registro.REG_Importe += importe;
                         } else if (mov === 'ROT') {
-                            registro.ROT_Unidades += unidades;
-                            registro.ROT_Importe += importe;
+                            registro.ROT_Unidades += unidades; registro.ROT_Importe += importe;
                         } else if (mov === 'ROB') {
-                            registro.ROB_Unidades += unidades;
-                            registro.ROB_Importe += importe;
+                            registro.ROB_Unidades += unidades; registro.ROB_Importe += importe;
                         } else {
-                            registro.Otros_Unidades += unidades;
-                            registro.Otros_Importe += importe;
+                            registro.Otros_Unidades += unidades; registro.Otros_Importe += importe;
                         }
                     }
                 }
@@ -91,18 +78,11 @@ module.exports = async (req, res) => {
         const libroTrabajo = XLSX.utils.book_new();
 
         const filasExcel = listaConsolidada.map(item => ({
-            'Sector': item.SEC,
-            'SKU': item.SKU,
-            'Código EAN': item.EAN,
-            'Descripción Producto': item.Descripción,
-            'U. Vencimiento': item.VTO_Unidades,
-            '$ Vencimiento': item.VTO_Importe,
-            'U. Regularización': item.REG_Unidades,
-            '$ Regularización': item.REG_Importe,
-            'U. Roturas': item.ROT_Unidades,
-            '$ Roturas': item.ROT_Importe,
-            'U. Robos': item.ROB_Unidades,
-            '$ Robos': item.ROB_Importe,
+            'Sector': item.SEC, 'SKU': item.SKU, 'Código EAN': item.EAN, 'Descripción Producto': item.Descripción,
+            'U. Vencimiento': item.VTO_Unidades, '$ Vencimiento': item.VTO_Importe,
+            'U. Regularización': item.REG_Unidades, '$ Regularización': item.REG_Importe,
+            'U. Roturas': item.ROT_Unidades, '$ Roturas': item.ROT_Importe,
+            'U. Robos': item.ROB_Unidades, '$ Robos': item.ROB_Importe,
             'Observaciones': ''
         }));
 
@@ -118,6 +98,6 @@ module.exports = async (req, res) => {
 
     } catch (error) {
         console.error("Error crítico en Serverless Function:", error);
-        return res.status(500).json({ error: 'Error interno al procesar el lote de mermas.' });
+        return res.status(500).json({ error: 'Error interno al procesar el lote.' });
     }
 };
