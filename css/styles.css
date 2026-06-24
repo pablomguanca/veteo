@@ -1125,6 +1125,52 @@ h3 {
   background-color: #1e2028;
 }
 
+.swal2-popup {
+  border-radius: 12px !important;
+  border: 1px solid #D6DCE4 !important;
+  box-shadow: 0 10px 25px rgba(31, 56, 100, 0.15) !important;
+}
+
+.swal2-title {
+  color: #1F3864 !important;
+  font-weight: bold !important;
+}
+
+.swal2-html-container {
+  color: #414141 !important;
+}
+
+.swal2-confirm {
+  background-color: #1F3864 !important;
+  color: #ffffff !important;
+  border-radius: 6px !important;
+  padding: 10px 24px !important;
+  font-weight: bold !important;
+  box-shadow: none !important;
+  transition: background-color 0.2s ease-in-out !important;
+}
+
+.swal2-confirm:hover {
+  background-color: #1F4E79 !important;
+}
+
+.swal2-loader {
+  border-color: #1F3864 transparent #1F3864 transparent !important;
+}
+
+.swal2-icon.swal2-success [class^=swal2-success-line] {
+  background-color: #1D6A39 !important;
+}
+
+.swal2-icon.swal2-success .swal2-success-ring {
+  border-color: rgba(29, 106, 57, 0.3) !important;
+}
+
+.swal2-icon.swal2-warning {
+  border-color: #FFB74D !important;
+  color: #F57C00 !important;
+}
+
 .filtros-wrap {
   display: flex;
   flex-direction: column;

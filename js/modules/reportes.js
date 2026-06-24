@@ -29,7 +29,7 @@ export async function enviarCruceRapido() {
     try {
         Swal.fire({
             title: 'Cruzando inventarios...',
-            text: 'Procesando miles de filas a la velocidad de la luz ⚡',
+            text: 'Procesando miles de filas a la velocidad de la luz',
             allowOutsideClick: false,
             didOpen: () => {
                 Swal.showLoading();
@@ -110,7 +110,7 @@ export async function enviarLoteMermas() {
     try {
         Swal.fire({
             title: 'Veteo AI Core trabajando...',
-            html: 'Tabulando mermas y <b>Gemini</b> está redactando el Plan de Acción corporativo 🧠',
+            html: 'Tabulando mermas y <b>Gemini</b> está redactando el Plan de Acción',
             allowOutsideClick: false,
             didOpen: () => {
                 Swal.showLoading();
