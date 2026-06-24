@@ -11,6 +11,10 @@
     font-family: v.$ff-body;
     color: v.$text;
 
+    @media (min-width: 320px) and (max-width: 599px) {
+        max-width: 360px;
+    }
+
     &__section {
         padding: 0.5rem 0;
     }

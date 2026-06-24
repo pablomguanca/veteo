@@ -1,9 +1,14 @@
 export async function enviarCruceRapido() {
-    const inputP1 = document.getElementById('inv-periodo-1').files[0];
-    const inputP2 = document.getElementById('inv-periodo-2').files[0];
+    const inputP1 = document.getElementById('inv-periodo-1');
+    const inputP2 = document.getElementById('inv-periodo-2');
 
-    if (!inputP1 || !inputP2) {
-        alert("Por favor, selecciona los dos inventarios base para realizar el Cruce de Inventarios.");
+    if (!inputP1.files[0] || !inputP2.files[0]) {
+        Swal.fire({
+            icon: 'warning',
+            title: 'Faltan archivos',
+            text: 'Por favor, selecciona los dos inventarios base para realizar el cruce rápido.',
+            confirmButtonColor: '#1F3864'
+        });
         return;
     }
 
@@ -13,8 +18,8 @@ export async function enviarCruceRapido() {
         reader.readAsText(file, 'ISO-8859-1');
     });
 
-    const textoPeriodo1 = await leerTexto(inputP1);
-    const textoPeriodo2 = await leerTexto(inputP2);
+    const textoPeriodo1 = await leerTexto(inputP1.files[0]);
+    const textoPeriodo2 = await leerTexto(inputP2.files[0]);
 
     const payload = {
         inventarioPeriodo1: textoPeriodo1,
@@ -22,7 +27,14 @@ export async function enviarCruceRapido() {
     };
 
     try {
-        if (typeof mostrarSpinner === 'function') mostrarSpinner(true);
+        Swal.fire({
+            title: 'Cruzando inventarios...',
+            text: 'Procesando miles de filas a la velocidad de la luz ⚡',
+            allowOutsideClick: false,
+            didOpen: () => {
+                Swal.showLoading();
+            }
+        });
 
         const respuesta = await fetch('/api/cruce-rapido', {
             method: 'POST',
@@ -37,25 +49,48 @@ export async function enviarCruceRapido() {
         const link = document.createElement('a');
         link.href = urlDescarga;
         link.download = `Cruce_de_Inventarios.xlsx`;
-
+        
         document.body.appendChild(link);
         link.click();
         document.body.removeChild(link);
         window.URL.revokeObjectURL(urlDescarga);
 
+        Swal.fire({
+            icon: 'success',
+            title: '¡Cruce completado!',
+            text: 'El Excel se ha descargado correctamente.',
+            timer: 3000,
+            showConfirmButton: false
+        });
+
+        inputP1.value = '';
+        inputP2.value = '';
+        const labelP1 = document.querySelector(`label[for="inv-periodo-1"]`);
+        const labelP2 = document.querySelector(`label[for="inv-periodo-2"]`);
+        if(labelP1) labelP1.innerHTML = 'Seleccionar Inventario Período 1';
+        if(labelP2) labelP2.innerHTML = 'Seleccionar Inventario Período 2';
+
     } catch (error) {
         console.error("Error en cruce rápido:", error);
-        alert("Hubo un problema al generar el cruce de inventarios.");
-    } finally {
-        if (typeof mostrarSpinner === 'function') mostrarSpinner(false);
+        Swal.fire({
+            icon: 'error',
+            title: 'Error del servidor',
+            text: 'Hubo un problema al generar el cruce de inventarios.',
+            confirmButtonColor: '#1F3864'
+        });
     }
 }
 
 export async function enviarLoteMermas() {
     const inputLote = document.getElementById('analytics-lote');
-
+    
     if (!inputLote || inputLote.files.length === 0) {
-        alert("Por favor, selecciona o arrastra al menos un archivo .txt del GNX para mermas.");
+        Swal.fire({
+            icon: 'warning',
+            title: 'Lote vacío',
+            text: 'Por favor, selecciona o arrastra al menos un archivo .txt del GNX para mermas.',
+            confirmButtonColor: '#1F3864'
+        });
         return;
     }
 
@@ -73,7 +108,14 @@ export async function enviarLoteMermas() {
     }
 
     try {
-        if (typeof mostrarSpinner === 'function') mostrarSpinner(true);
+        Swal.fire({
+            title: 'Veteo AI Core trabajando...',
+            html: 'Tabulando mermas y <b>Gemini</b> está redactando el Plan de Acción corporativo 🧠',
+            allowOutsideClick: false,
+            didOpen: () => {
+                Swal.showLoading();
+            }
+        });
 
         const respuesta = await fetch('/api/procesar-merma', {
             method: 'POST',
@@ -88,38 +130,76 @@ export async function enviarLoteMermas() {
         const link = document.createElement('a');
         link.href = urlDescarga;
         link.download = `Libro_Maestro_Mermas_Veteo.xlsx`;
-
+        
         document.body.appendChild(link);
         link.click();
         document.body.removeChild(link);
         window.URL.revokeObjectURL(urlDescarga);
 
+        Swal.fire({
+            icon: 'success',
+            title: '¡Libro Maestro Generado!',
+            text: 'Tu reporte inteligente con IA está listo.',
+            confirmButtonColor: '#1F3864'
+        });
+
+        inputLote.value = '';
+        const textDropzone = document.getElementById('dropzone-text');
+        if(textDropzone) {
+            textDropzone.innerHTML = `
+                <svg class="dashboard-reports__icon-dropzone" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                    <polyline points="17 8 12 3 7 8" />
+                    <line x1="12" y1="3" x2="12" y2="15" />
+                </svg>
+                <span class="dashboard-reports__dropzone-text">Arrastra múltiples archivos .txt o haz clic para buscarlos</span>
+            `;
+        }
+
     } catch (error) {
         console.error("Error al compilar lote:", error);
-        alert("Hubo un error al procesar el lote en el servidor.");
-    } finally {
-        if (typeof mostrarSpinner === 'function') mostrarSpinner(false);
+        Swal.fire({
+            icon: 'error',
+            title: '¡Ups!',
+            text: 'Hubo un error al compilar el Libro Maestro en el servidor.',
+            confirmButtonColor: '#1F3864'
+        });
     }
 }
 
 export function inicializarReportes() {
+    // 1. Listeners de botones de ejecución
     const btnCruce = document.getElementById('btn-procesar-cruce-rapido');
-    if (btnCruce) {
-        btnCruce.addEventListener('click', enviarCruceRapido);
-    }
+    if (btnCruce) btnCruce.addEventListener('click', enviarCruceRapido);
 
     const btnConsolidado = document.getElementById('btn-procesar-consolidado');
-    if (btnConsolidado) {
-        btnConsolidado.addEventListener('click', enviarLoteMermas);
-    }
+    if (btnConsolidado) btnConsolidado.addEventListener('click', enviarLoteMermas);
 
+    const actualizarEtiquetaCruce = (e) => {
+        const input = e.target;
+        const label = document.querySelector(`label[for="${input.id}"]`);
+        if (label && input.files.length > 0) {
+            label.innerHTML = `
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#1D6A39" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align: middle;">
+                    <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                    <polyline points="22 4 12 14.01 9 11.01"></polyline>
+                </svg>
+                <span style="color: #1D6A39; margin-left: 8px; vertical-align: middle;">Archivo cargado: <strong>${input.files[0].name}</strong></span>
+            `;
+        }
+    };
+
+    const inputP1 = document.getElementById('inv-periodo-1');
+    const inputP2 = document.getElementById('inv-periodo-2');
+    if (inputP1) inputP1.addEventListener('change', actualizarEtiquetaCruce);
+    if (inputP2) inputP2.addEventListener('change', actualizarEtiquetaCruce);
     const inputLote = document.getElementById('analytics-lote');
     const textDropzone = document.getElementById('dropzone-text');
 
     if (inputLote && textDropzone) {
         inputLote.addEventListener('change', (e) => {
             const total = e.target.files.length;
-
+            
             if (total === 1) {
                 textDropzone.innerHTML = `
                     <div class="dashboard-reports__dropzone-result">

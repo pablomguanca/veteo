@@ -912,6 +912,11 @@ h3 {
   font-family: "Google Sans", sans-serif;
   color: #eeeae3;
 }
+@media (min-width: 320px) and (max-width: 599px) {
+  .dashboard-reports {
+    max-width: 360px;
+  }
+}
 .dashboard-reports__section {
   padding: 0.5rem 0;
 }
