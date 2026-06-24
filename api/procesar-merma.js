@@ -102,8 +102,8 @@ module.exports = async (req, res) => {
                 const mov = partes[movIdx];
                 const sec = partes[movIdx - 1];
 
-                let importe = parseFloat(partes[partes.length - 1].replace(/,/g, ''));
-                let unidades = parseFloat(partes[partes.length - 2].replace(/,/g, ''));
+                let unidades = parseFloat(partes[partes.length - 4].replace(/,/g, ''));
+                let importe = parseFloat(partes[partes.length - 3].replace(/,/g, ''));
 
                 if (isNaN(unidades) || isNaN(importe)) return;
 
@@ -113,10 +113,7 @@ module.exports = async (req, res) => {
                 const sku = partes[movIdx + 1];
                 const ean = partes[movIdx + 2];
 
-                let partesDesc = partes.slice(movIdx + 3, partes.length - 2);
-                if (partesDesc.length > 0 && /^(UNI|KIL|UM|UC|UN|CJA|KG)$/i.test(partesDesc[partesDesc.length - 1])) {
-                    partesDesc.pop();
-                }
+                const partesDesc = partes.slice(movIdx + 3, partes.length - 6);
                 const descripcion = partesDesc.join(' ').trim();
 
                 listaPlana.push({
@@ -154,6 +151,7 @@ module.exports = async (req, res) => {
                 u: item.INV_U + item.VTO_U + item.REG_U + item.ROT_U + item.ROB_U + item.Otros_U,
                 i: item.INV_I + item.VTO_I + item.REG_I + item.ROT_I + item.ROB_I + item.Otros_I,
             }))
+            .filter(art => art.i < 0)
             .sort((a, b) => a.i - b.i);
 
         const top5 = articulosOrdenados.slice(0, 5);
