@@ -5,12 +5,10 @@ const PALETA = {
     NAVY2: '2E5090',
     SILVER: 'D6DCE4',
     ZEBRA: 'EEF2F7',
-    RED: 'FFCCCC',
-    ORANGE: 'FFE0B2',
-    GREEN: 'C8E6C9',
-    BLUE_TOT: 'D9E1F2',
-    GOLD: 'C9D9F0',
-    WHITE: 'FFFFFFFF',
+    RED_BG: 'FFC7CE',
+    RED_TXT: '9C0006',
+    GREEN_BG: 'C6EFCE',
+    GREEN_TXT: '006100'
 };
 
 const thin = (color = 'AAAAAA') => ({ style: 'thin', color: { argb: 'FF' + color } });
@@ -121,7 +119,7 @@ module.exports = async (req, res) => {
             if (mapaConsolidado.has(item.ean)) {
                 const ext = mapaConsolidado.get(item.ean);
                 ext.U_P2 = item.unidades; ext.I_P2 = item.importe;
-                ext.MOV = item.mov;
+                ext.MOV = item.mov; 
             } else {
                 mapaConsolidado.set(item.ean, {
                     MOV: item.mov, SEC: item.sec, SKU: item.sku, EAN: item.ean, Descripción: item.descripcion,
@@ -164,39 +162,42 @@ module.exports = async (req, res) => {
         hdr.eachCell(c => styleHeader(c));
 
         const dataArray = Array.from(mapaConsolidado.values());
-
-        dataArray.sort((a, b) => Math.abs(b.I_P2 - b.I_P1) - Math.abs(a.I_P2 - a.I_P1));
+        
+        dataArray.sort((a, b) => a.I_P1 - b.I_P1);
 
         dataArray.forEach((item, i) => {
             const difUnidades = item.U_P2 - item.U_P1;
             const difImporte = item.I_P2 - item.I_P1;
-
+            
             const row = h1.addRow([
                 item.MOV, item.SEC, item.SKU, item.EAN, item.Descripción,
                 item.U_P1, item.I_P1, item.U_P2, item.I_P2, difUnidades, difImporte
             ]);
-
+            
             row.height = 16;
             row.eachCell((cell, ci) => {
                 styleData(cell, i);
-
-                if ([6, 8, 10].includes(ci)) {
-                    cell.numFmt = UFMT;
-                    cell.alignment = { horizontal: 'right', vertical: 'middle' };
+                
+                if ([6, 8, 10].includes(ci)) { 
+                    cell.numFmt = UFMT; 
+                    cell.alignment = { horizontal: 'right', vertical: 'middle' }; 
                 }
-
-                if ([7, 9, 11].includes(ci)) {
-                    cell.numFmt = MFMT;
-                    cell.alignment = { horizontal: 'right', vertical: 'middle' };
+                if ([7, 9, 11].includes(ci)) { 
+                    cell.numFmt = MFMT; 
+                    cell.alignment = { horizontal: 'right', vertical: 'middle' }; 
                 }
-
+                
                 if (ci === 10 || ci === 11) {
-                    cell.font = { name: 'Segoe UI', size: 10, bold: true };
                     const valorDeReferencia = ci === 10 ? difUnidades : difImporte;
+                    
                     if (valorDeReferencia < 0) {
-                        cell.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FF' + PALETA.RED } }; // Cayó el stock/importe
+                        cell.font = { name: 'Segoe UI', size: 10, bold: true, color: { argb: PALETA.RED_TXT } };
+                        cell.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: PALETA.RED_BG } };
                     } else if (valorDeReferencia > 0) {
-                        cell.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FF' + PALETA.GREEN } }; // Subió el stock/importe
+                        cell.font = { name: 'Segoe UI', size: 10, bold: true, color: { argb: PALETA.GREEN_TXT } };
+                        cell.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: PALETA.GREEN_BG } };
+                    } else {
+                        cell.font = { name: 'Segoe UI', size: 10, bold: false, color: { argb: 'FF7F7F7F' } };
                     }
                 }
             });
