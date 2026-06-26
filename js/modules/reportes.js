@@ -109,8 +109,8 @@ export async function enviarLoteMermas() {
 
     try {
         Swal.fire({
-            title: 'Veteo AI Core trabajando...',
-            html: 'Tabulando mermas y <b>Gemini</b> está redactando el Plan de Acción',
+            title: 'Veteo AI trabajando...',
+            html: 'Tabulando mermas y redactando el Plan de Acción',
             allowOutsideClick: false,
             didOpen: () => {
                 Swal.showLoading();
