@@ -226,7 +226,7 @@
             box-shadow: 0 4px 12px rgba(29, 118, 242, 0.15);
 
             &:hover {
-                background-color: lighten(v.$blue-bg, 5%);
+                background-color: lighten(v.$blue-bg, 10%);
                 box-shadow: 0 6px 16px rgba(29, 118, 242, 0.3);
                 transform: translateY(-1px);
             }
