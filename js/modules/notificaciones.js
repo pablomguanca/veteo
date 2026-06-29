@@ -1,59 +1,65 @@
 import { obtenerProductosEnMemoria } from './vencimientos-db.js';
-import { obtenerUsuarioActual } from './google-auth.js';
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
-import { getMessaging, getToken, onMessage } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-messaging.js";
-import { CONFIGURACION } from './config.js';
+import { obtenerEscaneadosParaNotificaciones } from './vencimientos.js';
+import { obtenerTiendaId } from './auth.js';
+import { getFirestoreInstance } from '../firebase/firebase.js';
+import { getMessaging, getToken, onMessage } from 'firebase/messaging';
+import { doc, setDoc, merge } from 'firebase/firestore';
+import { obtenerConfiguracion } from './config.js';
 
-const app = initializeApp(CONFIGURACION.firebase);
-const mensajeria = getMessaging(app);
-const CLAVE_ALMACENAMIENTO_NOTIFICACIONES = 'veteo_notif_config_v1';
+let mensajeria = null;
 
-function cargarConfiguracion() {
-    try { return JSON.parse(localStorage.getItem(CLAVE_ALMACENAMIENTO_NOTIFICACIONES)) || null; }
+async function obtenerMensajeria() {
+    if (mensajeria) return mensajeria;
+    const config = await obtenerConfiguracion();
+    const { initializeApp, getApps } = await import('firebase/app');
+    const { getMessaging: gM } = await import('firebase/messaging');
+    const app = getApps()[0];
+    mensajeria = gM(app);
+    return mensajeria;
+}
+
+const CLAVE_NOTIF = 'veteo_notif_config_v1';
+
+function cargarConfigNotif() {
+    try { return JSON.parse(localStorage.getItem(CLAVE_NOTIF)) || null; }
     catch { return null; }
 }
 
-function guardarConfiguracion(configuracion) {
-    localStorage.setItem(CLAVE_ALMACENAMIENTO_NOTIFICACIONES, JSON.stringify(configuracion));
+function guardarConfigNotif(config) {
+    localStorage.setItem(CLAVE_NOTIF, JSON.stringify(config));
 }
 
-function limpiarConfiguracion() {
-    localStorage.removeItem(CLAVE_ALMACENAMIENTO_NOTIFICACIONES);
+function limpiarConfigNotif() {
+    localStorage.removeItem(CLAVE_NOTIF);
 }
 
 function establecerEstado(punto, texto, textoEstado, estado) {
     const estados = {
-        inactivo:  { clasePunto: '', etiqueta: 'Sin configurar' },
-        activo:    { clasePunto: 'notif-status__dot--active', etiqueta: 'Activo' },
-        denegado:  { clasePunto: 'notif-status__dot--denied', etiqueta: 'Bloqueado' },
+        inactivo: { clasePunto: '', etiqueta: 'Sin configurar' },
+        activo: { clasePunto: 'notif-status__dot--active', etiqueta: 'Activo' },
+        denegado: { clasePunto: 'notif-status__dot--denied', etiqueta: 'Bloqueado' },
     };
-    const seleccion = estados[estado] ?? estados.inactivo;
-    punto.className = `notif-status__dot ${seleccion.clasePunto}`;
-    texto.textContent = textoEstado || seleccion.etiqueta;
+    const sel = estados[estado] ?? estados.inactivo;
+    punto.className = `notif-status__dot ${sel.clasePunto}`;
+    texto.textContent = textoEstado || sel.etiqueta;
 }
 
-function parsearFecha(cadenaFecha) {
-    if (!cadenaFecha) return null;
-    const s = String(cadenaFecha).trim();
-
+function parsearFecha(cadena) {
+    if (!cadena) return null;
+    const s = String(cadena).trim();
     if (/^\d{2}\/\d{2}\/\d{4}$/.test(s)) {
         const [d, m, a] = s.split('/');
         return new Date(`${a}-${m}-${d}T00:00:00`);
     }
-    if (/^\d{4}-\d{2}-\d{2}/.test(s)) {
-        return new Date(s.slice(0, 10) + 'T00:00:00');
-    }
-
-    const fallback = new Date(s);
-    return isNaN(fallback) ? null : fallback;
+    if (/^\d{4}-\d{2}-\d{2}/.test(s)) return new Date(s.slice(0, 10) + 'T00:00:00');
+    const f = new Date(s);
+    return isNaN(f) ? null : f;
 }
 
 function mostrarBanner(refs, { mensaje, etiquetaBoton, alHacerClic, modificadorExtra = null }) {
     const { banner, textoBanner, botonBanner } = refs;
-
     banner.classList.remove('vdb-alert--warning');
     if (modificadorExtra) banner.classList.add(modificadorExtra);
-
     textoBanner.textContent = mensaje;
     botonBanner.textContent = etiquetaBoton;
     botonBanner.hidden = false;
@@ -65,7 +71,7 @@ function ocultarBanner(refs) {
     refs.banner.hidden = true;
 }
 
-function contarCriticos() {
+async function contarCriticos() {
     const hoy = new Date();
     hoy.setHours(0, 0, 0, 0);
 
@@ -76,26 +82,27 @@ function contarCriticos() {
         return dias >= 0 && dias <= 7;
     };
 
-    const datosManuales = (() => {
-        try { return JSON.parse(localStorage.getItem('veteo_vencimientos_v1')) || []; }
-        catch { return []; }
-    })();
-    const criticosManuales = datosManuales.filter(item => esCritico(item.fecha));
-
-    const datosPlanilla = obtenerProductosEnMemoria();
-    const criticosPlanilla = datosPlanilla.filter(item => {
-        const estado = (item.ESTADO || item.estado || '').toUpperCase();
+    const escaneados = await obtenerEscaneadosParaNotificaciones();
+    const criticosEsc = escaneados.filter(item => {
+        const estado = (item.estado || '').toUpperCase();
         if (estado.includes('CARGADO')) return false;
-        return esCritico(item.VENCIMIENTO || item.vencimiento);
+        return esCritico(item.fechaVencimiento || item.fecha);
     });
 
-    return criticosManuales.length + criticosPlanilla.length;
+    const importados = obtenerProductosEnMemoria();
+    const criticosImp = importados.filter(item => {
+        const estado = (item.estado || item.ESTADO || '').toUpperCase();
+        if (estado.includes('CARGADO')) return false;
+        return esCritico(item.vencimiento || item.VENCIMIENTO);
+    });
+
+    return criticosEsc.length + criticosImp.length;
 }
 
-function revisarVencimientosCriticos(refs) {
+async function revisarVencimientosCriticos(refs) {
     if (Notification.permission === 'denied') return;
 
-    const total = contarCriticos();
+    const total = await contarCriticos();
 
     if (total > 0) {
         mostrarBanner(refs, {
@@ -112,17 +119,26 @@ function revisarVencimientosCriticos(refs) {
     }
 }
 
-export function inicializarNotificaciones() {
-    const botonHabilitar  = document.getElementById('notif-enable-btn');
+async function guardarTokenFirestore(token) {
+    const tiendaId = obtenerTiendaId();
+    if (!tiendaId) return;
+
+    const db = getFirestoreInstance();
+    const ref = doc(db, 'tiendas', tiendaId);
+    await setDoc(ref, { fcmToken: token }, { merge: true });
+}
+
+export async function inicializarNotificaciones() {
+    const botonHabilitar = document.getElementById('notif-enable-btn');
     const botonDeshabilitar = document.getElementById('notif-disable-btn');
-    const controles       = document.getElementById('notif-controls');
-    const panelActivo     = document.getElementById('notif-active');
-    const textoActivo     = document.getElementById('notif-active-text');
-    const puntoEstado     = document.getElementById('notif-dot');
-    const textoEstado     = document.getElementById('notif-status-text');
+    const controles = document.getElementById('notif-controls');
+    const panelActivo = document.getElementById('notif-active');
+    const textoActivo = document.getElementById('notif-active-text');
+    const puntoEstado = document.getElementById('notif-dot');
+    const textoEstado = document.getElementById('notif-status-text');
 
     const refsBanner = {
-        banner:      document.getElementById('notif-banner'),
+        banner: document.getElementById('notif-banner'),
         textoBanner: document.getElementById('notif-banner-text'),
         botonBanner: document.getElementById('notif-banner-btn'),
     };
@@ -137,8 +153,9 @@ export function inicializarNotificaciones() {
         return;
     }
 
-    const configuracion = cargarConfiguracion();
-    if (configuracion?.active && Notification.permission === 'granted') {
+    const configNotif = cargarConfigNotif();
+
+    if (configNotif?.active && Notification.permission === 'granted') {
         mostrarEstadoActivo();
     } else if (Notification.permission === 'denied') {
         mostrarEstadoDenegado();
@@ -146,40 +163,37 @@ export function inicializarNotificaciones() {
         mostrarEstadoInactivo();
     }
 
-    revisarVencimientosCriticos(refsBanner);
-    window.addEventListener('veteo:productosActualizados', () => revisarVencimientosCriticos(refsBanner));
+    await revisarVencimientosCriticos(refsBanner);
+
+    window.addEventListener('veteo:productosActualizados', async () => {
+        await revisarVencimientosCriticos(refsBanner);
+    });
 
     botonHabilitar.addEventListener('click', async () => {
-        const usuario = obtenerUsuarioActual();
-        if (!usuario) {
-            alert("Iniciá sesión con Google primero para activar las notificaciones.");
+        const tiendaId = obtenerTiendaId();
+        if (!tiendaId) {
+            alert('Iniciá sesión primero para activar las notificaciones.');
             return;
         }
 
         try {
-            console.log("[Veteo] Solicitando permiso...");
             const permiso = await Notification.requestPermission();
 
             if (permiso === 'granted') {
                 establecerEstado(puntoEstado, textoEstado, 'Conectando...', 'activo');
 
+                const config = await obtenerConfiguracion();
+                const msj = await obtenerMensajeria();
                 const registro = await navigator.serviceWorker.ready;
-                const token = await getToken(mensajeria, {
-                    vapidKey: CONFIGURACION.vapidKey,
+                const token = await getToken(msj, {
+                    vapidKey: config.vapidKey,
                     serviceWorkerRegistration: registro,
                 });
 
                 if (token) {
-                    guardarConfiguracion({ active: true, fcmToken: token });
+                    guardarConfigNotif({ active: true, fcmToken: token });
+                    await guardarTokenFirestore(token);
                     mostrarEstadoActivo();
-
-                    fetch(CONFIGURACION.apiUrl, {
-                        method: 'POST',
-                        body: JSON.stringify({ action: 'saveToken', token, email: usuario.email }),
-                    })
-                        .then(res => res.json())
-                        .then(data => console.log("[Veteo] Token guardado:", data))
-                        .catch(err => console.error("[Veteo] Error al guardar token:", err));
 
                     registro.showNotification('Veteo App conectada ✓', {
                         body: 'Recordatorio configurado a las 08:00 hs.',
@@ -187,13 +201,15 @@ export function inicializarNotificaciones() {
                         tag: 'veteo-setup',
                     });
 
-                    onMessage(mensajeria, (payload) => {
+                    onMessage(msj, payload => {
                         registro.showNotification(
                             payload.notification?.title ?? 'Veteo App',
-                            { body: payload.notification?.body ?? 'Tenés un nuevo recordatorio.', icon: './icons/icon-512.png' }
+                            {
+                                body: payload.notification?.body ?? 'Tenés un nuevo recordatorio.',
+                                icon: './icons/icon-512.png',
+                            }
                         );
                     });
-
                 } else {
                     establecerEstado(puntoEstado, textoEstado, 'Error: no se obtuvo token', 'denegado');
                 }
@@ -203,14 +219,13 @@ export function inicializarNotificaciones() {
             }
 
         } catch (error) {
-            console.error("[Veteo] Error en notificaciones:", error);
-            alert("Detalle del error: " + error.message);
+            console.error('[Notificaciones]:', error);
             establecerEstado(puntoEstado, textoEstado, 'Error de conexión', 'denegado');
         }
     });
 
     botonDeshabilitar?.addEventListener('click', () => {
-        limpiarConfiguracion();
+        limpiarConfigNotif();
         mostrarEstadoInactivo();
     });
 
@@ -234,14 +249,11 @@ export function inicializarNotificaciones() {
         botonHabilitar.disabled = true;
         botonHabilitar.textContent = 'Permiso bloqueado';
 
-        const total = contarCriticos();
-        if (total === 0) {
-            mostrarBanner(refsBanner, {
-                mensaje: 'Las notificaciones están bloqueadas. Habilitá los permisos desde el navegador.',
-                etiquetaBoton: 'Cómo habilitarlas',
-                alHacerClic: () => window.open('https://support.google.com/chrome/answer/3220216', '_blank'),
-                modificadorExtra: 'vdb-alert--warning',
-            });
-        }
+        mostrarBanner(refsBanner, {
+            mensaje: 'Las notificaciones están bloqueadas. Habilitá los permisos desde el navegador.',
+            etiquetaBoton: 'Cómo habilitarlas',
+            alHacerClic: () => window.open('https://support.google.com/chrome/answer/3220216', '_blank'),
+            modificadorExtra: 'vdb-alert--warning',
+        });
     }
 }

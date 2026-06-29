@@ -24,7 +24,7 @@
 
     <link rel="stylesheet" href="./css/styles.css" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/driver.js@1.3.1/dist/driver.css" />
-    <script src="https://accounts.google.com/gsi/client" async defer></script>
+
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-TU_ID"></script>
     <script>
         window.dataLayer = window.dataLayer || [];
@@ -35,15 +35,14 @@
 </head>
 
 <body>
-    <div id="login-overlay" class="login-overlay">
+    <div id="login-overlay">
         <div class="login-card">
             <h2>Veteo App</h2>
-            <p>Ingresá con tu cuenta para registrar vencimientos</p>
-
-            <div class="btn-google" id="btn-google-front">
-            </div>
-
-            <p id="error-message" style="color: #ff4d4d; margin-top: 10px;" hidden></p>
+            <p>Ingresá con los datos de tu tienda</p>
+            <input id="login-tienda-id" type="text" placeholder="Número de tienda" />
+            <input id="login-password" type="password" placeholder="Contraseña" />
+            <button id="btn-login-tienda">Ingresar</button>
+            <p id="error-message" hidden></p>
         </div>
     </div>
     <div id="app-content" hidden>
@@ -288,7 +287,7 @@
             <section class="card card--wide a3" aria-label="Base de datos de vencimientos" id="vdb-section">
                 <div class="card-row">
                     <div class="card__header-text">
-                        <div class="card__label">Génesix → Sheets</div>
+                        <div class="card__label">GNX → Firestore</div>
                         <div class="card__title">Vencimientos Importados</div>
                     </div>
                     <div class="card__header-actions"> <button class="btn-ghost" id="vdb-refresh-btn">↺
@@ -586,6 +585,9 @@
                 <p class="sidebar__user-name" id="sidebar-nombre"></p>
                 <p class="sidebar__user-email" id="sidebar-email"></p>
             </div>
+            <button id="btn-cambiar-operador" class="btn-ghost btn-ghost--sm">
+                Cambiar operador
+            </button>
         </div>
 
         <button id="btn-install-pwa" class="btn-install" hidden>
@@ -648,15 +650,7 @@
                 </svg>
                 Instructivo
             </a>
-            <a class="sidebar__link" id="sidebar-sheets-link" target="_blank" rel="noopener" hidden>
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <rect x="3" y="3" width="18" height="18" rx="2" />
-                    <line x1="3" y1="9" x2="21" y2="9" />
-                    <line x1="3" y1="15" x2="21" y2="15" />
-                    <line x1="9" y1="3" x2="9" y2="21" />
-                </svg>
-                Ir a mi Base de Datos
-            </a>
+
         </nav>
 
         <div class="sidebar__footer">
