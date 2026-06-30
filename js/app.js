@@ -17,6 +17,7 @@ import { inicializarSidebar } from './modules/sidebar.js';
 import { inicializarInstaladorPWA } from './modules/install.js';
 import { inicializarReportes } from './modules/reportes.js';
 import { inicializarFirebase } from './firebase/firebase.js';
+import '../sass/main.scss';
 
 document.addEventListener('DOMContentLoaded', async () => {
     await inicializarFirebase();

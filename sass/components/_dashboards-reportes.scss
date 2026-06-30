@@ -1,4 +1,5 @@
 @use '../variables' as v;
+@use 'sass:color';
 
 .dashboard-reports {
     background-color: v.$surface;
@@ -226,7 +227,7 @@
             box-shadow: 0 4px 12px rgba(29, 118, 242, 0.15);
 
             &:hover {
-                background-color: lighten(v.$blue-bg, 10%);
+                background-color: color.adjust(v.$blue-bg, $lightness: 10%);
                 box-shadow: 0 6px 16px rgba(29, 118, 242, 0.3);
                 transform: translateY(-1px);
             }
