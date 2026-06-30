@@ -3,7 +3,7 @@ import { obtenerEscaneadosParaNotificaciones } from './vencimientos.js';
 import { obtenerTiendaId } from './auth.js';
 import { getFirestoreInstance } from '../firebase/firebase.js';
 import { getMessaging, getToken, onMessage } from 'firebase/messaging';
-import { doc, setDoc, merge } from 'firebase/firestore';
+import { doc, setDoc } from 'firebase/firestore';
 import { obtenerConfiguracion } from './config.js';
 
 let mensajeria = null;

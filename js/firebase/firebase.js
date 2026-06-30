@@ -1,7 +1,7 @@
 import { initializeApp, getApps } from 'firebase/app';
 import { getAuth } from 'firebase/auth';
 import { getFirestore } from 'firebase/firestore';
-import { obtenerConfiguracion } from './config.js';
+import { obtenerConfiguracion } from '../modules/config.js';
 
 let _auth = null;
 let _db = null;

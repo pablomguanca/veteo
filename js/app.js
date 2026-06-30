@@ -36,7 +36,9 @@ document.addEventListener('DOMContentLoaded', async () => {
     inicializarVencimientos();
     inicializarBaseDatosVencimientos();
     inicializarNotificaciones();
-    inicializarTopProductos();
-    inicializarRankingUsuarios();
-    inicializarMensajeDelDia();
+
+    window.addEventListener('veteo:login', () => {
+        inicializarTopProductos();
+        inicializarRankingUsuarios();
+    }, { once: true });
 });

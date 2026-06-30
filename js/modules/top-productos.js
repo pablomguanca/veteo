@@ -1,4 +1,4 @@
-import { db } from '../firebase/firebase.js';
+import { getFirestoreInstance } from '../firebase/firebase.js'
 import {
     collection, getDocs, query,
     where, Timestamp,
@@ -9,11 +9,11 @@ async function fetchTopProductosFirestore() {
     hace7Dias.setDate(hace7Dias.getDate() - 7);
     const tsLimite = Timestamp.fromDate(hace7Dias);
 
-    const tiendasSnap = await getDocs(collection(db, 'tiendas'));
+    const tiendasSnap = await getDocs(collection(getFirestoreInstance(), 'tiendas'));
     const conteo = {};
 
     for (const tiendaDoc of tiendasSnap.docs) {
-        const histRef = collection(db, 'tiendas', tiendaDoc.id, 'historial');
+        const histRef = collection(getFirestoreInstance(), 'tiendas', tiendaDoc.id, 'historial');
         const q = query(histRef, where('fechaCarga', '>=', tsLimite));
         const snap = await getDocs(q);
 

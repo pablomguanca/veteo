@@ -1,5 +1,5 @@
-import { db }                              from '../firebase/firebase.js';
-import { obtenerTiendaId }                from './auth.js';
+import { getFirestoreInstance } from '../firebase/firebase.js';
+import { obtenerTiendaId } from './auth.js';
 import { actualizarPosicionGamificacion } from './checklist.js';
 import {
     collection, getDocs, query,
@@ -10,16 +10,16 @@ async function fetchRankingFirestore() {
     const hace7Dias = new Date();
     hace7Dias.setDate(hace7Dias.getDate() - 7);
     const tsLimite = Timestamp.fromDate(hace7Dias);
-    const tiendasSnap = await getDocs(collection(db, 'tiendas'));
-    const ranking     = [];
+    const tiendasSnap = await getDocs(collection(getFirestoreInstance(), 'tiendas'));
+    const ranking = [];
 
     for (const tiendaDoc of tiendasSnap.docs) {
-        const tiendaId    = tiendaDoc.id;
-        const nombreTienda= tiendaDoc.data().nombre || `Tienda ${tiendaId}`;
+        const tiendaId = tiendaDoc.id;
+        const nombreTienda = tiendaDoc.data().nombre || `Tienda ${tiendaId}`;
 
-        const histRef = collection(db, 'tiendas', tiendaId, 'historial');
-        const q       = query(histRef, where('fechaCarga', '>=', tsLimite));
-        const snap    = await getDocs(q);
+        const histRef = collection(getFirestoreInstance(), 'tiendas', tiendaId, 'historial');
+        const q = query(histRef, where('fechaCarga', '>=', tsLimite));
+        const snap = await getDocs(q);
 
         if (snap.size > 0) {
             ranking.push({
@@ -34,15 +34,15 @@ async function fetchRankingFirestore() {
 }
 
 function renderizarRanking(datos) {
-    const contenedor    = document.getElementById('ranking-list');
+    const contenedor = document.getElementById('ranking-list');
     const elementoVacio = document.getElementById('ranking-empty');
     const elementoFecha = document.getElementById('ranking-fecha');
     if (!contenedor) return;
 
     if (elementoFecha) {
-        const hoy   = new Date();
+        const hoy = new Date();
         const hace7 = new Date(hoy.getTime() - 7 * 24 * 60 * 60 * 1000);
-        const fmt   = d => d.toLocaleDateString('es-AR', { day: '2-digit', month: 'short' });
+        const fmt = d => d.toLocaleDateString('es-AR', { day: '2-digit', month: 'short' });
         elementoFecha.textContent = `${fmt(hace7)} → ${fmt(hoy)}`;
     }
 
@@ -54,21 +54,21 @@ function renderizarRanking(datos) {
     }
     if (elementoVacio) elementoVacio.hidden = true;
 
-    const miTiendaId    = obtenerTiendaId();
-    const miPosicionEl  = document.getElementById('ranking-mi-posicion');
-    const miPosEl       = document.getElementById('ranking-mi-pos');
-    const miCargasEl    = document.getElementById('ranking-mi-cargas');
+    const miTiendaId = obtenerTiendaId();
+    const miPosicionEl = document.getElementById('ranking-mi-posicion');
+    const miPosEl = document.getElementById('ranking-mi-pos');
+    const miCargasEl = document.getElementById('ranking-mi-cargas');
 
     if (miTiendaId && miPosicionEl) {
-        const miIndex    = datos.findIndex(t => t.tiendaId === miTiendaId);
-        const posicion   = miIndex !== -1 ? miIndex + 1 : '-';
+        const miIndex = datos.findIndex(t => t.tiendaId === miTiendaId);
+        const posicion = miIndex !== -1 ? miIndex + 1 : '-';
         actualizarPosicionGamificacion(posicion);
         const estaEnTop10 = miIndex !== -1 && miIndex < 10;
 
         if (!estaEnTop10 && miIndex !== -1) {
-            miPosEl.textContent    = `#${miIndex + 1}`;
+            miPosEl.textContent = `#${miIndex + 1}`;
             miCargasEl.textContent = `${datos[miIndex].cargas} carga${datos[miIndex].cargas !== 1 ? 's' : ''}`;
-            miPosicionEl.hidden    = false;
+            miPosicionEl.hidden = false;
         } else {
             miPosicionEl.hidden = true;
         }
@@ -76,7 +76,7 @@ function renderizarRanking(datos) {
 
     datos.slice(0, 10).forEach((tienda, i) => {
         const esTop = i === 0;
-        const el    = document.createElement('div');
+        const el = document.createElement('div');
         el.className = `ranking-item${esTop ? ' ranking-item--top' : ''}`;
 
         const iniciales = tienda.nombre

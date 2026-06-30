@@ -11,7 +11,7 @@ import {
     recalcularGamificacionTotal
 } from './checklist.js';
 import { trackearEvento } from './analytics.js';
-import { db } from '../firebase/firebase.js';
+import { getFirestoreInstance } from '../firebase/firebase.js';
 import { collection, getDocs, onSnapshot } from 'firebase/firestore';
 import { obtenerTiendaId as getTiendaId } from './auth.js';
 
@@ -71,7 +71,7 @@ async function cargarEscaneadosFirestore() {
     const tiendaId = getTiendaId();
     if (!tiendaId) return [];
 
-    const ref = collection(db, 'tiendas', tiendaId, 'escaneados');
+    const ref = collection(getFirestoreInstance(), 'tiendas', tiendaId, 'escaneados');
     const snap = await getDocs(ref);
     const items = [];
     snap.forEach(d => items.push({ id: d.id, ...d.data() }));

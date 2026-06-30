@@ -1,4 +1,4 @@
-import { db } from '../firebase/firebase.js';
+import { getFirestoreInstance } from '../firebase/firebase.js';
 import { obtenerTiendaId } from './auth.js';
 import {
     collection, query, where,
@@ -14,7 +14,7 @@ async function leerCargasHoyFirestore() {
     const hoy = new Date();
     hoy.setHours(0, 0, 0, 0);
 
-    const histRef = collection(db, 'tiendas', tiendaId, 'historial');
+    const histRef = collection(getFirestoreInstance(), 'tiendas', tiendaId, 'historial');
     const q = query(histRef, where('fechaCarga', '>=', Timestamp.fromDate(hoy)));
     const snap = await getDocs(q);
 

@@ -1,6 +1,6 @@
 import { signInWithEmailAndPassword, signOut, onAuthStateChanged } from 'firebase/auth';
 import { doc, getDoc, setDoc, serverTimestamp } from 'firebase/firestore';
-import { inicializarFirebase, getAuthInstance, getFirestoreInstance } from './firebase.js';
+import { inicializarFirebase, getAuthInstance, getFirestoreInstance } from '../firebase/firebase.js';
 import { iniciarTour } from './tour.js';
 import { formatearEmailTienda } from './config.js';
 
@@ -27,7 +27,7 @@ export function obtenerTiendaId() {
 }
 
 export async function iniciarSesionTienda(idTienda, password) {
-    const auth = getAuthInstance();
+    const { auth } = await inicializarFirebase();
     const email = formatearEmailTienda(idTienda);
     const cred = await signInWithEmailAndPassword(auth, email, password);
     return cred.user;

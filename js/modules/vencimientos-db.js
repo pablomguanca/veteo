@@ -1,4 +1,4 @@
-import { db } from '../firebase/firebase.js';
+import { getFirestoreInstance } from '../firebase/firebase.js';
 import { alternarEstadoVacio } from '../utils/ui.js';
 import { obtenerTiendaId, obtenerOperador } from './auth.js';
 import {
@@ -21,15 +21,15 @@ export function obtenerProductosEnMemoria() {
 }
 
 function refVencimientos(tiendaId) {
-    return collection(db, 'tiendas', tiendaId, 'vencimientos');
+    return collection(getFirestoreInstance(), 'tiendas', tiendaId, 'vencimientos');
 }
 
 function refEscaneados(tiendaId) {
-    return collection(db, 'tiendas', tiendaId, 'escaneados');
+    return collection(getFirestoreInstance(), 'tiendas', tiendaId, 'escaneados');
 }
 
 function refHistorial(tiendaId) {
-    return collection(db, 'tiendas', tiendaId, 'historial');
+    return collection(getFirestoreInstance(), 'tiendas', tiendaId, 'historial');
 }
 
 function parsearTxt(contenido) {
@@ -82,7 +82,7 @@ export async function importarTxtFirestore(contenido) {
     }
 
     for (const chunk of chunks) {
-        const batch = writeBatch(db);
+        const batch = writeBatch(getFirestoreInstance());
         chunk.forEach(fila => {
             const clave = `${fila.ean}__${fila.vencimiento}`;
             const previo = mapaEstados[clave];
@@ -138,7 +138,7 @@ export async function actualizarEstadoFirestore(ean, vencimiento, estado) {
     if (!tiendaId) throw new Error('No hay tienda activa');
 
     const clave = `${ean}__${vencimiento}`;
-    const docRef = doc(db, 'tiendas', tiendaId, 'vencimientos', clave);
+    const docRef = doc(getFirestoreInstance(), 'tiendas', tiendaId, 'vencimientos', clave);
     const snap = await getDoc(docRef);
 
     if (snap.exists()) {
@@ -203,7 +203,7 @@ export async function eliminarEscaneadoFirestore(ean, fechaVencimiento) {
     const snap = await getDocs(q);
     if (snap.empty) throw new Error('No se encontró el registro');
 
-    const batch = writeBatch(db);
+    const batch = writeBatch(getFirestoreInstance());
     snap.docs.forEach(d => batch.delete(d.ref));
     await batch.commit();
 
