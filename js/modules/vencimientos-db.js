@@ -7,7 +7,7 @@ import {
 } from './checklist.js';
 import { trackearEvento } from './analytics.js';
 import { ENLACES_APP } from './enlaces.js';
-
+import { getAuthInstance } from '../firebase/firebase.js';
 import {
     collection, doc, getDoc, getDocs, setDoc,
     deleteDoc, writeBatch, serverTimestamp,
@@ -64,17 +64,33 @@ export async function importarTxtFirestore(contenido) {
 
     const vencRef = refVencimientos(tiendaId);
     const hoy = new Date().toISOString().split('T')[0];
-    const qCargados = query(vencRef, where('estado', '==', 'CARGADO'));
-    const snapCargados = await getDocs(qCargados);
+
+    const snapTodos = await getDocs(vencRef);
 
     const mapaEstados = {};
-    snapCargados.forEach(d => {
+    const clavesAEliminar = [];
+
+    snapTodos.forEach(d => {
         const data = d.data();
-        mapaEstados[`${data.ean}__${data.vencimiento}`] = {
-            estado: data.estado,
-            cargadoEl: data.cargadoEl || null,
-        };
+        if (data.estado === 'CARGADO' || data.estado === 'CARGADO UM') {
+            mapaEstados[d.id] = {
+                estado: data.estado,
+                cargadoEl: data.cargadoEl || null,
+            };
+        } else {
+            clavesAEliminar.push(d.id);
+        }
     });
+
+    const chunksEliminar = [];
+    for (let i = 0; i < clavesAEliminar.length; i += 490) {
+        chunksEliminar.push(clavesAEliminar.slice(i, i + 490));
+    }
+    for (const chunk of chunksEliminar) {
+        const batch = writeBatch(getFirestoreInstance());
+        chunk.forEach(clave => batch.delete(doc(vencRef, clave)));
+        await batch.commit();
+    }
 
     const chunks = [];
     for (let i = 0; i < filas.length; i += 490) {
@@ -84,7 +100,7 @@ export async function importarTxtFirestore(contenido) {
     for (const chunk of chunks) {
         const batch = writeBatch(getFirestoreInstance());
         chunk.forEach(fila => {
-            const clave = `${fila.ean}__${fila.vencimiento}`;
+            const clave = `${fila.ean}__${fila.vencimiento.replace(/\//g, '-')}`;
             const previo = mapaEstados[clave];
             const docRef = doc(vencRef, clave);
 
@@ -137,7 +153,7 @@ export async function actualizarEstadoFirestore(ean, vencimiento, estado) {
     const tiendaId = obtenerTiendaId();
     if (!tiendaId) throw new Error('No hay tienda activa');
 
-    const clave = `${ean}__${vencimiento}`;
+    const clave = `${ean}__${vencimiento.replace(/\//g, '-')}`;
     const docRef = doc(getFirestoreInstance(), 'tiendas', tiendaId, 'vencimientos', clave);
     const snap = await getDoc(docRef);
 
