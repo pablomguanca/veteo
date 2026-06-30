@@ -63,6 +63,7 @@ function mostrarApp(tiendaId, nombreTienda) {
     const appContent = document.getElementById('app-content');
     if (appContent) appContent.hidden = false;
     document.getElementById('usuario-info')?.removeAttribute('hidden');
+    document.getElementById('sidebar-open')?.removeAttribute('hidden');
     const saludo = document.getElementById('saludo-usuario');
     if (saludo) saludo.textContent = `Hola, ${nombreTienda}!`;
     setTimeout(() => { if (typeof iniciarTour === 'function') iniciarTour(); }, 2000);
@@ -73,6 +74,7 @@ function mostrarLogin() {
     if (overlay) overlay.style.display = '';
     const appContent = document.getElementById('app-content');
     if (appContent) appContent.hidden = true;
+    document.getElementById('sidebar-open')?.setAttribute('hidden', '');
 }
 
 export function mostrarSelectorOperador(tiendaId, onConfirmar) {

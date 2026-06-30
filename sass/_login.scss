@@ -32,7 +32,7 @@
         left: 0;
         right: 0;
         height: 2px;
-        background: linear-gradient(90deg, v.$green, v.$violet, v.$blue);
+        background: linear-gradient(90deg, v.$blue-bg, #2d5ea2, v.$blue);
         opacity: 0.9;
     }
 
@@ -74,8 +74,8 @@
         }
 
         &:focus {
-            border-color: v.$green-border;
-            box-shadow: 0 0 0 3px v.$green-glow;
+            border-color: #1d76f271;
+            box-shadow: 0 0 0 3px #0077ff6f;
             background: v.$surface-3;
         }
 
@@ -91,8 +91,8 @@
     button#btn-login-tienda {
         width: 100%;
         padding: 13px 20px;
-        background: v.$green;
-        color: v.$bg;
+        background: v.$blue-bg;
+        color: v.$text;
         border: none;
         border-radius: v.$radius-sm;
         font-family: v.$ff-body;
