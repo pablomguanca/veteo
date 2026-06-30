@@ -66,7 +66,6 @@ function mostrarApp(tiendaId, nombreTienda) {
     document.getElementById('sidebar-open')?.removeAttribute('hidden');
     const saludo = document.getElementById('saludo-usuario');
     if (saludo) saludo.textContent = `Hola, ${nombreTienda}!`;
-    setTimeout(() => { if (typeof iniciarTour === 'function') iniciarTour(); }, 2000);
 }
 
 function mostrarLogin() {
@@ -244,7 +243,9 @@ export async function inicializarAutenticacion() {
 
         const operadorGuardado = obtenerOperador();
         if (!operadorGuardado || operadorGuardado.tiendaId !== tiendaId) {
-            mostrarSelectorOperador(tiendaId, null);
+            mostrarSelectorOperador(tiendaId, () => {
+                setTimeout(() => iniciarTour(), 500);
+            });
         }
     });
 }
