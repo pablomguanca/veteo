@@ -1,5 +1,42 @@
+import { getFirestoreInstance } from '../firebase/firebase.js';
+import { doc, getDoc } from 'firebase/firestore';
+
 let lector = null;
 let escaneando = false;
+
+async function buscarEnCatalogo(ean) {
+    try {
+        const snap = await getDoc(doc(getFirestoreInstance(), 'catalogo', ean));
+        return snap.exists() ? snap.data() : null;
+    } catch {
+        return null;
+    }
+}
+
+async function abrirModalConEAN(ean) {
+    const inputEan = document.getElementById('f-producto');
+    const inputDesc = document.getElementById('f-descripcion');
+    const inputSec = document.getElementById('f-sec');
+    const fondoModal = document.getElementById('modal-backdrop');
+
+    if (inputEan) inputEan.value = ean;
+
+    const producto = await buscarEnCatalogo(ean);
+    if (producto) {
+        if (inputDesc) inputDesc.value = producto.descripcion || '';
+        if (inputSec && producto.sec) inputSec.value = producto.sec;
+    } else {
+        if (inputDesc) inputDesc.value = '';
+        if (inputSec) inputSec.value = '';
+    }
+
+    if (fondoModal) {
+        fondoModal.hidden = false;
+        document.body.style.overflow = 'hidden';
+    }
+
+    inputEan?.focus();
+}
 
 async function iniciarEscaneo() {
     if (escaneando) return;
@@ -18,15 +55,17 @@ async function iniciarEscaneo() {
                 facingMode: 'environment',
                 width: { ideal: 1920 },
                 height: { ideal: 1080 },
-                advanced: [{ focusMode: "continuous" }]
-            }
+                advanced: [{ focusMode: 'continuous' }],
+            },
         });
 
         videoEscaner.srcObject = stream;
         await videoEscaner.play();
 
         if ('BarcodeDetector' in window) {
-            const detector = new window.BarcodeDetector({ formats: ['ean_13', 'ean_8', 'upc_a', 'upc_e', 'code_128'] });
+            const detector = new window.BarcodeDetector({
+                formats: ['ean_13', 'ean_8', 'upc_a', 'upc_e', 'code_128'],
+            });
 
             const bucleEscaneo = async () => {
                 if (!escaneando) return;
@@ -34,11 +73,10 @@ async function iniciarEscaneo() {
                     const codigos = await detector.detect(videoEscaner);
                     if (codigos.length > 0) {
                         detenerEscaneo();
-                        abrirModalConEAN(codigos[0].rawValue);
+                        await abrirModalConEAN(codigos[0].rawValue);
                         return;
                     }
-                } catch (e) {
-                }
+                } catch { }
                 requestAnimationFrame(bucleEscaneo);
             };
 
@@ -46,16 +84,16 @@ async function iniciarEscaneo() {
 
         } else {
             if (!lector) lector = new window.ZXing.BrowserMultiFormatReader();
-            lector.decodeFromVideoDevice(null, videoEscaner, (resultado, error) => {
+            lector.decodeFromVideoDevice(null, videoEscaner, async (resultado) => {
                 if (resultado) {
                     detenerEscaneo();
-                    abrirModalConEAN(resultado.text);
+                    await abrirModalConEAN(resultado.text);
                 }
             });
         }
 
     } catch (error) {
-        console.error(error);
+        console.error('[Escaner]:', error);
         detenerEscaneo();
     }
 }
@@ -67,7 +105,7 @@ function detenerEscaneo() {
 
     escaneando = false;
 
-    if (videoEscaner && videoEscaner.srcObject) {
+    if (videoEscaner?.srcObject) {
         videoEscaner.srcObject.getTracks().forEach(track => track.stop());
         videoEscaner.srcObject = null;
     }
@@ -76,23 +114,6 @@ function detenerEscaneo() {
 
     contenedor.hidden = true;
     if (botonEscanear) botonEscanear.disabled = false;
-}
-
-function abrirModalConEAN(ean) {
-    const inputProducto = document.getElementById('f-producto');
-
-    const fondoModal = document.getElementById('modal-backdrop');
-
-    if (inputProducto) {
-        inputProducto.value = ean;
-    }
-
-    if (fondoModal) {
-        fondoModal.hidden = false;
-        document.body.style.overflow = 'hidden';
-
-        inputProducto?.focus();
-    }
 }
 
 export function inicializarEscaner() {
