@@ -1,3 +1,5 @@
+import '../../sass/main.scss';
+
 export function inicializarAdminCatalogo() {
     const inputArchivo = document.getElementById('archivo-excel');
     const labelArchivo = document.getElementById('label-archivo');
