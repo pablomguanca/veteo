@@ -8,7 +8,7 @@ export default defineConfig({
             input: {
                 main: 'index.html',
                 reportes: 'reportes.html',
-                adminCatalogo:  'admin-catalogo.html',
+                adminCatalogo: 'admin-catalogo.html',
             }
         }
     },
