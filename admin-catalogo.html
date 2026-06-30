@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Admin — Cargar Catálogo · Veteo App</title>
+    <link rel="stylesheet" href="./css/styles.css" />
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+</head>
+
+<body class="admin-body">
+    <main class="admin-container">
+        <section class="admin-card" aria-labelledby="admin-title">
+
+            <header class="admin-card__header">
+                <p class="admin-card__eyebrow">Admin · Veteo App</p>
+                <h1 id="admin-title" class="admin-card__title">Cargar Catálogo</h1>
+                <p class="admin-card__subtitle">
+                    Subí el Excel de surtido para poblar la base de productos.
+                    Solo EAN y Descripción son obligatorios.
+                </p>
+            </header>
+
+            <div class="admin-card__body">
+                <div class="admin-field">
+                    <label class="admin-field__label" for="archivo-excel">Archivo Excel (.xlsx)</label>
+                    <div class="file-wrapper">
+                        <input class="file-wrapper__input" type="file" id="archivo-excel" accept=".xlsx" />
+                        <span class="file-wrapper__label" id="label-archivo">
+                            Seleccionar archivo .xlsx
+                        </span>
+                    </div>
+                </div>
+
+                <div class="admin-field">
+                    <label class="admin-field__label" for="col-ean">
+                        Nombre de columna — EAN
+                    </label>
+                    <input class="admin-field__input" type="text" id="col-ean" value="EAN" placeholder="EAN" />
+                    <p class="admin-field__hint">
+                        Exactamente como aparece en la primera fila del Excel
+                    </p>
+                </div>
+
+                <div class="admin-field">
+                    <label class="admin-field__label" for="col-desc">
+                        Nombre de columna — Descripción
+                    </label>
+                    <input class="admin-field__input" type="text" id="col-desc" value="Descripción EAN"
+                        placeholder="Descripción EAN" />
+                </div>
+
+                <div class="admin-field">
+                    <label class="admin-field__label" for="col-sec">
+                        Nombre de columna — Sector
+                        <span class="admin-field__label--optional">(opcional)</span>
+                    </label>
+                    <input class="admin-field__input" type="text" id="col-sec" placeholder="Dejar vacío si no existe" />
+                </div>
+            </div>
+
+            <footer class="admin-card__footer">
+                <button class="btn-primary" id="btn-cargar" disabled>
+                    Cargar al catálogo
+                </button>
+                <p class="admin-result" id="resultado" hidden></p>
+            </footer>
+
+        </section>
+    </main>
+
+    <script type="module" src="./js/modules/admin-catalogo.js"></script>
+</body>
+
+</html>

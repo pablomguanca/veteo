@@ -46,10 +46,10 @@ export function iniciarTour() {
                 }
             },
             {
-                element: '#checklist',
+                element: '#daily-tracker',
                 popover: {
-                    title: 'Tu checklist personal ✅',
-                    description: 'Registrá el paso a paso de tu recorrida',
+                    title: 'Medí tus cargas! ⚡',
+                    description: 'Registro diario de actividad de tu tienda',
                     side: "bottom",
                     align: 'start'
                 }
