@@ -1,7 +1,8 @@
 {
     "version": 2,
     "name": "veteo",
-    "buildCommand": null,
+    "buildCommand": "npm run build",
+    "outputDirectory": "dist",
     "routes": [
         {
             "src": "/sw.js",

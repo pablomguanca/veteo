@@ -1,3 +1,4 @@
+import '../sass/main.scss';
 import { inicializarFecha } from './modules/fecha.js';
 import { inicializarMensajeDelDia } from './modules/mensaje-diario.js';
 import { inicializarChecklist } from './modules/checklist.js';
@@ -17,7 +18,6 @@ import { inicializarSidebar } from './modules/sidebar.js';
 import { inicializarInstaladorPWA } from './modules/install.js';
 import { inicializarReportes } from './modules/reportes.js';
 import { inicializarFirebase } from './firebase/firebase.js';
-import '../sass/main.scss';
 
 document.addEventListener('DOMContentLoaded', async () => {
     await inicializarFirebase();
