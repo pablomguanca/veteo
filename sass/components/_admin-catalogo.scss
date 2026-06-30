@@ -1,37 +1,37 @@
 @use '../variables' as v;
 
 .admin-body {
-    background:      v.$bg;
-    color:           v.$text;
-    min-height:      100vh;
-    display:         flex;
-    align-items:     center;
+    background: v.$bg;
+    color: v.$text;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
     justify-content: center;
-    padding:         24px;
-    font-family:     v.$ff-body;
+    padding: 24px;
+    font-family: v.$ff-body;
 }
 
 .admin-container {
-    width:     100%;
+    width: 100%;
     max-width: 480px;
 }
 
 .admin-card {
-    background:    v.$surface;
-    border:        1px solid v.$border-2;
+    background: v.$surface;
+    border: 1px solid v.$border-2;
     border-radius: v.$radius-lg;
-    padding:       40px 32px;
-    position:      relative;
-    overflow:      hidden;
-    box-shadow:    v.$shadow-lg;
+    padding: 40px 32px;
+    position: relative;
+    overflow: hidden;
+    box-shadow: v.$shadow-lg;
 
     &::before {
-        content:    '';
-        position:   absolute;
-        top:        0;
-        left:       0;
-        right:      0;
-        height:     2px;
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 2px;
         background: linear-gradient(90deg, v.$green, v.$violet, v.$blue);
     }
 
@@ -40,35 +40,35 @@
     }
 
     &__eyebrow {
-        font-family:    v.$ff-mono;
-        font-size:      10px;
-        font-weight:    600;
+        font-family: v.$ff-mono;
+        font-size: 10px;
+        font-weight: 600;
         letter-spacing: 1.5px;
         text-transform: uppercase;
-        color:          v.$green;
-        margin-bottom:  10px;
+        color: v.$green;
+        margin-bottom: 10px;
     }
 
     &__title {
-        font-family:   v.$ff-title;
-        font-size:     26px;
-        font-weight:   700;
-        color:         v.$text;
-        letter-spacing:-0.5px;
+        font-family: v.$ff-title;
+        font-size: 26px;
+        font-weight: 700;
+        color: v.$text;
+        letter-spacing: -0.5px;
         margin-bottom: 6px;
-        line-height:   1.1;
+        line-height: 1.1;
     }
 
     &__subtitle {
-        font-size:   13px;
-        color:       v.$muted;
+        font-size: 13px;
+        color: v.$muted;
         line-height: 1.5;
     }
 
     &__body {
-        display:        flex;
+        display: flex;
         flex-direction: column;
-        gap:            16px;
+        gap: 16px;
     }
 
     &__footer {
@@ -77,48 +77,50 @@
 }
 
 .admin-field {
-    display:        flex;
+    display: flex;
     flex-direction: column;
-    gap:            6px;
+    gap: 6px;
 
     &__label {
-        font-size:      12px;
-        font-weight:    500;
-        color:          v.$muted;
+        font-size: 12px;
+        font-weight: 500;
+        color: v.$muted;
         letter-spacing: 0.3px;
     }
 
     &__label--optional {
         font-weight: 400;
-        color:       v.$dim;
+        color: v.$dim;
     }
 
     &__input {
-        width:          100%;
-        background:     v.$surface-2;
-        border:         1px solid v.$border;
-        border-radius:  v.$radius-sm;
-        color:          v.$text;
-        font-family:    v.$ff-body;
-        font-size:      13px;
-        padding:        12px 16px;
-        outline:        none;
+        width: 100%;
+        background: v.$surface-2;
+        border: 1px solid v.$border;
+        border-radius: v.$radius-sm;
+        color: v.$text;
+        font-family: v.$ff-body;
+        font-size: 13px;
+        padding: 12px 16px;
+        outline: none;
         transition:
             border-color v.$duration-fast v.$ease,
-            box-shadow   v.$duration-fast v.$ease;
+            box-shadow v.$duration-fast v.$ease;
 
-        &::placeholder { color: v.$muted; }
+        &::placeholder {
+            color: v.$muted;
+        }
 
         &:focus {
             border-color: v.$green-border;
-            box-shadow:   0 0 0 3px v.$green-glow;
-            background:   v.$surface-3;
+            box-shadow: 0 0 0 3px v.$green-glow;
+            background: v.$surface-3;
         }
     }
 
     &__hint {
-        font-size:   11px;
-        color:       v.$muted;
+        font-size: 11px;
+        color: v.$muted;
         line-height: 1.4;
     }
 }
@@ -128,56 +130,56 @@
 
     &__input {
         position: absolute;
-        inset:    0;
-        opacity:  0;
-        cursor:   pointer;
-        width:    100%;
-        height:   100%;
+        inset: 0;
+        opacity: 0;
+        cursor: pointer;
+        width: 100%;
+        height: 100%;
 
-        &.loaded + .file-wrapper__label {
-            color:        v.$green;
+        &.loaded+.file-wrapper__label {
+            color: v.$green;
             border-color: v.$green-border;
-            background:   v.$green-glow;
+            background: v.$green-glow;
         }
 
-        &:hover + .file-wrapper__label {
+        &:hover+.file-wrapper__label {
             border-color: v.$green-border;
-            color:        v.$green;
+            color: v.$green;
         }
     }
 
     &__label {
-        display:       block;
-        padding:       12px 16px;
-        background:    v.$surface-2;
-        border:        1px solid v.$border;
+        display: block;
+        padding: 12px 16px;
+        background: v.$surface-2;
+        border: 1px solid v.$border;
         border-radius: v.$radius-sm;
-        font-size:     13px;
-        color:         v.$muted;
-        cursor:        pointer;
+        font-size: 13px;
+        color: v.$muted;
+        cursor: pointer;
         transition:
             border-color v.$duration-fast v.$ease,
-            color        v.$duration-fast v.$ease,
-            background   v.$duration-fast v.$ease;
+            color v.$duration-fast v.$ease,
+            background v.$duration-fast v.$ease;
     }
 }
 
 .admin-result {
-    margin-top:    16px;
-    padding:       12px 16px;
+    margin-top: 16px;
+    padding: 12px 16px;
     border-radius: v.$radius-sm;
-    font-size:     13px;
-    line-height:   1.5;
+    font-size: 13px;
+    line-height: 1.5;
 
     &--ok {
         background: v.$green-glow;
-        border:     1px solid v.$green-border;
-        color:      v.$green;
+        border: 1px solid v.$green-border;
+        color: v.$green;
     }
 
     &--error {
         background: v.$red-glow;
-        border:     1px solid v.$red-border;
-        color:      v.$red;
+        border: 1px solid v.$red-border;
+        color: v.$red;
     }
 }
