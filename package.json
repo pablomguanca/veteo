@@ -8,7 +8,8 @@
     "@google/genai": "^2.9.0",
     "exceljs": "^4.4.0",
     "firebase": "^12.15.0",
-    "firebase-admin": "^14.1.0"
+    "firebase-admin": "^14.1.0",
+    "xlsx": "^0.18.5"
   },
   "devDependencies": {
     "sass": "^1.101.0",
