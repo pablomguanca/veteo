@@ -77,11 +77,11 @@ function mostrarLogin() {
 }
 
 export function mostrarSelectorOperador(tiendaId, onConfirmar) {
-    const db             = getFirestoreInstance();
+    const db = getFirestoreInstance();
     const operadorActual = obtenerOperador();
 
-    const overlay  = document.createElement('div');
-    overlay.id     = 'operador-overlay';
+    const overlay = document.createElement('div');
+    overlay.id = 'operador-overlay';
     overlay.className = 'operador-overlay';
 
     overlay.innerHTML = `
@@ -115,9 +115,9 @@ export function mostrarSelectorOperador(tiendaId, onConfirmar) {
     const lista = overlay.querySelector('#operador-lista');
 
     async function cargarLista() {
-        const snap       = await getDoc(doc(db, 'tiendas', tiendaId));
+        const snap = await getDoc(doc(db, 'tiendas', tiendaId));
         const operadores = snap.data()?.operadores || [];
-        lista.innerHTML  = '';
+        lista.innerHTML = '';
 
         if (!operadores.length) {
             lista.innerHTML = `<p class="operador-modal__vacio">Todavía no hay operadores. Agregá el primero.</p>`;
@@ -127,19 +127,19 @@ export function mostrarSelectorOperador(tiendaId, onConfirmar) {
         operadores.forEach(nombre => {
             const btn = document.createElement('button');
             btn.textContent = nombre;
-            btn.className   = `operador-item${operadorActual?.nombre === nombre ? ' operador-item--activo' : ''}`;
-            btn.onclick     = () => seleccionar(nombre);
+            btn.className = `operador-item${operadorActual?.nombre === nombre ? ' operador-item--activo' : ''}`;
+            btn.onclick = () => seleccionar(nombre);
             lista.appendChild(btn);
         });
     }
 
     async function agregar() {
-        const input  = overlay.querySelector('#operador-nuevo-input');
+        const input = overlay.querySelector('#operador-nuevo-input');
         const nombre = input.value.trim();
         if (!nombre) return;
 
-        const ref        = doc(db, 'tiendas', tiendaId);
-        const snap       = await getDoc(ref);
+        const ref = doc(db, 'tiendas', tiendaId);
+        const snap = await getDoc(ref);
         const operadores = snap.data()?.operadores || [];
 
         if (!operadores.includes(nombre)) {
@@ -159,7 +159,7 @@ export function mostrarSelectorOperador(tiendaId, onConfirmar) {
         if (onConfirmar) onConfirmar(operador);
     }
 
-    overlay.querySelector('#operador-nuevo-btn').onclick  = agregar;
+    overlay.querySelector('#operador-nuevo-btn').onclick = agregar;
     overlay.querySelector('#operador-nuevo-input').onkeydown = e => {
         if (e.key === 'Enter') agregar();
     };
@@ -211,11 +211,19 @@ function inicializarFormLogin() {
 
 export async function inicializarAutenticacion() {
     const { auth } = await inicializarFirebase();
+    const loginOverlay = document.getElementById('login-overlay');
+    const loginCard = document.querySelector('.login-card');
+    if (loginCard) loginCard.style.visibility = 'hidden';
 
     inicializarFormLogin();
 
     onAuthStateChanged(auth, async user => {
-        if (!user) { mostrarLogin(); return; }
+        if (loginCard) loginCard.style.visibility = '';
+
+        if (!user) {
+            mostrarLogin();
+            return;
+        }
 
         const tiendaId = user.email.match(/^tienda(\w+)@/)?.[1];
         if (!tiendaId) { await cerrarSesion(); return; }
