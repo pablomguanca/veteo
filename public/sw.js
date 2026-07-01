@@ -11,32 +11,13 @@ firebase.initializeApp({
 });
 
 const mensajeria = firebase.messaging();
-const NOMBRE_CACHE = 'veteo-v2';
+const NOMBRE_CACHE = 'veteo-v3';
 const URLS_CACHE = [
     './',
     './index.html',
     './manifest.json',
-    './css/styles.css',
-    './js/app.js',
-    './js/modules/checklist.js',
-    './js/modules/config.js',
-    './js/modules/enlaces.js',
-    './js/modules/escaner.js',
-    './js/modules/estado-formularios.js',
-    './js/modules/fecha.js',
-    './js/modules/filtros.js',
-    './js/modules/google-auth.js',
-    './js/modules/mensaje-diario.js',
-    './js/modules/notificaciones.js',
-    './js/modules/ranking-usuarios.js',
-    './js/modules/sesion-ui.js',
-    './js/modules/sw-register.js',
-    './js/modules/top-productos.js',
-    './js/modules/tour.js',
-    './js/modules/vencimientos-db.js',
-    './js/modules/vencimientos.js',
-    './assets/img/icon-192.png',
-    './assets/img/icon-512.png',
+    '/assets/img/icon-192.png',
+    '/assets/img/icon-512.png',
 ];
 
 self.addEventListener('install', (evento) => {
@@ -66,12 +47,10 @@ self.addEventListener('fetch', (evento) => {
     evento.respondWith(
         caches.match(evento.request).then((cacheado) => {
             if (cacheado) return cacheado;
-
             return fetch(evento.request).then((respuesta) => {
                 if (!respuesta || respuesta.status !== 200 || respuesta.type !== 'basic') {
                     return respuesta;
                 }
-
                 const clon = respuesta.clone();
                 caches.open(NOMBRE_CACHE).then((cache) => cache.put(evento.request, clon));
                 return respuesta;
@@ -82,20 +61,14 @@ self.addEventListener('fetch', (evento) => {
 
 self.addEventListener('notificationclick', (evento) => {
     evento.notification.close();
-
     const urlDestino = evento.notification.data?.url || new URL('./', self.location.origin).href;
-
     evento.waitUntil(
         clients.matchAll({ type: 'window', includeUncontrolled: true }).then((clientesVentana) => {
             for (let i = 0; i < clientesVentana.length; i++) {
                 const cliente = clientesVentana[i];
-                if (cliente.url === urlDestino && 'focus' in cliente) {
-                    return cliente.focus();
-                }
+                if (cliente.url === urlDestino && 'focus' in cliente) return cliente.focus();
             }
-            if (clients.openWindow) {
-                return clients.openWindow(urlDestino);
-            }
+            if (clients.openWindow) return clients.openWindow(urlDestino);
         })
     );
 });
@@ -104,13 +77,11 @@ mensajeria.onBackgroundMessage((cargaUtil) => {
     const titulo = cargaUtil.notification?.title || 'Veteo App';
     const opciones = {
         body: cargaUtil.notification?.body || 'Tienes una nueva notificación.',
-        icon: './assets/img/icon-512.png'
+        icon: '/assets/img/icon-512.png'
     };
     self.registration.showNotification(titulo, opciones);
 });
 
 self.addEventListener('message', (evento) => {
-    if (evento.data && evento.data.type === 'SKIP_WAITING') {
-        self.skipWaiting();
-    }
+    if (evento.data && evento.data.type === 'SKIP_WAITING') self.skipWaiting();
 });
