@@ -1,0 +1,175 @@
+@use '../variables' as v;
+
+.operador-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.75);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: v.$z-modal;
+    padding: 24px;
+}
+
+.operador-modal {
+    background: v.$surface-2;
+    border: 1px solid v.$border-2;
+    border-radius: v.$radius-lg;
+    padding: 28px 24px;
+    width: min(360px, 90vw);
+    box-shadow: v.$shadow-lg;
+    position: relative;
+    overflow: hidden;
+
+    &::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 2px;
+        background: linear-gradient(90deg, v.$green, v.$violet);
+    }
+
+    &__title {
+        font-family: v.$ff-title;
+        font-size: 16px;
+        font-weight: 700;
+        color: v.$text;
+        margin: 0 0 6px;
+    }
+
+    &__subtitle {
+        font-size: 13px;
+        color: v.$muted;
+        margin: 0 0 20px;
+        line-height: 1.5;
+    }
+
+    &__lista {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        margin-bottom: 16px;
+        max-height: 200px;
+        overflow-y: auto;
+        scrollbar-width: thin;
+        scrollbar-color: v.$border transparent;
+    }
+
+    &__vacio {
+        font-size: 13px;
+        color: v.$muted;
+        text-align: center;
+        padding: 8px 0;
+    }
+
+    &__add {
+        display: flex;
+        gap: 8px;
+        margin-bottom: 8px;
+    }
+
+    &__input {
+        flex: 1;
+        padding: 10px 12px;
+        border-radius: v.$radius-sm;
+        border: 1px solid v.$border;
+        background: v.$surface-3;
+        color: v.$text;
+        font-family: v.$ff-body;
+        font-size: 14px;
+        outline: none;
+        transition:
+            border-color v.$duration-fast v.$ease,
+            box-shadow v.$duration-fast v.$ease;
+
+        &::placeholder {
+            color: v.$muted;
+        }
+
+        &:focus {
+            border-color: v.$green-border;
+            box-shadow: 0 0 0 3px v.$green-glow;
+        }
+    }
+
+    &__btn-add {
+        padding: 10px 14px;
+        border-radius: v.$radius-sm;
+        background: v.$green;
+        border: none;
+        color: v.$bg;
+        font-weight: 700;
+        font-size: 16px;
+        cursor: pointer;
+        transition: opacity v.$duration-fast v.$ease;
+        line-height: 1;
+
+        &:hover {
+            opacity: 0.85;
+        }
+    }
+
+    &__hint {
+        font-size: 11px;
+        color: v.$muted;
+        margin: 0 0 16px;
+        line-height: 1.4;
+    }
+
+    &__btn-cancelar {
+        width: 100%;
+        padding: 10px;
+        border-radius: v.$radius-sm;
+        border: 1px solid v.$border;
+        background: transparent;
+        color: v.$muted;
+        font-family: v.$ff-body;
+        font-size: 13px;
+        cursor: pointer;
+        transition:
+            border-color v.$duration-fast v.$ease,
+            color v.$duration-fast v.$ease;
+
+        &:hover {
+            border-color: v.$border-2;
+            color: v.$text;
+        }
+    }
+}
+
+.operador-item {
+    width: 100%;
+    padding: 10px 14px;
+    border-radius: v.$radius-sm;
+    border: 1px solid v.$border;
+    background: v.$surface-3;
+    color: v.$text;
+    font-family: v.$ff-body;
+    font-size: 14px;
+    text-align: left;
+    font-weight: 500;
+    cursor: pointer;
+    transition:
+        background v.$duration-fast v.$ease,
+        border-color v.$duration-fast v.$ease,
+        color v.$duration-fast v.$ease;
+
+    &:hover {
+        border-color: v.$green-border;
+        background: v.$green-glow;
+    }
+
+    &--activo {
+        background: v.$green;
+        border-color: v.$green;
+        color: v.$bg;
+
+        &:hover {
+            background: v.$green;
+            border-color: v.$green;
+            opacity: 0.9;
+        }
+    }
+}

@@ -77,40 +77,34 @@ function mostrarLogin() {
 }
 
 export function mostrarSelectorOperador(tiendaId, onConfirmar) {
-    const db = getFirestoreInstance();
+    const db             = getFirestoreInstance();
     const operadorActual = obtenerOperador();
 
-    const overlay = document.createElement('div');
-    overlay.id = 'operador-overlay';
-    overlay.style.cssText = `
-        position:fixed;inset:0;background:rgba(0,0,0,.7);
-        display:flex;align-items:center;justify-content:center;z-index:9999;
-    `;
+    const overlay  = document.createElement('div');
+    overlay.id     = 'operador-overlay';
+    overlay.className = 'operador-overlay';
 
     overlay.innerHTML = `
-        <div style="background:var(--bg-card,#1a1a2e);border-radius:12px;padding:28px 24px;
-                    width:min(360px,90vw);box-shadow:0 8px 32px rgba(0,0,0,.4)">
-            <h3 style="margin:0 0 6px;font-size:16px;color:var(--text,#fff)">¿Quién está cargando?</h3>
-            <p style="margin:0 0 20px;font-size:13px;color:var(--muted,#888)">
+        <div class="operador-modal">
+            <h3 class="operador-modal__title">¿Quién está cargando?</h3>
+            <p class="operador-modal__subtitle">
                 Tienda ${tiendaId} · Esta preferencia se guarda en este dispositivo
             </p>
-            <div id="operador-lista"
-                style="display:flex;flex-direction:column;gap:8px;margin-bottom:16px;
-                        max-height:200px;overflow-y:auto"></div>
-            <div style="display:flex;gap:8px;margin-bottom:8px">
-                <input id="operador-nuevo-input" type="text" placeholder="Agregar nombre..."
+            <div class="operador-modal__lista" id="operador-lista"></div>
+            <div class="operador-modal__add">
+                <input
+                    class="operador-modal__input"
+                    id="operador-nuevo-input"
+                    type="text"
+                    placeholder="Agregar nombre..."
                     maxlength="40"
-                    style="flex:1;padding:10px 12px;border-radius:8px;border:1px solid #333;
-                            background:#0d0d1a;color:#fff;font-size:14px"/>
-                <button id="operador-nuevo-btn"
-                        style="padding:10px 14px;border-radius:8px;background:var(--green,#00c46a);
-                            border:none;color:#000;font-weight:700;cursor:pointer;font-size:13px">+</button>
+                />
+                <button class="operador-modal__btn-add" id="operador-nuevo-btn">+</button>
             </div>
-            <p style="font-size:11px;color:var(--muted,#888);margin:0 0 16px">
+            <p class="operador-modal__hint">
                 El nombre elegido se registra en cada carga que hagas.
             </p>
-            <button id="operador-cancelar"
-                    style="width:100%;padding:10px;border-radius:8px;border:1px solid #333;background:transparent;color:var(--muted,#888);cursor:pointer;font-size:13px">
+            <button class="operador-modal__btn-cancelar" id="operador-cancelar">
                 ${operadorActual ? 'Cancelar' : 'Continuar sin nombre'}
             </button>
         </div>
@@ -121,39 +115,31 @@ export function mostrarSelectorOperador(tiendaId, onConfirmar) {
     const lista = overlay.querySelector('#operador-lista');
 
     async function cargarLista() {
-        const snap = await getDoc(doc(db, 'tiendas', tiendaId));
+        const snap       = await getDoc(doc(db, 'tiendas', tiendaId));
         const operadores = snap.data()?.operadores || [];
-        lista.innerHTML = '';
+        lista.innerHTML  = '';
 
         if (!operadores.length) {
-            lista.innerHTML = `<p style="font-size:13px;color:var(--muted,#888);text-align:center">
-                Todavía no hay operadores. Agregá el primero.</p>`;
+            lista.innerHTML = `<p class="operador-modal__vacio">Todavía no hay operadores. Agregá el primero.</p>`;
             return;
         }
 
         operadores.forEach(nombre => {
             const btn = document.createElement('button');
             btn.textContent = nombre;
-            const esActual = operadorActual?.nombre === nombre;
-            btn.style.cssText = `
-                padding:10px 14px;border-radius:8px;
-                border:1px solid ${esActual ? 'var(--green,#00c46a)' : '#333'};
-                background:${esActual ? 'var(--green,#00c46a)' : '#1a1a2e'};
-                color:${esActual ? '#000' : '#fff'};
-                cursor:pointer;font-size:14px;text-align:left;font-weight:500;
-            `;
-            btn.onclick = () => seleccionar(nombre);
+            btn.className   = `operador-item${operadorActual?.nombre === nombre ? ' operador-item--activo' : ''}`;
+            btn.onclick     = () => seleccionar(nombre);
             lista.appendChild(btn);
         });
     }
 
     async function agregar() {
-        const input = overlay.querySelector('#operador-nuevo-input');
+        const input  = overlay.querySelector('#operador-nuevo-input');
         const nombre = input.value.trim();
         if (!nombre) return;
 
-        const ref = doc(db, 'tiendas', tiendaId);
-        const snap = await getDoc(ref);
+        const ref        = doc(db, 'tiendas', tiendaId);
+        const snap       = await getDoc(ref);
         const operadores = snap.data()?.operadores || [];
 
         if (!operadores.includes(nombre)) {
@@ -173,7 +159,7 @@ export function mostrarSelectorOperador(tiendaId, onConfirmar) {
         if (onConfirmar) onConfirmar(operador);
     }
 
-    overlay.querySelector('#operador-nuevo-btn').onclick = agregar;
+    overlay.querySelector('#operador-nuevo-btn').onclick  = agregar;
     overlay.querySelector('#operador-nuevo-input').onkeydown = e => {
         if (e.key === 'Enter') agregar();
     };
