@@ -218,6 +218,7 @@ export async function inicializarAutenticacion() {
     inicializarFormLogin();
 
     onAuthStateChanged(auth, async user => {
+        document.getElementById('app-loader')?.setAttribute('hidden', '');
         if (loginCard) loginCard.style.visibility = '';
 
         if (!user) {
