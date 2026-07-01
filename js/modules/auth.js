@@ -70,7 +70,7 @@ function mostrarApp(tiendaId, nombreTienda) {
 
 function mostrarLogin() {
     const overlay = document.getElementById('login-overlay');
-    if (overlay) overlay.style.display = '';
+    if (overlay) overlay.removeAttribute('hidden');
     const appContent = document.getElementById('app-content');
     if (appContent) appContent.hidden = true;
     document.getElementById('sidebar-open')?.setAttribute('hidden', '');
