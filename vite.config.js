@@ -9,6 +9,7 @@ export default defineConfig({
                 main: 'index.html',
                 reportes: 'reportes.html',
                 adminCatalogo: 'admin-catalogo.html',
+instructivo:   'instructivo.html',
             }
         }
     },
