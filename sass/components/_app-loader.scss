@@ -1,0 +1,40 @@
+@use '../variables' as v;
+
+.app-loader {
+    position: fixed;
+    inset: 0;
+    z-index: v.$z-modal + 1;
+    background: v.$bg;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 20px;
+    transition: opacity v.$duration-slow v.$ease;
+
+    &[hidden] {
+        display: none;
+    }
+
+    &__spinner {
+        width: 44px;
+        height: 44px;
+        border-radius: 50%;
+        border: 3px solid v.$border;
+        border-top-color: v.$green;
+        animation: veteo-spin 700ms linear infinite;
+    }
+
+    &__text {
+        font-family: v.$ff-body;
+        font-size: 13px;
+        color: v.$muted;
+        letter-spacing: 0.3px;
+    }
+}
+
+@keyframes veteo-spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
