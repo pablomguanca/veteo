@@ -61,32 +61,34 @@
 .sidebar {
     position: fixed;
     top: 0;
-    left: -300px;
+    left: 0;
     width: 280px;
     height: 100%;
     background: v.$surface;
     border-right: 1px solid v.$border;
     z-index: v.$z-modal + 10;
-    transition: left v.$duration-base v.$ease, right v.$duration-base v.$ease;
+    transform: translateX(-100%);
+    transition: transform 250ms cubic-bezier(.4, 0, .2, 1);
     padding: 80px 20px 20px;
     display: flex;
     flex-direction: column;
     overflow-y: auto;
+    will-change: transform;
 
     &--open {
-        left: 0;
+        transform: translateX(0);
         box-shadow: v.$shadow-lg;
     }
 
     @media (min-width: 561px) {
         left: auto;
-        right: -320px;
+        right: 0;
         border-right: none;
         border-left: 1px solid v.$border;
+        transform: translateX(100%);
 
         &--open {
-            right: 0;
-            left: auto;
+            transform: translateX(0);
         }
     }
 
