@@ -1,3 +1,5 @@
+import { defineConfig } from 'vite';
+
 export default defineConfig({
     root: '.',
     publicDir: 'public',
@@ -5,10 +7,10 @@ export default defineConfig({
         outDir: 'dist',
         rollupOptions: {
             input: {
-                main: 'index.html',
-                reportes: 'reportes.html',
+                main:          'index.html',
+                reportes:      'reportes.html',
                 adminCatalogo: 'admin-catalogo.html',
-                instructivo: 'instructivo.html',
+                instructivo:   'instructivo.html',
             }
         }
     },
