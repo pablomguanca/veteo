@@ -79,7 +79,7 @@
 
 .footer {
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
     justify-content: space-between;
     align-items: center;
     padding-top: 22px;
@@ -89,7 +89,6 @@
     margin-top: 6px;
 
     @media (max-width: 560px) {
-        flex-direction: row;
         font-size: 0.75rem;
         gap: 8px;
     }

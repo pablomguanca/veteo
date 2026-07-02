@@ -564,9 +564,16 @@ body {
     }
 }
 
-.footer {
+.instructivo-footer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
     text-align: center;
-    padding: 60px 24px 80px;
+    padding: 20px 24px 80px;
+
+    &__logo-wrapper {
+        margin: 0 auto 24px;
+    }
 
     &__logo {
         display: block;
@@ -574,7 +581,6 @@ body {
         height: 72px;
         object-fit: contain;
         border-radius: v.$radius-lg;
-        margin: 0 auto 24px;
         box-shadow: 0 0 40px v.$blue-glow;
         animation: fadeUp 0.6s 0.1s ease both;
     }

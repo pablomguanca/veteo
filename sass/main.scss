@@ -3,6 +3,7 @@
 @use 'base';
 @use 'login';
 @use 'layout';
+@use 'instructivo';
 @use 'components/alerts';
 @use 'components/badges';
 @use 'components/buttons';
@@ -22,3 +23,4 @@
 @use 'components/admin-catalogo';
 @use 'components/operador-selector';
 @use 'components/app-loader';
+@use 'components/historial';

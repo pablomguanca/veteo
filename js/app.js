@@ -18,6 +18,7 @@ import { inicializarSidebar } from './modules/sidebar.js';
 import { inicializarInstaladorPWA } from './modules/install.js';
 import { inicializarReportes } from './modules/reportes.js';
 import { inicializarFirebase } from './firebase/firebase.js';
+import { inicializarHistorial } from './modules/historial.js';
 
 document.addEventListener('DOMContentLoaded', async () => {
     await inicializarFirebase();
@@ -37,6 +38,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     inicializarVencimientos();
     inicializarBaseDatosVencimientos();
     inicializarNotificaciones();
+    inicializarHistorial();
 
     window.addEventListener('veteo:login', () => {
         inicializarTopProductos();
