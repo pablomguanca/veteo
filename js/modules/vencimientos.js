@@ -11,16 +11,19 @@ import {
     recalcularGamificacionTotal
 } from './checklist.js';
 import { resolverAcciones } from './formularios.js';
+import {
+    botonesFila, claseUrgencia, textoUrgencia, confirmarEliminacion
+} from '../utils/fila-vencimiento.js';
 import { trackearEvento } from './analytics.js';
 import { getFirestoreInstance } from '../firebase/firebase.js';
 import { collection, getDocs, onSnapshot } from 'firebase/firestore';
 import { obtenerTiendaId as getTiendaId } from './auth.js';
 
 const NIVELES_ETAPA = [
-    { clave: '-7', etiqueta: '−7d', dias: 7, claseCSS: 'venc-item__badge--7' },
-    { clave: '-30', etiqueta: '−30d', dias: 30, claseCSS: 'venc-item__badge--30' },
-    { clave: '-60', etiqueta: '−60d', dias: 60, claseCSS: 'venc-item__badge--60' },
-    { clave: '-90', etiqueta: '−90d', dias: 90, claseCSS: 'venc-item__badge--90' },
+    { clave: '-7', etiqueta: '−7d', dias: 7, claseCSS: 'venc-badge--7' },
+    { clave: '-30', etiqueta: '−30d', dias: 30, claseCSS: 'venc-badge--30' },
+    { clave: '-60', etiqueta: '−60d', dias: 60, claseCSS: 'venc-badge--60' },
+    { clave: '-90', etiqueta: '−90d', dias: 90, claseCSS: 'venc-badge--90' },
 ];
 
 function obtenerDiasRestantes(cadenaFecha) {
@@ -64,7 +67,7 @@ async function cargarEscaneadosFirestore() {
 }
 
 function renderizarItems(contenedor, elementoVacio, items, onEliminar) {
-    contenedor.querySelectorAll('.venc-item').forEach(el => el.remove());
+    contenedor.querySelectorAll('.venc-row').forEach(el => el.remove());
 
     const filtrados = items
         .filter(item => ![30, 31, 32, 33].includes(parseInt(item.sec)))
@@ -81,42 +84,34 @@ function renderizarItems(contenedor, elementoVacio, items, onEliminar) {
             ? parseFloat(cantRaw).toString().replace('.', ',')
             : cantRaw;
         const textoVence = dias === 0 ? 'Vence hoy' : `Vence el ${formatearFecha(fecha)}`;
-        const textoDias = dias < 0
-            ? `Vencido hace ${Math.abs(dias)}d`
-            : `${dias}d restantes`;
         const estado = item.estado || 'PENDIENTE';
 
         const elemento = document.createElement('div');
-        elemento.className = `venc-item vdb-row ${estado.includes('CARGADO') ? 'vdb-row--done' : ''}`;
+        elemento.className = `venc-row ${estado.includes('CARGADO') ? 'venc-row--done' : ''}`;
         elemento.dataset.id = item.id;
         elemento.dataset.fecha = fecha;
         elemento.dataset.vencido = dias < 0 ? 'true' : 'false';
         if (dias < 0) elemento.style.display = 'none';
 
         elemento.innerHTML = `
-            <div class="vdb-row__left">
-                <span class="venc-badge ${etapa.claseCSS}">${etapa.etiqueta}</span>
-            </div>
-            <div class="vdb-row__info">
-                <div class="vdb-row__name">${escaparHTML(item.descripcion || '')}</div>
-                <div class="vdb-row__meta">
-                    EAN ${escaparHTML(item.ean || 'N/A')} · SEC ${sec} · ${textoVence} · ${textoDias} · Cant: ${cant}
+            <span class="venc-badge ${etapa.claseCSS}">${etapa.etiqueta}</span>
+            <div class="venc-row__info">
+                <div class="venc-row__name">${escaparHTML(item.descripcion || '')}</div>
+                <div class="venc-row__meta">
+                    <span class="venc-row__urgency ${claseUrgencia(dias)}">${textoUrgencia(dias)}</span>
+                    <span>${textoVence} · EAN ${escaparHTML(item.ean || 'N/A')} · SEC ${sec} · Cant: ${cant}</span>
                 </div>
             </div>
-            <div class="vdb-row__actions">
-                <button class="copy-btn" title="Copiar EAN">
-                    <div class="copy-icon"></div>
-                </button>
-                <button class="venc-item__delete" aria-label="Eliminar" data-id="${item.id}">✕</button>
-                ${acciones.etiquetaPrincipal
-                ? `<button class="action-btn action-btn--main" data-action="${acciones.etiquetaPrincipal}">${acciones.etiquetaPrincipal}</button>`
-                : ''}
-                ${acciones.mostrarUM
-                ? `<button class="action-btn action-btn--um">UM</button>`
-                : ''}
+            <div class="venc-row__actions">
+                ${botonesFila({
+            etiquetaPrincipal: acciones.etiquetaPrincipal,
+            mostrarUM: acciones.mostrarUM,
+            permiteEliminar: true,
+        })}
             </div>`;
 
-        elemento.querySelector('.copy-btn').onclick = e => copiarEAN(item.ean || '', e);
+        elemento.querySelector('[data-accion="copiar"]').onclick =
+            e => copiarEAN(item.ean || '', e);
 
         const procesarCarga = async (tipo, label) => {
             const itemFormateado = {
@@ -127,18 +122,23 @@ function renderizarItems(contenedor, elementoVacio, items, onEliminar) {
             sumarCargaGamificacion();
         };
 
-        const btnMain = elemento.querySelector('.action-btn--main');
+        const btnMain = elemento.querySelector('[data-accion="principal"]');
         if (btnMain) btnMain.onclick = () => procesarCarga('PRINCIPAL', acciones.etiquetaPrincipal);
 
-        if (acciones.mostrarUM) {
-            elemento.querySelector('.action-btn--um').onclick = () => procesarCarga('UM', 'UM');
-        }
+        const btnUM = elemento.querySelector('[data-accion="um"]');
+        if (btnUM) btnUM.onclick = () => procesarCarga('UM', 'UM');
 
-        elemento.querySelector('.venc-item__delete').onclick = async () => {
+        elemento.querySelector('[data-accion="eliminar"]').onclick = async () => {
+            const confirmado = await confirmarEliminacion(
+                item.descripcion,
+                'Vencimientos cargados'
+            );
+            if (!confirmado) return;
+
             try {
                 await eliminarEscaneadoFirestore(item.ean, fecha);
                 elemento.remove();
-                const restantes = [...contenedor.querySelectorAll('.venc-item')];
+                const restantes = [...contenedor.querySelectorAll('.venc-row')];
                 const tieneVisibles = restantes.some(r => r.style.display !== 'none');
                 alternarEstadoVacio(elementoVacio, tieneVisibles);
                 if (onEliminar) await onEliminar(item);
@@ -150,7 +150,7 @@ function renderizarItems(contenedor, elementoVacio, items, onEliminar) {
         contenedor.appendChild(elemento);
     });
 
-    const tieneVisibles = [...contenedor.querySelectorAll('.vdb-row')]
+    const tieneVisibles = [...contenedor.querySelectorAll('.venc-row')]
         .some(r => r.style.display !== 'none');
     alternarEstadoVacio(elementoVacio, tieneVisibles);
 }

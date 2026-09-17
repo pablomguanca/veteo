@@ -7,6 +7,10 @@ import {
 } from './checklist.js';
 import { trackearEvento } from './analytics.js';
 import { construirUrlFormulario, resolverAcciones } from './formularios.js';
+import {
+    botonesFila, claseUrgencia, textoUrgencia,
+    confirmarEliminacion, ICONO_COPIADO
+} from '../utils/fila-vencimiento.js';
 import { getAuthInstance } from '../firebase/firebase.js';
 import {
     collection, doc, getDoc, getDocs, setDoc,
@@ -67,18 +71,27 @@ export async function importarTxtFirestore(contenido) {
 
     const snapTodos = await getDocs(vencRef);
 
+    const clavesDelArchivo = new Set(
+        filas.map(fila => `${fila.ean}__${fila.vencimiento.replace(/\//g, '-')}`)
+    );
+
     const mapaEstados = {};
     const clavesAEliminar = [];
 
     snapTodos.forEach(d => {
         const data = d.data();
+        const sigueEnArchivo = clavesDelArchivo.has(d.id);
+
+        if (!sigueEnArchivo) {
+            clavesAEliminar.push(d.id);
+            return;
+        }
+
         if (data.estado === 'CARGADO' || data.estado === 'CARGADO UM') {
             mapaEstados[d.id] = {
                 estado: data.estado,
                 cargadoEl: data.cargadoEl || null,
             };
-        } else {
-            clavesAEliminar.push(d.id);
         }
     });
 
@@ -207,6 +220,16 @@ export async function guardarEscaneadoFirestore(datos) {
     return { ok: true };
 }
 
+export async function eliminarImportadoFirestore(idDocumento) {
+    const tiendaId = obtenerTiendaId();
+    if (!tiendaId) throw new Error('No hay tienda activa');
+    if (!idDocumento) throw new Error('Falta el identificador del registro');
+
+    await deleteDoc(doc(refVencimientos(tiendaId), idDocumento));
+
+    return { ok: true };
+}
+
 export async function eliminarEscaneadoFirestore(ean, fechaVencimiento) {
     const tiendaId = obtenerTiendaId();
     if (!tiendaId) throw new Error('No hay tienda activa');
@@ -246,15 +269,10 @@ export function copiarEAN(ean, event) {
     const originalHTML = btn.innerHTML;
 
     navigator.clipboard.writeText(ean).then(() => {
-        btn.classList.add('copied');
-        btn.innerHTML = `
-            <svg class="copy-icon" viewBox="0 0 24 24" fill="none"
-                    stroke="white" stroke-width="3"
-                    stroke-linecap="round" stroke-linejoin="round">
-                <polyline points="20 6 9 17 4 12"></polyline>
-            </svg>`;
+        btn.classList.add('is-copied');
+        btn.innerHTML = ICONO_COPIADO;
         setTimeout(() => {
-            btn.classList.remove('copied');
+            btn.classList.remove('is-copied');
             btn.innerHTML = originalHTML;
         }, 2000);
     });
@@ -338,7 +356,7 @@ function escaparHTML(s) {
 }
 
 function renderizarTabla(contenedor, elementoVacio, filas) {
-    contenedor?.querySelectorAll('.vdb-row').forEach(el => el.remove());
+    contenedor?.querySelectorAll('.venc-row').forEach(el => el.remove());
     if (!filas?.length) { alternarEstadoVacio(elementoVacio, false); return; }
 
     const SECS_EXCLUIDOS = [30, 31, 32, 33, 65, 83];
@@ -363,61 +381,80 @@ function renderizarTabla(contenedor, elementoVacio, filas) {
         const etapa = obtenerEtapa(dias);
 
         const textoVence = dias === 0 ? 'Vence hoy' : `Vence el ${formatearFecha(vto)}`;
-        const textoDias = dias < 0
-            ? `Vencido hace ${Math.abs(dias)}d`
-            : `${dias}d restantes`;
 
         const { etiquetaPrincipal: labelPrincipal, mostrarUM } = resolverAcciones(item);
 
         const elemento = document.createElement('div');
-        elemento.className = `vdb-row ${estado.includes('CARGADO') ? 'vdb-row--done' : ''}`;
+        elemento.className = `venc-row ${estado.includes('CARGADO') ? 'venc-row--done' : ''}`;
         elemento.dataset.fecha = vto;
         elemento.dataset.vencido = dias < 0 ? 'true' : 'false';
         if (dias < 0) elemento.style.display = 'none';
 
         elemento.innerHTML = `
-            <div class="vdb-row__left">
-                <span class="venc-badge ${etapa.claseCSS}">${etapa.etiqueta}</span>
-            </div>
-            <div class="vdb-row__info">
-                <div class="vdb-row__name">${escaparHTML(desc)}</div>
-                <div class="vdb-row__meta">
-                    EAN ${escaparHTML(ean)} · SEC ${sec} · ${textoVence} · ${textoDias} · Cant: ${cant}
+            <span class="venc-badge ${etapa.claseCSS}">${etapa.etiqueta}</span>
+            <div class="venc-row__info">
+                <div class="venc-row__name">${escaparHTML(desc)}</div>
+                <div class="venc-row__meta">
+                    <span class="venc-row__urgency ${claseUrgencia(dias)}">${textoUrgencia(dias)}</span>
+                    <span>${textoVence} · EAN ${escaparHTML(ean)} · SEC ${sec} · Cant: ${cant}</span>
                 </div>
             </div>
-            <div class="vdb-row__actions">
-                <button class="copy-btn" title="Copiar EAN">
-                    <div class="copy-icon"></div>
-                </button>
-                ${labelPrincipal
-                ? `<button class="action-btn action-btn--main" data-action="${labelPrincipal}">${labelPrincipal}</button>`
-                : ''}
-                ${mostrarUM
-                ? `<button class="action-btn action-btn--um">UM</button>`
-                : ''}
+            <div class="venc-row__actions">
+                ${botonesFila({
+            etiquetaPrincipal: labelPrincipal,
+            mostrarUM,
+            permiteEliminar: true,
+        })}
             </div>`;
 
-        elemento.querySelector('.copy-btn').onclick = e => copiarEAN(ean, e);
+        elemento.querySelector('[data-accion="copiar"]').onclick = e => copiarEAN(ean, e);
 
-        const btnMain = elemento.querySelector('.action-btn--main');
+        const btnMain = elemento.querySelector('[data-accion="principal"]');
         if (btnMain) btnMain.onclick = () => ejecutarCargaCompleta(item, 'PRINCIPAL');
 
-        if (mostrarUM) {
-            elemento.querySelector('.action-btn--um').onclick = () => ejecutarCargaCompleta(item, 'UM');
-        }
+        const btnUM = elemento.querySelector('[data-accion="um"]');
+        if (btnUM) btnUM.onclick = () => ejecutarCargaCompleta(item, 'UM');
+
+        const esEscaneado = item.fuente === 'esc';
+
+        elemento.querySelector('[data-accion="eliminar"]').onclick = async () => {
+            const confirmado = await confirmarEliminacion(
+                desc,
+                esEscaneado ? 'Vencimientos cargados' : 'Vencimientos Importados'
+            );
+            if (!confirmado) return;
+
+            try {
+                if (esEscaneado) {
+                    await eliminarEscaneadoFirestore(ean, vto);
+                } else {
+                    await eliminarImportadoFirestore(item.id);
+                }
+                productosEnMemoria = productosEnMemoria.filter(p => p.id !== item.id);
+                elemento.remove();
+                const quedanVisibles = [...contenedor.querySelectorAll('.venc-row')]
+                    .some(r => r.style.display !== 'none');
+                alternarEstadoVacio(elementoVacio, quedanVisibles);
+                window.dispatchEvent(new CustomEvent('veteo:productosActualizados', {
+                    detail: productosEnMemoria,
+                }));
+            } catch (err) {
+                console.error('[Eliminar importado]:', err);
+            }
+        };
 
         contenedor.appendChild(elemento);
     });
 
-    const tieneVisibles = [...contenedor.querySelectorAll('.vdb-row')]
+    const tieneVisibles = [...contenedor.querySelectorAll('.venc-row')]
         .some(r => r.style.display !== 'none');
     alternarEstadoVacio(elementoVacio, tieneVisibles);
 
     const filtroActivo = contenedor.dataset.filtroActivo;
     if (filtroActivo && filtroActivo !== 'todos') {
-        [...contenedor.querySelectorAll('.vdb-row')].forEach(r => {
+        [...contenedor.querySelectorAll('.venc-row')].forEach(r => {
             const esVencido = r.dataset.vencido === 'true';
-            const botones = [...r.querySelectorAll('.action-btn')];
+            const botones = [...r.querySelectorAll('.venc-row__btn')];
             const coincide = filtroActivo === 'vencidos'
                 ? esVencido
                 : !esVencido && botones.some(b => b.textContent.trim() === filtroActivo);

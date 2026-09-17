@@ -34,28 +34,28 @@
         border-radius: 50%;
         flex-shrink: 0;
 
+        &--neutral {
+            background-color: v.$muted;
+        }
+
         &--blue {
-            background-color: #3b82f6;
+            background-color: v.$blue;
         }
 
         &--green {
-            background-color: #22c55e;
+            background-color: v.$green;
         }
 
         &--amber {
-            background-color: v.$orange;
+            background-color: v.$amber;
         }
 
         &--red {
-            background-color: #ef4444;
-        }
-
-        &--purple {
-            background-color: v.$violet;
+            background-color: v.$red;
         }
 
         &--violet {
-            background-color: #8b5cf6;
+            background-color: v.$violet;
         }
     }
 
@@ -70,21 +70,21 @@
     border: 1px solid transparent;
 
     &--7 {
-        background: v.$amber-glow;
-        color: v.$amber;
-        border-color: v.$amber-border;
-    }
-
-    &--30 {
         background: v.$red-glow;
         color: v.$red;
         border-color: v.$red-border;
     }
 
+    &--30 {
+        background: v.$amber-glow;
+        color: v.$amber;
+        border-color: v.$amber-border;
+    }
+
     &--60 {
-        background: v.$green-glow;
-        color: v.$green;
-        border-color: v.$green-border;
+        background: v.$blue-glow;
+        color: v.$blue;
+        border-color: v.$blue-border;
     }
 
     &--90 {

@@ -1,10 +1,21 @@
 export async function registrarServiceWorker() {
     if (!('serviceWorker' in navigator)) return;
 
+    if (!import.meta.env.PROD) {
+        const registros = await navigator.serviceWorker.getRegistrations();
+        await Promise.all(registros.map(registro => registro.unregister()));
+        const claves = await caches.keys();
+        await Promise.all(claves.map(clave => caches.delete(clave)));
+        return;
+    }
+
     try {
         const registro = await navigator.serviceWorker.register('./sw.js', {
             scope: './',
+            updateViaCache: 'none',
         });
+
+        registro.update();
 
         let refrescando = false;
 

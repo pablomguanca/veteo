@@ -11,8 +11,12 @@ firebase.initializeApp({
 });
 
 const mensajeria = firebase.messaging();
-const NOMBRE_CACHE = 'veteo-v4';
-const URLS_CACHE = [
+
+const BUILD = '__VETEO_BUILD__';
+const NOMBRE_CACHE = `veteo-${BUILD}`;
+const URL_OFFLINE = './index.html';
+
+const URLS_PRECACHE = [
     './',
     './index.html',
     './manifest.json',
@@ -20,43 +24,102 @@ const URLS_CACHE = [
     '/assets/img/icon-512.png',
 ];
 
+function esAssetInmutable(url) {
+    return url.pathname.startsWith('/assets/') && /-[A-Za-z0-9_-]{8,}\./.test(url.pathname);
+}
+
+async function respuestaDeRed(peticion) {
+    const respuesta = await fetch(peticion);
+    if (respuesta && respuesta.ok && respuesta.type === 'basic') {
+        const cache = await caches.open(NOMBRE_CACHE);
+        cache.put(peticion, respuesta.clone());
+    }
+    return respuesta;
+}
+
+async function redPrimero(peticion) {
+    try {
+        return await respuestaDeRed(peticion);
+    } catch (error) {
+        const cache = await caches.open(NOMBRE_CACHE);
+        const cacheado = await cache.match(peticion);
+        if (cacheado) return cacheado;
+
+        if (peticion.mode === 'navigate') {
+            const shell = await cache.match(URL_OFFLINE);
+            if (shell) return shell;
+        }
+
+        throw error;
+    }
+}
+
+async function cachePrimero(peticion) {
+    const cache = await caches.open(NOMBRE_CACHE);
+    const cacheado = await cache.match(peticion);
+    if (cacheado) return cacheado;
+    return respuestaDeRed(peticion);
+}
+
+async function revalidarEnSegundoPlano(peticion) {
+    const cache = await caches.open(NOMBRE_CACHE);
+    const cacheado = await cache.match(peticion);
+
+    const enRed = respuestaDeRed(peticion).catch(() => null);
+    if (cacheado) {
+        return cacheado;
+    }
+
+    const respuesta = await enRed;
+    if (respuesta) return respuesta;
+    throw new Error('Sin red y sin caché');
+}
+
 self.addEventListener('install', (evento) => {
     evento.waitUntil(
-        caches.open(NOMBRE_CACHE).then((cache) => cache.addAll(URLS_CACHE))
+        caches.open(NOMBRE_CACHE).then((cache) => cache.addAll(URLS_PRECACHE))
     );
 });
 
 self.addEventListener('activate', (evento) => {
     evento.waitUntil(
-        caches.keys().then((claves) =>
-            Promise.all(
+        caches.keys()
+            .then((claves) => Promise.all(
                 claves
                     .filter((clave) => clave !== NOMBRE_CACHE)
                     .map((clave) => caches.delete(clave))
-            )
-        )
+            ))
+            .then(() => self.clients.claim())
     );
-    self.clients.claim();
 });
 
 self.addEventListener('fetch', (evento) => {
-    if (evento.request.method !== 'GET') return;
-    if (!evento.request.url.startsWith('http')) return;
-    if (evento.request.url.includes('script.google.com')) return;
+    const peticion = evento.request;
 
-    evento.respondWith(
-        caches.match(evento.request).then((cacheado) => {
-            if (cacheado) return cacheado;
-            return fetch(evento.request).then((respuesta) => {
-                if (!respuesta || respuesta.status !== 200 || respuesta.type !== 'basic') {
-                    return respuesta;
-                }
-                const clon = respuesta.clone();
-                caches.open(NOMBRE_CACHE).then((cache) => cache.put(evento.request, clon));
-                return respuesta;
-            });
-        })
-    );
+    if (peticion.method !== 'GET') return;
+    if (!peticion.url.startsWith('http')) return;
+    if (peticion.url.includes('script.google.com')) return;
+
+    const url = new URL(peticion.url);
+
+    if (url.origin !== self.location.origin) return;
+
+    if (peticion.mode === 'navigate') {
+        evento.respondWith(redPrimero(peticion));
+        return;
+    }
+
+    if (esAssetInmutable(url)) {
+        evento.respondWith(cachePrimero(peticion));
+        return;
+    }
+
+    if (url.pathname.endsWith('.html')) {
+        evento.respondWith(redPrimero(peticion));
+        return;
+    }
+
+    evento.respondWith(revalidarEnSegundoPlano(peticion));
 });
 
 self.addEventListener('notificationclick', (evento) => {

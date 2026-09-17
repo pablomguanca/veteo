@@ -306,3 +306,41 @@
         color: #ffffff;
     }
 }
+.swal2-popup.swal-veteo {
+    background: v.$surface-2 !important;
+    border: 1px solid v.$border-2 !important;
+    box-shadow: v.$shadow-md !important;
+    border-radius: v.$radius !important;
+
+    .swal2-title {
+        color: v.$text !important;
+        font-family: v.$ff-display !important;
+        font-size: 1.25rem !important;
+    }
+
+    .swal2-html-container {
+        color: v.$muted !important;
+
+        strong {
+            color: v.$text;
+        }
+    }
+
+    .swal2-confirm,
+    .swal2-cancel {
+        min-height: 44px !important;
+        padding: 0 22px !important;
+        border-radius: v.$radius-xs !important;
+        font-weight: 700 !important;
+    }
+
+    .swal2-confirm {
+        background-color: v.$danger !important;
+        color: v.$bg !important;
+    }
+
+    .swal2-cancel {
+        background-color: v.$surface-3 !important;
+        color: v.$text !important;
+    }
+}

@@ -9,7 +9,7 @@ function filtrarRows(rows, filtro) {
 
         if (filtro === 'todos') return true;
 
-        const botones = [...r.querySelectorAll('.action-btn')];
+        const botones = [...r.querySelectorAll('.venc-row__btn')];
         return botones.some(btn => btn.textContent.trim() === filtro);
     });
 }
@@ -21,7 +21,7 @@ function aplicarFiltroUI(target, filtro) {
 
     contenedor.dataset.filtroActivo = filtro;
 
-    const todasLasRows = [...contenedor.querySelectorAll('.vdb-row')];
+    const todasLasRows = [...contenedor.querySelectorAll('.venc-row')];
     const visibles = filtrarRows(todasLasRows, filtro);
     const ocultas = todasLasRows.filter(r => !visibles.includes(r));
 
@@ -43,12 +43,12 @@ function generarPDF(target) {
 
     const cssUrl = new URL('/css/pdf.css', window.location.origin).href;
 
-    const rows = [...contenedor.querySelectorAll('.vdb-row')]
+    const rows = [...contenedor.querySelectorAll('.venc-row')]
         .filter(r => r.style.display !== 'none');
 
     const filas = rows.map(row => {
-        const meta = row.querySelector('.vdb-row__meta')?.textContent || '';
-        const desc = row.querySelector('.vdb-row__name')?.textContent.trim() || '—';
+        const meta = row.querySelector('.venc-row__meta')?.textContent || '';
+        const desc = row.querySelector('.venc-row__name')?.textContent.trim() || '—';
 
         const secMatch = meta.match(/SEC\s+(\d+)/);
         const eanMatch = meta.match(/EAN\s+(\d+)/);
@@ -142,7 +142,7 @@ async function generarExcelPCH(target) {
 
     if (!contenedor) return;
 
-    const rows = [...contenedor.querySelectorAll('.vdb-row')]
+    const rows = [...contenedor.querySelectorAll('.venc-row')]
         .filter(r => r.style.display !== 'none');
 
     if (rows.length === 0) {
@@ -177,7 +177,7 @@ async function generarExcelPCH(target) {
     const tiendaFinal = tienda || "";
 
     const datosExcel = rows.map(row => {
-        const meta = row.querySelector('.vdb-row__meta')?.textContent || '';
+        const meta = row.querySelector('.venc-row__meta')?.textContent || '';
 
         const eanMatch = meta.match(/EAN\s+(\d+)/);
         const cantMatch = meta.match(/Cant:\s*([\d,]+)/);

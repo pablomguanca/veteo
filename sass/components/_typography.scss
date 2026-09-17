@@ -40,9 +40,11 @@
     font-weight: 800;
     letter-spacing: -0.03em;
     line-height: 1;
-    background: linear-gradient(130deg, #eeeae3 35%, #555760 100%);
+    background: linear-gradient(130deg, v.$text 35%, v.$muted 100%);
     background-clip: text;
-    color: transparent;
+    -webkit-background-clip: text;
+    color: v.$text;
+    -webkit-text-fill-color: transparent;
 
     @media (max-width: 560px) {
         font-size: 2.4rem;
