@@ -12,7 +12,8 @@
     align-items: center;
     gap: 6px;
     align-self: flex-start;
-    padding: 5px 12px;
+    min-height: 44px;
+    padding: 5px 14px;
     border-radius: v.$radius-sm;
     border: 1px solid v.$border;
     background: transparent;

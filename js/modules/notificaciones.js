@@ -109,7 +109,7 @@ async function revisarVencimientosCriticos(refs) {
             mensaje: `Tenés ${total} producto${total > 1 ? 's' : ''} que vencen en menos de 7 días.`,
             etiquetaBoton: 'Ver ahora',
             alHacerClic: () => {
-                const destino = document.getElementById('vdb-list') ?? document.getElementById('venc-list');
+                const destino = document.getElementById('vdb-list');
                 destino?.scrollIntoView({ behavior: 'smooth' });
                 ocultarBanner(refs);
             },

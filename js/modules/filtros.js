@@ -15,7 +15,7 @@ function filtrarRows(rows, filtro) {
 }
 
 function aplicarFiltroUI(target, filtro) {
-    const contenedorId = target === 'venc' ? 'venc-list' : 'vdb-list';
+    const contenedorId = 'vdb-list';
     const contenedor = document.getElementById(contenedorId);
     if (!contenedor) return;
 
@@ -30,11 +30,11 @@ function aplicarFiltroUI(target, filtro) {
 }
 
 function generarPDF(target) {
-    const contenedorId = target === 'venc' ? 'venc-list' : 'vdb-list';
+    const contenedorId = 'vdb-list';
     const contenedor = document.getElementById(contenedorId);
     if (!contenedor) return;
 
-    const titulo = target === 'venc' ? 'Vencimientos Cargados' : 'Vencimientos Importados';
+    const titulo = 'Próximos a Vencer';
     const fecha = new Date().toLocaleDateString('es-AR', {
         day: '2-digit',
         month: '2-digit',
@@ -137,7 +137,7 @@ function generarPDF(target) {
 }
 
 async function generarExcelPCH(target) {
-    const contenedorId = target === 'venc' ? 'venc-list' : 'vdb-list';
+    const contenedorId = 'vdb-list';
     const contenedor = document.getElementById(contenedorId);
 
     if (!contenedor) return;
@@ -220,10 +220,6 @@ async function generarExcelPCH(target) {
 export function inicializarFiltros() {
     [
         {
-            toggleId: 'filtros-toggle-venc',
-            barraId: 'filtros-venc'
-        },
-        {
             toggleId: 'filtros-toggle-vdb',
             barraId: 'filtros-vdb'
         },
@@ -262,8 +258,8 @@ export function inicializarFiltros() {
                 btnExcel.style.display = filtro === 'PCH' ? 'inline-flex' : 'none';
             }
 
-            const barraId = target === 'venc' ? 'filtros-venc' : 'filtros-vdb';
-            const toggleId = target === 'venc' ? 'filtros-toggle-venc' : 'filtros-toggle-vdb';
+            const barraId = `filtros-${target}`;
+            const toggleId = `filtros-toggle-${target}`;
             const toggle = document.getElementById(toggleId);
 
             document.querySelectorAll(`#${barraId} .filtro-chip:not(#print-${target}-btn):not(#excel-${target}-btn)`).forEach(c => {
@@ -276,14 +272,9 @@ export function inicializarFiltros() {
         });
     });
 
-    document.getElementById('print-venc-btn')
-        ?.addEventListener('click', () => generarPDF('venc'));
-
     document.getElementById('print-vdb-btn')
         ?.addEventListener('click', () => generarPDF('vdb'));
 
-    document.getElementById('excel-venc-btn')
-        ?.addEventListener('click', () => generarExcelPCH('venc'));
 
     document.getElementById('excel-vdb-btn')
         ?.addEventListener('click', () => generarExcelPCH('vdb'));

@@ -251,73 +251,6 @@
 
             </div>
 
-            <section class="card card--wide a3" aria-label="Gestión de vencimientos">
-                <div class="card-row">
-                    <div>
-                        <div class="card__label">Gestión manual</div>
-                        <div class="card__title">Vencimientos cargados</div>
-                    </div>
-                    <div class="card-row__actions">
-                        <div class="card-row__actions-inner">
-                            <button class="btn-icon" id="btn-escanear" aria-label="Escanear producto con cámara">
-                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
-                                    stroke="currentColor" stroke-width="2.5" stroke-linecap="round"
-                                    stroke-linejoin="round">
-                                    <path
-                                        d="M5.5 11.5V8a2.5 2.5 0 0 1 2.5-2.5h1.5l1.5-2h3l1.5 2H17A2.5 2.5 0 0 1 19.5 8v3.5" />
-                                    <path d="M5.5 14.5V17A2.5 2.5 0 0 0 8 19.5h3.5" />
-                                    <circle cx="12.5" cy="11.5" r="2.5" fill="currentColor" stroke="none" />
-                                    <circle cx="18" cy="18" r="1.75" fill="currentColor" stroke="none" />
-                                </svg>
-                            </button>
-                            <button class="btn-primary" id="add-venc-btn">+ Agregar</button>
-                        </div>
-                    </div>
-                </div>
-                <div class="filtros-wrap">
-                    <button class="filtros-toggle" id="filtros-toggle-venc" aria-expanded="false">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none"
-                            stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                            <line x1="4" y1="6" x2="20" y2="6" />
-                            <line x1="7" y1="12" x2="17" y2="12" />
-                            <line x1="10" y1="18" x2="14" y2="18" />
-                        </svg>
-                        Filtrar
-                    </button>
-                    <div class="filtros-bar" id="filtros-venc" hidden>
-                        <button class="filtro-chip filtro-chip--active" data-filtro="todos"
-                            data-target="venc">Todos</button>
-                        <button class="filtro-chip" data-filtro="PFT" data-target="venc">PFT</button>
-                        <button class="filtro-chip" data-filtro="ACC" data-target="venc">ACC</button>
-                        <button class="filtro-chip" data-filtro="PAS" data-target="venc">PAS</button>
-                        <button class="filtro-chip" data-filtro="PCH" data-target="venc">PCH</button>
-                        <button class="filtro-chip" data-filtro="UM" data-target="venc">UM</button>
-                        <button class="filtro-chip" data-filtro="vencidos" data-target="venc">Vencidos</button>
-                        <button class="filtro-chip filtro-chip--pdf" id="print-venc-btn"><svg width="16" height="16"
-                                viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                                stroke-linecap="round" stroke-linejoin="round">
-                                <polyline points="6 9 6 2 18 2 18 9" />
-                                <path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2" />
-                                <rect x="6" y="14" width="12" height="8" />
-                            </svg> Imprimir PDF</button>
-                        <button class="filtro-chip filtro-chip--excel" id="excel-venc-btn" style="display: none;"><svg
-                                width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                                stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                <rect x="3" y="3" width="18" height="18" rx="2" />
-                                <line x1="3" y1="9" x2="21" y2="9" />
-                                <line x1="3" y1="15" x2="21" y2="15" />
-                                <line x1="9" y1="9" x2="9" y2="21" />
-                            </svg> Exportar PCH</button>
-                    </div>
-                </div>
-                <div class="scrollable-list" id="venc-list" role="list">
-                    <div class="venc-empty" id="venc-empty">
-                        <span>Sin vencimientos cargados</span>
-                        <span class="venc-empty__sub">Usá el botón para agregar productos críticos</span>
-                    </div>
-                </div>
-            </section>
-
             <div class="modal-backdrop" id="modal-backdrop" hidden aria-modal="true" role="dialog"
                 aria-label="Agregar vencimiento">
                 <div class="modal">
@@ -352,21 +285,9 @@
                                 </div>
                             </div>
 
-                            <div class="field-row">
-                                <div class="field">
-                                    <label class="field__label" for="f-fecha">Fecha de vencimiento</label>
-                                    <input class="field__input" id="f-fecha" type="date" />
-                                </div>
-                                <div class="field">
-                                    <label class="field__label" for="f-etapa">Etapa</label>
-                                    <select class="field__input field__select" id="f-etapa">
-                                        <option value="auto">Automático (por fecha)</option>
-                                        <option value="-90">−90 días</option>
-                                        <option value="-60">−60 días</option>
-                                        <option value="-30">−30 días</option>
-                                        <option value="-7">−7 días</option>
-                                    </select>
-                                </div>
+                            <div class="field">
+                                <label class="field__label" for="f-fecha">Fecha de vencimiento</label>
+                                <input class="field__input" id="f-fecha" type="date" />
                             </div>
 
                             <div class="field">
@@ -383,15 +304,27 @@
                 </div>
             </div>
 
-            <section class="card card--wide a3" aria-label="Base de datos de vencimientos" id="vdb-section">
+            <section class="card card--wide a3" aria-label="Próximos a vencer" id="vdb-section">
                 <div class="card-row">
                     <div class="card__header-text">
-                        <div class="card__label">GNX → Base de Datos</div>
-                        <div class="card__title">Vencimientos Importados</div>
+                        <div class="card__label">Importados y escaneados</div>
+                        <div class="card__title">Próximos a Vencer</div>
                     </div>
-                    <div class="card__header-actions"> <button class="btn-ghost" id="vdb-refresh-btn">↺
-                            Actualizar</button>
-                        <button class="btn-primary" id="vdb-import-btn">↑ Importar</button>
+                    <div class="card__header-actions">
+                        <button class="btn-icon" id="btn-escanear" aria-label="Escanear producto con cámara">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
+                                stroke="currentColor" stroke-width="2.5" stroke-linecap="round"
+                                stroke-linejoin="round">
+                                <path
+                                    d="M5.5 11.5V8a2.5 2.5 0 0 1 2.5-2.5h1.5l1.5-2h3l1.5 2H17A2.5 2.5 0 0 1 19.5 8v3.5" />
+                                <path d="M5.5 14.5V17A2.5 2.5 0 0 0 8 19.5h3.5" />
+                                <circle cx="12.5" cy="11.5" r="2.5" fill="currentColor" stroke="none" />
+                                <circle cx="18" cy="18" r="1.75" fill="currentColor" stroke="none" />
+                            </svg>
+                        </button>
+                        <button class="btn-ghost" id="vdb-refresh-btn">↺ Actualizar</button>
+                        <button class="btn-ghost" id="vdb-import-btn">↑ Importar</button>
+                        <button class="btn-primary" id="add-venc-btn">+ Agregar</button>
                         <input type="file" id="vdb-file-input" accept=".txt" class="u-hidden" />
                     </div>
                 </div>
@@ -435,8 +368,8 @@
                 </div>
                 <div class="vdb-list" id="vdb-list" role="list">
                     <div class="venc-empty" id="vdb-empty">
-                        <span>Sin datos importados</span>
-                        <span class="venc-empty__sub">Importá el Listado de Vencimientos</span>
+                        <span>Sin productos próximos a vencer</span>
+                        <span class="venc-empty__sub">Importá el listado de GNX o agregá productos a mano</span>
                     </div>
                 </div>
             </section>

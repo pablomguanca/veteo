@@ -1,59 +1,8 @@
-import { alternarEstadoVacio } from '../utils/ui.js';
-import { obtenerTiendaId } from './auth.js';
-import {
-    copiarEAN, ejecutarCargaCompleta,
-    guardarEscaneadoFirestore,
-    eliminarEscaneadoFirestore,
-    obtenerProductosEnMemoria
-} from './vencimientos-db.js';
-import {
-    sincronizarImpacto, sumarCargaGamificacion,
-    recalcularGamificacionTotal
-} from './checklist.js';
-import { resolverAcciones } from './formularios.js';
-import {
-    botonesFila, claseUrgencia, textoUrgencia, confirmarEliminacion
-} from '../utils/fila-vencimiento.js';
+import { guardarEscaneadoFirestore } from './vencimientos-db.js';
 import { trackearEvento } from './analytics.js';
 import { getFirestoreInstance } from '../firebase/firebase.js';
-import { collection, getDocs, onSnapshot } from 'firebase/firestore';
+import { collection, getDocs } from 'firebase/firestore';
 import { obtenerTiendaId as getTiendaId } from './auth.js';
-
-const NIVELES_ETAPA = [
-    { clave: '-7', etiqueta: '−7d', dias: 7, claseCSS: 'venc-badge--7' },
-    { clave: '-30', etiqueta: '−30d', dias: 30, claseCSS: 'venc-badge--30' },
-    { clave: '-60', etiqueta: '−60d', dias: 60, claseCSS: 'venc-badge--60' },
-    { clave: '-90', etiqueta: '−90d', dias: 90, claseCSS: 'venc-badge--90' },
-];
-
-function obtenerDiasRestantes(cadenaFecha) {
-    const objetivo = new Date(cadenaFecha + 'T00:00:00');
-    const hoy = new Date();
-    hoy.setHours(0, 0, 0, 0);
-    return Math.round((objetivo - hoy) / (1000 * 60 * 60 * 24));
-}
-
-function resolverEtapa(claveEtapa, cadenaFecha) {
-    if (claveEtapa !== 'auto') {
-        return NIVELES_ETAPA.find(n => n.clave === claveEtapa) || NIVELES_ETAPA[0];
-    }
-    const dias = obtenerDiasRestantes(cadenaFecha);
-    if (dias <= 7) return NIVELES_ETAPA[0];
-    if (dias <= 30) return NIVELES_ETAPA[1];
-    if (dias <= 60) return NIVELES_ETAPA[2];
-    return NIVELES_ETAPA[3];
-}
-
-function formatearFecha(cadenaFecha) {
-    return new Date(cadenaFecha + 'T00:00:00')
-        .toLocaleDateString('es-AR', { day: 'numeric', month: 'short', year: 'numeric' });
-}
-
-function escaparHTML(cadena) {
-    return String(cadena)
-        .replace(/&/g, '&amp;').replace(/</g, '&lt;')
-        .replace(/>/g, '&gt;').replace(/"/g, '&quot;');
-}
 
 async function cargarEscaneadosFirestore() {
     const tiendaId = getTiendaId();
@@ -64,95 +13,6 @@ async function cargarEscaneadosFirestore() {
     const items = [];
     snap.forEach(d => items.push({ id: d.id, ...d.data() }));
     return items;
-}
-
-function renderizarItems(contenedor, elementoVacio, items, onEliminar) {
-    contenedor.querySelectorAll('.venc-row').forEach(el => el.remove());
-
-    const filtrados = items
-        .filter(item => ![30, 31, 32, 33].includes(parseInt(item.sec)))
-        .sort((a, b) => new Date(a.fechaVencimiento) - new Date(b.fechaVencimiento));
-
-    filtrados.forEach(item => {
-        const sec = parseInt(item.sec);
-        const fecha = item.fechaVencimiento || item.fecha || '';
-        const dias = obtenerDiasRestantes(fecha);
-        const etapa = resolverEtapa(item.etapa || 'auto', fecha);
-        const acciones = resolverAcciones(item);
-        const cantRaw = item.cantidad || 1;
-        const cant = !isNaN(parseFloat(cantRaw))
-            ? parseFloat(cantRaw).toString().replace('.', ',')
-            : cantRaw;
-        const textoVence = dias === 0 ? 'Vence hoy' : `Vence el ${formatearFecha(fecha)}`;
-        const estado = item.estado || 'PENDIENTE';
-
-        const elemento = document.createElement('div');
-        elemento.className = `venc-row ${estado.includes('CARGADO') ? 'venc-row--done' : ''}`;
-        elemento.dataset.id = item.id;
-        elemento.dataset.fecha = fecha;
-        elemento.dataset.vencido = dias < 0 ? 'true' : 'false';
-        if (dias < 0) elemento.style.display = 'none';
-
-        elemento.innerHTML = `
-            <span class="venc-badge ${etapa.claseCSS}">${etapa.etiqueta}</span>
-            <div class="venc-row__info">
-                <div class="venc-row__name">${escaparHTML(item.descripcion || '')}</div>
-                <div class="venc-row__meta">
-                    <span class="venc-row__urgency ${claseUrgencia(dias)}">${textoUrgencia(dias)}</span>
-                    <span>${textoVence} · EAN ${escaparHTML(item.ean || 'N/A')} · SEC ${sec} · Cant: ${cant}</span>
-                </div>
-            </div>
-            <div class="venc-row__actions">
-                ${botonesFila({
-            etiquetaPrincipal: acciones.etiquetaPrincipal,
-            mostrarUM: acciones.mostrarUM,
-            permiteEliminar: true,
-        })}
-            </div>`;
-
-        elemento.querySelector('[data-accion="copiar"]').onclick =
-            e => copiarEAN(item.ean || '', e);
-
-        const procesarCarga = async (tipo, label) => {
-            const itemFormateado = {
-                ...item,
-                vencimiento: fecha,
-            };
-            await ejecutarCargaCompleta(itemFormateado, tipo);
-            sumarCargaGamificacion();
-        };
-
-        const btnMain = elemento.querySelector('[data-accion="principal"]');
-        if (btnMain) btnMain.onclick = () => procesarCarga('PRINCIPAL', acciones.etiquetaPrincipal);
-
-        const btnUM = elemento.querySelector('[data-accion="um"]');
-        if (btnUM) btnUM.onclick = () => procesarCarga('UM', 'UM');
-
-        elemento.querySelector('[data-accion="eliminar"]').onclick = async () => {
-            const confirmado = await confirmarEliminacion(
-                item.descripcion,
-                'Vencimientos cargados'
-            );
-            if (!confirmado) return;
-
-            try {
-                await eliminarEscaneadoFirestore(item.ean, fecha);
-                elemento.remove();
-                const restantes = [...contenedor.querySelectorAll('.venc-row')];
-                const tieneVisibles = restantes.some(r => r.style.display !== 'none');
-                alternarEstadoVacio(elementoVacio, tieneVisibles);
-                if (onEliminar) await onEliminar(item);
-            } catch (err) {
-                console.error('[Eliminar escaneado]:', err);
-            }
-        };
-
-        contenedor.appendChild(elemento);
-    });
-
-    const tieneVisibles = [...contenedor.querySelectorAll('.venc-row')]
-        .some(r => r.style.display !== 'none');
-    alternarEstadoVacio(elementoVacio, tieneVisibles);
 }
 
 function abrirModal(fondoModal) {
@@ -173,40 +33,25 @@ export async function inicializarVencimientos() {
     const botonCerrar = document.getElementById('modal-close');
     const botonCancelar = document.getElementById('modal-cancel');
     const botonGuardar = document.getElementById('modal-save');
-    const listaVencimientos = document.getElementById('venc-list');
-    const elementoVacio = document.getElementById('venc-empty');
+    const formulario = document.getElementById('venc-form');
 
-    if (!botonAgregar || !fondoModal || !listaVencimientos) return;
+    if (!botonAgregar || !fondoModal) return;
 
     const entradaFecha = document.getElementById('f-fecha');
     if (entradaFecha) entradaFecha.min = new Date().toISOString().split('T')[0];
 
-    async function cargar() {
-        const items = await cargarEscaneadosFirestore();
-        renderizarItems(listaVencimientos, elementoVacio, items, null);
-    }
-
-    const tiendaId = getTiendaId();
-    if (tiendaId) {
-        await cargar();
-    } else {
-        window.addEventListener('veteo:login', () => cargar(), { once: true });
-    }
-
     botonAgregar.addEventListener('click', () => abrirModal(fondoModal));
 
     [botonCerrar, botonCancelar].forEach(btn => {
-        btn?.addEventListener('click', () =>
-            cerrarModal(fondoModal, document.getElementById('modal-backdrop'))
-        );
+        btn?.addEventListener('click', () => cerrarModal(fondoModal, formulario));
     });
 
     fondoModal.addEventListener('click', e => {
-        if (e.target === fondoModal) cerrarModal(fondoModal, fondoModal);
+        if (e.target === fondoModal) cerrarModal(fondoModal, formulario);
     });
 
     document.addEventListener('keydown', e => {
-        if (e.key === 'Escape' && !fondoModal.hidden) cerrarModal(fondoModal, fondoModal);
+        if (e.key === 'Escape' && !fondoModal.hidden) cerrarModal(fondoModal, formulario);
     });
 
     botonGuardar?.addEventListener('click', async () => {
@@ -215,8 +60,8 @@ export async function inicializarVencimientos() {
         const secValor = document.getElementById('f-sec')?.value.trim();
         const cantValor = parseFloat(document.getElementById('f-cantidad')?.value) || 0;
         const fechaValor = document.getElementById('f-fecha')?.value;
-        const etapaValor = document.getElementById('f-etapa')?.value || 'auto';
         const notaValor = document.getElementById('f-nota')?.value.trim();
+
         const camposError = [
             !eanValor && 'f-producto',
             !descValor && 'f-descripcion',
@@ -240,16 +85,14 @@ export async function inicializarVencimientos() {
                 cantidad: cantValor,
                 fecha_vencimiento: fechaValor,
                 nota: notaValor,
-                etapa: etapaValor,
             });
 
-            cerrarModal(fondoModal, document.getElementById('venc-form'));
+            cerrarModal(fondoModal, formulario);
             trackearEvento('ingreso_manual', {
-                etapa: etapaValor,
                 tiene_ean: eanValor ? 'si' : 'no',
             });
 
-            await cargar();
+            window.dispatchEvent(new CustomEvent('veteo:refrescarVencimientos'));
 
         } catch (err) {
             console.error('[Guardar escaneado]:', err);

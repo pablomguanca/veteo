@@ -535,6 +535,7 @@ export async function inicializarBaseDatosVencimientos() {
     });
 
     botonRefrescar?.addEventListener('click', cargarDatos);
+    window.addEventListener('veteo:refrescarVencimientos', cargarDatos);
 
     const tiendaId = obtenerTiendaId();
     if (tiendaId) {
