@@ -1,0 +1,103 @@
+@import url("https://fonts.googleapis.com/css2?family=Google+Sans+Code:ital,wght,MONO@0,300..800,1;1,300..800,1&family=Google+Sans:ital,opsz,wght@0,17..18,400..700;1,17..18,400..700&family=Sora:wght@100..800&display=swap");
+.pdf-body {
+  font-family: "Google Sans", sans-serif;
+  font-size: 11px;
+  color: #111216;
+  margin: 32px;
+}
+.pdf-body .pdf-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20px;
+  padding-bottom: 12px;
+  border-bottom: 2px solid #111;
+}
+.pdf-body .pdf-header__left {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.pdf-body .pdf-header__logo {
+  width: 36px;
+  height: 36px;
+  border-radius: 8px;
+}
+.pdf-body .pdf-header__brand {
+  font-family: "Sora";
+  font-size: 22px;
+  font-weight: 700;
+  letter-spacing: -0.5px;
+}
+.pdf-body .pdf-header__center {
+  flex: 1;
+  text-align: center;
+}
+.pdf-body .pdf-header__subtitle {
+  font-size: 13px;
+  font-weight: 700;
+  color: #111;
+  margin: 0;
+}
+.pdf-body .pdf-header__meta {
+  font-family: "Google Sans Code";
+  font-size: 10px;
+  color: #666;
+  text-align: right;
+  line-height: 1.6;
+}
+.pdf-body .pdf-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+.pdf-body .pdf-table th {
+  background: #f0f0f0;
+  text-align: left;
+  padding: 6px 8px;
+  font-size: 10px;
+  font-weight: 700;
+  border-bottom: 2px solid #ccc;
+  white-space: nowrap;
+}
+.pdf-body .pdf-table td {
+  padding: 5px 8px;
+  border-bottom: 1px solid #e8e8e8;
+  vertical-align: top;
+  font-family: Arial, Helvetica, sans-serif;
+}
+.pdf-body .pdf-table td:last-child {
+  text-align: center;
+  width: 80px;
+}
+.pdf-body .pdf-table tr:nth-child(even) td {
+  background: #fafafa;
+}
+.pdf-body .pdf-table th:nth-child(4), .pdf-body .pdf-table th:nth-child(5),
+.pdf-body .pdf-table td:nth-child(4),
+.pdf-body .pdf-table td:nth-child(5) {
+  text-align: right;
+}
+.pdf-body .pdf-table th:nth-child(3),
+.pdf-body .pdf-table td:nth-child(3) {
+  font-size: 10px;
+  max-width: 280px;
+  white-space: normal;
+  word-break: break-word;
+}
+.pdf-body .pdf-footer {
+  display: flex;
+  flex-direction: column;
+  align-items: end;
+}
+.pdf-body .pdf-footer p {
+  color: #8c919c;
+  font-family: "Google Sans Code";
+  font-weight: 300;
+  text-align: end;
+}
+
+@media print {
+  .pdf-body {
+    margin: 20px;
+  }
+}
