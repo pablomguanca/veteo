@@ -74,6 +74,14 @@ function mostrarLogin() {
     const appContent = document.getElementById('app-content');
     if (appContent) appContent.hidden = true;
     document.getElementById('sidebar-open')?.setAttribute('hidden', '');
+
+    const btnLogin = document.getElementById('btn-login-tienda');
+    if (btnLogin) {
+        btnLogin.disabled = false;
+        btnLogin.classList.remove('login-submit--cargando');
+    }
+    const msgError = document.getElementById('error-message');
+    if (msgError) msgError.hidden = true;
 }
 
 export function mostrarSelectorOperador(tiendaId, onConfirmar) {
@@ -171,7 +179,29 @@ export function mostrarSelectorOperador(tiendaId, onConfirmar) {
     cargarLista();
 }
 
+function inicializarTogglePassword() {
+    const inputPw = document.getElementById('login-password');
+    const btnToggle = document.getElementById('btn-toggle-password');
+    if (!inputPw || !btnToggle) return;
+
+    const iconoVer = btnToggle.querySelector('[data-eye="on"]');
+    const iconoOcultar = btnToggle.querySelector('[data-eye="off"]');
+
+    btnToggle.addEventListener('click', () => {
+        const visible = inputPw.type === 'text';
+        inputPw.type = visible ? 'password' : 'text';
+        btnToggle.setAttribute('aria-pressed', String(!visible));
+        btnToggle.setAttribute('aria-label', visible ? 'Mostrar contraseña' : 'Ocultar contraseña');
+        if (iconoVer) iconoVer.hidden = !visible;
+        if (iconoOcultar) iconoOcultar.hidden = visible;
+        inputPw.focus();
+        const largo = inputPw.value.length;
+        inputPw.setSelectionRange?.(largo, largo);
+    });
+}
+
 function inicializarFormLogin() {
+    const form = document.getElementById('login-form');
     const inputId = document.getElementById('login-tienda-id');
     const inputPw = document.getElementById('login-password');
     const btnLogin = document.getElementById('btn-login-tienda');
@@ -179,34 +209,56 @@ function inicializarFormLogin() {
 
     if (!btnLogin) return;
 
+    const mostrarError = texto => {
+        if (!msgError) return;
+        msgError.textContent = texto;
+        msgError.hidden = false;
+    };
+
+    const limpiarError = () => {
+        if (msgError) msgError.hidden = true;
+    };
+
     const intentarLogin = async () => {
+        if (btnLogin.disabled) return;
+
         const id = inputId?.value.trim();
         const pw = inputPw?.value.trim();
 
         if (!id || !pw) {
-            if (msgError) { msgError.textContent = 'Completá el número de tienda y la contraseña.'; msgError.hidden = false; }
+            mostrarError('Completá el número de tienda y la contraseña.');
+            (!id ? inputId : inputPw)?.focus();
             return;
         }
 
+        limpiarError();
         btnLogin.disabled = true;
-        btnLogin.textContent = 'Ingresando...';
+        btnLogin.classList.add('login-submit--cargando');
 
         try {
             await iniciarSesionTienda(id, pw);
         } catch (err) {
-            if (msgError) {
-                msgError.textContent = err.code === 'auth/invalid-credential'
-                    ? 'Tienda o contraseña incorrecta.'
-                    : 'Error de conexión. Intentá de nuevo.';
-                msgError.hidden = false;
-            }
+            mostrarError(err.code === 'auth/invalid-credential'
+                ? 'Tienda o contraseña incorrecta.'
+                : 'Error de conexión. Intentá de nuevo.');
             btnLogin.disabled = false;
-            btnLogin.textContent = 'Ingresar';
+            btnLogin.classList.remove('login-submit--cargando');
+            inputPw?.focus();
+            inputPw?.select();
         }
     };
 
-    btnLogin.addEventListener('click', intentarLogin);
+    if (form) {
+        form.addEventListener('submit', e => { e.preventDefault(); intentarLogin(); });
+    } else {
+        btnLogin.addEventListener('click', intentarLogin);
+    }
+
+    [inputId, inputPw].forEach(input => input?.addEventListener('input', limpiarError));
+    inputId?.addEventListener('keydown', e => { if (e.key === 'Enter') intentarLogin(); });
     inputPw?.addEventListener('keydown', e => { if (e.key === 'Enter') intentarLogin(); });
+
+    inicializarTogglePassword();
 }
 
 export async function inicializarAutenticacion() {

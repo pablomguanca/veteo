@@ -11,7 +11,7 @@ firebase.initializeApp({
 });
 
 const mensajeria = firebase.messaging();
-const NOMBRE_CACHE = 'veteo-v3';
+const NOMBRE_CACHE = 'veteo-v4';
 const URLS_CACHE = [
     './',
     './index.html',

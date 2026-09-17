@@ -33,9 +33,9 @@ export const FORMULARIOS = {
             descripcion: 'entry.315963851',
             cantidad: 'entry.1129022501',
             vencimiento: 'entry.43131729',
+            lote: 'entry.646240165',
         },
     },
-
 
     PFT: { etiqueta: 'PFT', url: ENLACES_APP.formPft, campos: {} },
     PCH: { etiqueta: 'PCH', url: ENLACES_APP.pch, campos: {} },
@@ -96,6 +96,14 @@ export function normalizarFecha(valor) {
     return '';
 }
 
+export function formatearCantidad(valor) {
+    const crudo = String(valor ?? '').trim();
+    if (!crudo) return '';
+    const numero = parseFloat(crudo.replace(',', '.'));
+    if (!isFinite(numero)) return crudo;
+    return String(numero).replace('.', ',');
+}
+
 export function loteDesdeFecha(fechaNormalizada) {
     const partes = String(fechaNormalizada || '').match(/^(\d{4})-(\d{2})-(\d{2})$/);
     return partes ? `${partes[3]}${partes[2]}${partes[1]}` : '';
@@ -120,7 +128,7 @@ export function normalizarItem(item = {}) {
         ean: String(item.ean || item.EAN || '').trim(),
         sec: String(item.sec || item.SEC || '').trim(),
         descripcion: String(item.descripcion || item.DESCRIPCION || '').trim(),
-        cantidad: String(item.cantidad ?? '').trim(),
+        cantidad: formatearCantidad(item.cantidad ?? item.CANTIDAD),
         stock: String(item.stock ?? '').trim(),
         po: String(item.po || '').trim(),
         nota: String(item.nota || '').trim(),

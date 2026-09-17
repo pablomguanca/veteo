@@ -109,15 +109,6 @@ export function iniciarTour() {
                 }
             },
             {
-                element: '#ranking-list',
-                popover: {
-                    title: 'Ranking TOP 10 🏆',
-                    description: 'Medí tu desempeño contra el resto del equipo en el ranking semanal',
-                    side: "right",
-                    align: 'start'
-                }
-            },
-            {
                 element: '#top-list',
                 popover: {
                     title: 'Top EAN más cargados🚦',

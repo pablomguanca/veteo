@@ -5,8 +5,6 @@ import {
     getDocs, Timestamp,
 } from 'firebase/firestore';
 
-const CLAVE_POSICION = 'veteo_impacto_posicion';
-
 async function leerCargasHoyFirestore() {
     const tiendaId = obtenerTiendaId();
     if (!tiendaId) return 0;
@@ -22,14 +20,10 @@ async function leerCargasHoyFirestore() {
 }
 
 function renderizarImpacto(cargasHoy) {
-    const posicionTop = localStorage.getItem(CLAVE_POSICION) || '-';
-
     const elCargas = document.getElementById('impact-cargas');
-    const elPos = document.getElementById('impact-pos');
     const elStatus = document.getElementById('impact-status');
 
     if (elCargas) elCargas.textContent = cargasHoy;
-    if (elPos) elPos.textContent = posicionTop !== '-' ? `#${posicionTop}` : '-';
 
     if (!elStatus) return;
 
@@ -69,11 +63,6 @@ export async function sumarCargaGamificacion() {
 export async function recalcularGamificacionTotal() {
     const total = await leerCargasHoyFirestore();
     renderizarImpacto(total);
-}
-
-export function actualizarPosicionGamificacion(posicion) {
-    localStorage.setItem(CLAVE_POSICION, posicion);
-    leerCargasHoyFirestore().then(renderizarImpacto);
 }
 
 export async function inicializarChecklist() {

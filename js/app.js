@@ -13,7 +13,6 @@ import { inicializarSesionUI } from './modules/sesion-ui.js';
 import { inicializarAutenticacion } from './modules/auth.js';
 import { inicializarFiltros } from './modules/filtros.js';
 import { inicializarTopProductos } from './modules/top-productos.js';
-import { inicializarRankingUsuarios } from './modules/ranking-usuarios.js';
 import { inicializarSidebar } from './modules/sidebar.js';
 import { inicializarInstaladorPWA } from './modules/install.js';
 import { inicializarReportes } from './modules/reportes.js';
@@ -42,6 +41,5 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     window.addEventListener('veteo:login', () => {
         inicializarTopProductos();
-        inicializarRankingUsuarios();
     }, { once: true });
 });
