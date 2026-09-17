@@ -87,11 +87,20 @@ function generarPDF(target) {
     <title>${titulo} · ${fecha}</title>
     <link rel="stylesheet" href="${cssUrl}"/>
 </head>
+
 <body class="pdf-body">
+
     <header class="pdf-header">
+
         <div class="pdf-header__left">
-            <img src="https://veteo.vercel.app/assets/img/icon-512.png" alt="Veteo App" class="pdf-header__logo"/>
-            <div class="pdf-header__brand">Veteo App</div>
+            <img
+                src="https://veteo.vercel.app/assets/img/icon-512.png"
+                alt="Veteo App"
+                class="pdf-header__logo"
+            />
+            <div class="pdf-header__brand">
+                Veteo App
+            </div>
         </div>
 
         <div class="pdf-header__center">
@@ -104,9 +113,11 @@ function generarPDF(target) {
             ${titulo}<br/>
             Generado el ${fecha}
         </div>
+
     </header>
 
     <table class="pdf-table">
+
         <thead>
             <tr>
                 <th>Sección</th>
@@ -118,22 +129,50 @@ function generarPDF(target) {
             </tr>
         </thead>
 
-        <tbody>${filas}</tbody>
+        <tbody>
+            ${filas}
+        </tbody>
+
     </table>
 
     <footer class="pdf-footer">
         <p>Desarrollado por Pablo M. Guanca</p>
     </footer>
+
 </body>
 </html>`;
 
     const ventana = window.open('', '_blank');
 
+    if (!ventana) {
+        alert('No se pudo abrir la ventana para generar el PDF. Verificá que el navegador no esté bloqueando ventanas emergentes.');
+        return;
+    }
+
     ventana.document.write(html);
     ventana.document.close();
-    ventana.focus();
 
-    setTimeout(() => ventana.print(), 400);
+    ventana.onload = async () => {
+        const imagenes = [...ventana.document.images];
+
+        await Promise.all(
+            imagenes.map(img => {
+                if (img.complete) {
+                    return Promise.resolve();
+                }
+
+                return new Promise(resolve => {
+                    img.onload = resolve;
+                    img.onerror = resolve;
+                });
+            })
+        );
+
+        setTimeout(() => {
+            ventana.focus();
+            ventana.print();
+        }, 300);
+    };
 }
 
 async function generarExcelPCH(target) {
