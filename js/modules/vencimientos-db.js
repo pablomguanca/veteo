@@ -6,7 +6,7 @@ import {
     recalcularGamificacionTotal
 } from './checklist.js';
 import { trackearEvento } from './analytics.js';
-import { ENLACES_APP } from './enlaces.js';
+import { construirUrlFormulario, resolverAcciones } from './formularios.js';
 import { getAuthInstance } from '../firebase/firebase.js';
 import {
     collection, doc, getDoc, getDocs, setDoc,
@@ -261,36 +261,13 @@ export function copiarEAN(ean, event) {
 }
 
 export async function ejecutarCargaCompleta(item, tipo) {
-    const sec = parseInt(item.sec || item.SEC);
     const ean = item.ean || item.EAN;
     const vto = item.vencimiento || item.VENCIMIENTO || item.fechaVencimiento;
-    const desc = item.descripcion || item.DESCRIPCION || '';
-    const descMin = desc.toLowerCase();
-    const dias = obtenerDiasRestantes(vto);
 
-    const FORMS = {
-        PAS: { url: ENLACES_APP.formPas, id: 'entry.1279354663' },
-        PFT: { url: ENLACES_APP.formPft, id: 'entry.849574475' },
-        UM: { url: ENLACES_APP.ultimaMilla, idEan: 'entry.140972296', idDesc: 'entry.315963851' },
-        S10: { url: ENLACES_APP.accEspeciales, id: 'entry.1275730876' },
-        PCH: { url: ENLACES_APP.pch },
-    };
+    const clave = tipo === 'UM' ? 'UM' : resolverAcciones(item).principal;
+    const nuevoEstado = tipo === 'UM' ? 'CARGADO UM' : 'CARGADO';
 
-    let urlAbrir = '';
-    let nuevoEstado = 'CARGADO';
-
-    if (tipo === 'UM') {
-        urlAbrir = `${FORMS.UM.url}?usp=pp_url&${FORMS.UM.idEan}=${ean}&${FORMS.UM.idDesc}=${encodeURIComponent(desc)}`;
-        nuevoEstado = 'CARGADO UM';
-    } else {
-        if (sec === 20 && dias >= 3 && dias <= 7) urlAbrir = FORMS.PCH.url;
-        else if ([20, 21, 22, 23, 24, 26].includes(sec)) urlAbrir = FORMS.PFT.url;
-        else if (descMin.includes('carrefour') || descMin.includes('bulnez'))
-            urlAbrir = `${FORMS.S10.url}?usp=pp_url&${FORMS.S10.id}=${ean}`;
-        else if ([10, 34].includes(sec)) urlAbrir = `${FORMS.S10.url}?usp=pp_url&${FORMS.S10.id}=${ean}`;
-        else if (sec === 15) urlAbrir = `${FORMS.PAS.url}?usp=pp_url&${FORMS.PAS.id}=${ean}`;
-        else if ([11, 14].includes(sec)) urlAbrir = FORMS.PCH.url;
-    }
+    const urlAbrir = clave ? construirUrlFormulario(clave, item) : '';
 
     if (urlAbrir) window.open(urlAbrir, '_blank');
 
@@ -390,18 +367,7 @@ function renderizarTabla(contenedor, elementoVacio, filas) {
             ? `Vencido hace ${Math.abs(dias)}d`
             : `${dias}d restantes`;
 
-        const descMin = desc.toLowerCase();
-        let labelPrincipal = '';
-
-        if (sec === 20 && dias >= 3 && dias <= 7) labelPrincipal = 'PCH';
-        else if ([20, 21, 22, 23, 24, 26].includes(sec)) labelPrincipal = 'PFT';
-        else if (descMin.includes('carrefour') || descMin.includes('bulnez')) labelPrincipal = 'ACC';
-        else if ([10, 34].includes(sec)) labelPrincipal = 'ACC';
-        else if (sec === 15) labelPrincipal = 'PAS';
-        else if ([11, 14].includes(sec)) labelPrincipal = 'PCH';
-
-        const mostrarUM = [10, 14, 15].includes(sec) && dias >= 3 && dias <= 7;
-        if (mostrarUM) labelPrincipal = '';
+        const { etiquetaPrincipal: labelPrincipal, mostrarUM } = resolverAcciones(item);
 
         const elemento = document.createElement('div');
         elemento.className = `vdb-row ${estado.includes('CARGADO') ? 'vdb-row--done' : ''}`;

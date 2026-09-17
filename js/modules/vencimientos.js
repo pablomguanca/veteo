@@ -10,6 +10,7 @@ import {
     sincronizarImpacto, sumarCargaGamificacion,
     recalcularGamificacionTotal
 } from './checklist.js';
+import { resolverAcciones } from './formularios.js';
 import { trackearEvento } from './analytics.js';
 import { getFirestoreInstance } from '../firebase/firebase.js';
 import { collection, getDocs, onSnapshot } from 'firebase/firestore';
@@ -51,22 +52,6 @@ function escaparHTML(cadena) {
         .replace(/>/g, '&gt;').replace(/"/g, '&quot;');
 }
 
-function obtenerConfigBotones(sec, desc, dias) {
-    const descMin = desc.toLowerCase();
-    let labelPrincipal = '';
-
-    if ([20, 21, 22, 23, 24, 26].includes(sec)) labelPrincipal = 'PFT';
-    else if (descMin.includes('carrefour') || descMin.includes('bulnez')) labelPrincipal = 'ACC';
-    else if ([10, 34].includes(sec)) labelPrincipal = 'ACC';
-    else if (sec === 15) labelPrincipal = 'PAS';
-    else if (sec === 14) labelPrincipal = 'PCH';
-
-    const mostrarUM = [10, 14, 15].includes(sec) && dias >= 3 && dias <= 7;
-    if (mostrarUM) labelPrincipal = '';
-
-    return { labelPrincipal, mostrarUM };
-}
-
 async function cargarEscaneadosFirestore() {
     const tiendaId = getTiendaId();
     if (!tiendaId) return [];
@@ -90,7 +75,7 @@ function renderizarItems(contenedor, elementoVacio, items, onEliminar) {
         const fecha = item.fechaVencimiento || item.fecha || '';
         const dias = obtenerDiasRestantes(fecha);
         const etapa = resolverEtapa(item.etapa || 'auto', fecha);
-        const config = obtenerConfigBotones(sec, item.descripcion || '', dias);
+        const acciones = resolverAcciones(item);
         const cantRaw = item.cantidad || 1;
         const cant = !isNaN(parseFloat(cantRaw))
             ? parseFloat(cantRaw).toString().replace('.', ',')
@@ -123,10 +108,10 @@ function renderizarItems(contenedor, elementoVacio, items, onEliminar) {
                     <div class="copy-icon"></div>
                 </button>
                 <button class="venc-item__delete" aria-label="Eliminar" data-id="${item.id}">✕</button>
-                ${config.labelPrincipal
-                ? `<button class="action-btn action-btn--main" data-action="${config.labelPrincipal}">${config.labelPrincipal}</button>`
+                ${acciones.etiquetaPrincipal
+                ? `<button class="action-btn action-btn--main" data-action="${acciones.etiquetaPrincipal}">${acciones.etiquetaPrincipal}</button>`
                 : ''}
-                ${config.mostrarUM
+                ${acciones.mostrarUM
                 ? `<button class="action-btn action-btn--um">UM</button>`
                 : ''}
             </div>`;
@@ -143,9 +128,9 @@ function renderizarItems(contenedor, elementoVacio, items, onEliminar) {
         };
 
         const btnMain = elemento.querySelector('.action-btn--main');
-        if (btnMain) btnMain.onclick = () => procesarCarga('PRINCIPAL', config.labelPrincipal);
+        if (btnMain) btnMain.onclick = () => procesarCarga('PRINCIPAL', acciones.etiquetaPrincipal);
 
-        if (config.mostrarUM) {
+        if (acciones.mostrarUM) {
             elemento.querySelector('.action-btn--um').onclick = () => procesarCarga('UM', 'UM');
         }
 
@@ -232,8 +217,6 @@ export async function inicializarVencimientos() {
         const fechaValor = document.getElementById('f-fecha')?.value;
         const etapaValor = document.getElementById('f-etapa')?.value || 'auto';
         const notaValor = document.getElementById('f-nota')?.value.trim();
-
-        // Validación
         const camposError = [
             !eanValor && 'f-producto',
             !descValor && 'f-descripcion',
