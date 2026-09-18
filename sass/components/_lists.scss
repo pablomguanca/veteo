@@ -202,14 +202,15 @@
     min-height: 100px;
     max-height: 400px;
     overflow-y: auto;
+    overscroll-behavior: contain;
     padding-right: 6px;
     scrollbar-width: thin;
     scrollbar-color: v.$dim transparent;
 
     @media (max-width: 600px) {
-        max-height: none;
-        overflow-y: visible;
-        padding-right: 0;
+        max-height: 62vh;
+        max-height: 62svh;
+        padding-right: 4px;
     }
 }
 
