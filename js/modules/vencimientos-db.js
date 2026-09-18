@@ -420,7 +420,7 @@ function renderizarTabla(contenedor, elementoVacio, filas) {
         elemento.querySelector('[data-accion="eliminar"]').onclick = async () => {
             const confirmado = await confirmarEliminacion(
                 desc,
-                esEscaneado ? 'Vencimientos cargados' : 'Vencimientos Importados'
+                esEscaneado ? 'tus cargas manuales' : 'el listado importado de GNX'
             );
             if (!confirmado) return;
 
