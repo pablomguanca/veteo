@@ -8,9 +8,9 @@
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
     <meta name="apple-mobile-web-app-title" content="Veteo" />
-    <meta name="description" content="Veteo - Gestión de próximos a vencer en tienda" />
+    <meta name="description" content="Veteo — prevención de merma: controlá vencimientos y cargá cada producto en su formulario a tiempo." />
 
-    <title>Veteo App - Gestión de Próximos a Vencer</title>
+    <title>Veteo · Prevención de merma en tienda</title>
 
     <link rel="manifest" href="./manifest.json" />
     <link rel="icon" href="/assets/img/icon-192.png" type="image/png" />
@@ -35,7 +35,7 @@
 <body>
     <div id="app-loader" class="app-loader">
         <div class="app-loader__spinner"></div>
-        <p class="app-loader__text">Cargando Veteo App...</p>
+        <p class="app-loader__text">Cargando Veteo…</p>
     </div>
     <div id="login-overlay" hidden>
         <div class="login-aurora" aria-hidden="true"></div>
@@ -45,21 +45,21 @@
                     <img class="login-logo login-logo--sm" src="/assets/img/icon-192.png" alt="" aria-hidden="true" />
                     <span class="login-brand__wordmark">Veteo</span>
                 </div>
-                <p class="login-brand__claim">Gestioná y automatizá<br/> tareas de merma<br/>desde un solo lugar</p>
+                <p class="login-brand__claim">Ningún vencimiento<br/>llega tarde<br/>a su formulario</p>
                 <ul class="login-brand__list">
-                    <li>Escaneá códigos de barras rápidamente</li>
-                    <li>Importá listados en un solo clic</li>
-                    <li>Reportes de merma con Veteo AI</li>
-                    <li>Automatizá el cruce de inventarios</li>
-                    <li>Operá desde cualquier dispositivo</li>
+                    <li>Importás el listado del GNX y queda clasificado por etapa</li>
+                    <li>Cada producto muestra el form que le toca, abierto o cerrado</li>
+                    <li>A las 08:00 sabés qué ventanas cierran hoy</li>
+                    <li>Escaneás lo que encontrás en el salón, sin tipear</li>
+                    <li>Reportes de merma consolidados con Veteo AI</li>
                 </ul>
-                <p class="login-brand__foot">Gestión de Mermas</p>
+                <p class="login-brand__foot">Prevención de merma en tienda</p>
             </aside>
 
             <form class="login-form" id="login-form" novalidate>
                 <div class="login-form__brand">
                     <img class="login-logo login-logo--lg" src="/assets/img/icon-192.png" alt="" aria-hidden="true" />
-                    <span class="login-form__wordmark">Veteo App</span>
+                    <span class="login-form__wordmark">Veteo</span>
                 </div>
                 <h2 class="login-form__title">Ingresá a tu tienda</h2>
                 <p class="login-form__subtitle">Usá el número de tienda y la contraseña asignada.</p>
@@ -116,7 +116,7 @@
 
                 <p id="error-message" role="alert" hidden></p>
 
-                <p class="login-form__help">¿No podés entrar? Pedile los datos al creador de la app.</p>
+                <p class="login-form__help">¿No podés entrar? Escribile al responsable de Veteo en tu tienda.</p>
             </form>
         </div>
     </div>
@@ -126,8 +126,8 @@
         <main class="wrap">
 
             <header class="header" role="banner">
-                <div class="eyebrow">Gestión de Próximos a Vencer</div>
-                <h1 class="site-title">Veteo App</h1>
+                <div class="eyebrow">Prevención de merma</div>
+                <h1 class="site-title">Veteo</h1>
                 <div id="usuario-info" class="user-profile" hidden>
                     <img id="usuario-foto" src="" alt="foto de perfil" class="user-profile__avatar" />
                     <div class="user-profile__details">
@@ -181,8 +181,8 @@
                 </section>
 
                 <section class="card a3" id="daily-tracker" aria-label="Tu impacto operativo">
-                    <div class="card__label">Impacto Operativo</div>
-                    <div class="card__title">Tu rendimiento</div>
+                    <div class="card__label">Actividad de hoy</div>
+                    <div class="card__title">Cargas registradas</div>
 
                     <div class="impact">
                         <div class="impact__grid">
@@ -198,11 +198,11 @@
                                 </span>
                                 <div class="impact__data">
                                     <span class="impact__value" id="impact-cargas">0</span>
-                                    <span class="impact__label">Cargas de hoy</span>
+                                    <span class="impact__label">Cargas</span>
                                 </div>
                             </div>
                         </div>
-                        <div class="impact__msg" id="impact-status">¡Hacé tu primera carga!</div>
+                        <div class="impact__msg" id="impact-status">Todavía no cargaste nada hoy</div>
                         <button class="impact__historial-btn" id="btn-ver-historial">
                             <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24"
                                 fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"
@@ -267,19 +267,19 @@
                             </div>
 
                             <div class="field">
-                                <label class="field__label" for="f-descripcion">DESCRIPCIÓN</label>
+                                <label class="field__label" for="f-descripcion">Descripción</label>
                                 <input class="field__input" id="f-descripcion" type="text"
                                     placeholder="Ingresá la descripción" autocomplete="off" />
                             </div>
 
                             <div class="field-row">
                                 <div class="field">
-                                    <label class="field__label" for="f-sec">SECCIÓN</label>
+                                    <label class="field__label" for="f-sec">Sección</label>
                                     <input class="field__input" id="f-sec" type="text" inputmode="numeric"
                                         pattern="[0-9]*" placeholder="Ej: 14" autocomplete="off" />
                                 </div>
                                 <div class="field">
-                                    <label class="field__label" for="f-cantidad">CANTIDAD</label>
+                                    <label class="field__label" for="f-cantidad">Cantidad</label>
                                     <input class="field__input" id="f-cantidad" type="text" inputmode="numeric"
                                         pattern="[0-9]*" value="1" min="1" />
                                 </div>
@@ -308,7 +308,7 @@
                 <div class="card-row card-row--split">
                     <div class="card__header-text">
                         <div class="card__label">Importados y escaneados</div>
-                        <div class="card__title">Próximos a Vencer</div>
+                        <div class="card__title">Próximos a vencer</div>
                     </div>
                     <button class="btn-icon card__header-scan" id="btn-escanear"
                         aria-label="Escanear producto con cámara">
@@ -524,16 +524,15 @@
                 <div class="card-row">
                     <div>
                         <div class="card__label">Alertas automáticas</div>
-                        <div class="card__title">¡Activá las Notificaciones!</div>
+                        <div class="card__title">Avisos de 08:00</div>
                     </div>
                     <div class="notif-status" id="notif-status">
                         <span class="notif-status__dot" id="notif-dot"></span>
                         <span class="notif-status__text" id="notif-status-text">Sin configurar</span>
                     </div>
                 </div>
-                <p class="card__desc">Recibí recordatorios diarios para optimizar tu gestión. Se enviarán
-                    automáticamente
-                    todos los días a las 08:00 hs.</p>
+                <p class="card__desc">Todos los días a las 08:00 te llega qué formularios corresponden según el día
+                    y cuáles cierran. Es la forma de no perder las ventanas del fin de semana.</p>
                 <div class="notif-controls" id="notif-controls">
                     <button class="btn-primary" id="notif-enable-btn">Activar notificaciones</button>
                 </div>
@@ -547,8 +546,8 @@
             </section>
 
             <footer class="footer a6" role="contentinfo">
-                <span>Veteo App</span>
-                <span>Desarrollado por Pablo Guanca</span>
+                <span>Veteo</span>
+                <span>Prevención de merma en tienda</span>
                 <span class="mono">v1.0</span>
             </footer>
 
@@ -585,7 +584,7 @@
         <header class="sidebar__header">
             <div class="sidebar__brand">
                 <img src="./assets/img/icon-512.png" alt="Logo Veteo" class="sidebar__logo">
-                <h2 class="sidebar__title">Menú Veteo App</h2>
+                <h2 class="sidebar__title">Menú</h2>
             </div>
         </header>
         <div class="sidebar__profile" id="sidebar-profile">
@@ -641,7 +640,7 @@
                     stroke-linecap="round" stroke-linejoin="round">
                     <path d="M12 3c0 4.97-4.03 9-9 9 4.97 0 9 4.03 9 9 0-4.97 4.03-9 9-9-4.97 0-9-4.03-9-9Z" />
                 </svg>
-                Veteo AI
+                Veteo AI · Reportes
             </a>
             <a href="https://carrefour360.carrefour.com.ar/" class="sidebar__link" target="_blank" rel="noopener">
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">

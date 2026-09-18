@@ -1,7 +1,7 @@
 {
-    "name": "Veteo App - Centro de Gestión de Vencimientos",
+    "name": "Veteo · Prevención de merma",
     "short_name": "Veteo",
-    "description": "Gestión de vencimientos y operaciones diarias en tienda",
+    "description": "Controlá vencimientos y cargá cada producto en su formulario antes de que cierre la ventana.",
     "start_url": "./index.html",
     "display": "standalone",
     "background_color": "#0a0b0e",

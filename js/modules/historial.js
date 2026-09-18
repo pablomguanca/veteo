@@ -48,6 +48,13 @@ function estadoBadgeClass(estado) {
     return 'historial-item__badge--pendiente';
 }
 
+function estadoEtiqueta(estado) {
+    if (!estado) return 'Pendiente';
+    if (estado === 'CARGADO UM') return 'Cargado UM';
+    if (estado.includes('CARGADO')) return 'Cargado';
+    return 'Pendiente';
+}
+
 async function fetchHistorial(periodo) {
     const tiendaId = obtenerTiendaId();
     if (!tiendaId) return [];
@@ -95,7 +102,7 @@ function renderLista(rows) {
             <div class="historial-item__top">
                 <span class="historial-item__desc">${row.descripcion || row.ean || '—'}</span>
                 <span class="historial-item__badge ${estadoBadgeClass(row.estadoAsignado)}">
-                    ${row.estadoAsignado || 'PENDIENTE'}
+                    ${estadoEtiqueta(row.estadoAsignado)}
                 </span>
             </div>
             <div class="historial-item__meta">

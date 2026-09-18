@@ -83,7 +83,7 @@ export function inicializarAdminCatalogo() {
                 resultado.hidden = false;
                 Swal.fire({
                     icon: 'success',
-                    title: '¡Catálogo cargado!',
+                    title: 'Catálogo cargado',
                     text: `${data.procesados} productos procesados.`,
                     confirmButtonColor: '#6ee7b7',
                 });

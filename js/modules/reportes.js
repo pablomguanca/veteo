@@ -6,7 +6,7 @@ export async function enviarCruceRapido() {
         Swal.fire({
             icon: 'warning',
             title: 'Faltan archivos',
-            text: 'Por favor, selecciona los dos inventarios base para realizar el cruce rápido.',
+            text: 'Faltan los dos inventarios para hacer el cruce.',
             confirmButtonColor: '#1F3864'
         });
         return;
@@ -29,7 +29,7 @@ export async function enviarCruceRapido() {
     try {
         Swal.fire({
             title: 'Cruzando inventarios...',
-            text: 'Procesando miles de filas a la velocidad de la luz',
+            text: 'Cruzando los dos períodos. Puede tardar un momento.',
             allowOutsideClick: false,
             didOpen: () => {
                 Swal.showLoading();
@@ -57,7 +57,7 @@ export async function enviarCruceRapido() {
 
         Swal.fire({
             icon: 'success',
-            title: '¡Cruce completado!',
+            title: 'Cruce completado',
             text: 'El Excel se ha descargado correctamente.',
             timer: 3000,
             showConfirmButton: false
@@ -88,7 +88,7 @@ export async function enviarLoteMermas() {
         Swal.fire({
             icon: 'warning',
             title: 'Lote vacío',
-            text: 'Por favor, selecciona o arrastra al menos un archivo .txt del GNX para mermas.',
+            text: 'Subí al menos un archivo .txt del GNX.',
             confirmButtonColor: '#1F3864'
         });
         return;
@@ -138,8 +138,8 @@ export async function enviarLoteMermas() {
 
         Swal.fire({
             icon: 'success',
-            title: '¡Libro Maestro Generado!',
-            text: 'Tu reporte inteligente con IA está listo.',
+            title: 'Reporte consolidado listo',
+            text: 'Tu consolidado con análisis está listo.',
             confirmButtonColor: '#1F3864'
         });
 
@@ -152,7 +152,7 @@ export async function enviarLoteMermas() {
                     <polyline points="17 8 12 3 7 8" />
                     <line x1="12" y1="3" x2="12" y2="15" />
                 </svg>
-                <span class="dashboard-reports__dropzone-text">Arrastra múltiples archivos .txt o haz clic para buscarlos</span>
+                <span class="dashboard-reports__dropzone-text">Arrastrá los .txt o tocá para buscarlos</span>
             `;
         }
 
@@ -160,8 +160,8 @@ export async function enviarLoteMermas() {
         console.error("Error al compilar lote:", error);
         Swal.fire({
             icon: 'error',
-            title: '¡Ups!',
-            text: 'Hubo un error al compilar el Libro Maestro en el servidor.',
+            title: 'No se pudo compilar',
+            text: 'Hubo un error al compilar el reporte en el servidor.',
             confirmButtonColor: '#1F3864'
         });
     }
@@ -228,7 +228,7 @@ export function inicializarReportes() {
                         <polyline points="17 8 12 3 7 8" />
                         <line x1="12" y1="3" x2="12" y2="15" />
                     </svg>
-                    <span class="dashboard-reports__dropzone-text">Arrastra múltiples archivos .txt o haz clic para buscarlos</span>
+                    <span class="dashboard-reports__dropzone-text">Arrastrá los .txt o tocá para buscarlos</span>
                 `;
             }
         });

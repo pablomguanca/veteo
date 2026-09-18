@@ -95,11 +95,11 @@ function generarPDF(target) {
         <div class="pdf-header__left">
             <img
                 src="https://veteo.vercel.app/assets/img/icon-512.png"
-                alt="Veteo App"
+                alt="Veteo"
                 class="pdf-header__logo"
             />
             <div class="pdf-header__brand">
-                Veteo App
+                Veteo
             </div>
         </div>
 

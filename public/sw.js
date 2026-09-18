@@ -137,9 +137,9 @@ self.addEventListener('notificationclick', (evento) => {
 });
 
 mensajeria.onBackgroundMessage((cargaUtil) => {
-    const titulo = cargaUtil.notification?.title || 'Veteo App';
+    const titulo = cargaUtil.notification?.title || 'Veteo';
     const opciones = {
-        body: cargaUtil.notification?.body || 'Tienes una nueva notificación.',
+        body: cargaUtil.notification?.body || 'Tenés un recordatorio de Veteo.',
         icon: '/assets/img/icon-512.png'
     };
     self.registration.showNotification(titulo, opciones);

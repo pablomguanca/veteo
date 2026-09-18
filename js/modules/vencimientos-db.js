@@ -336,7 +336,7 @@ function obtenerDiasRestantes(cadena) {
 
 function obtenerEtapa(dias) {
     if (dias === null) return { etiqueta: '?', claseCSS: 'venc-badge--unknown' };
-    const etiqueta = dias < 0 ? `+${Math.abs(dias)}d` : `-${dias}d`;
+    const etiqueta = dias < 0 ? 'Vencido' : dias <= 7 ? '−7' : dias <= 30 ? '−30' : dias <= 60 ? '−60' : '−90';
     if (dias <= 7) return { etiqueta, claseCSS: 'venc-badge--7' };
     if (dias <= 30) return { etiqueta, claseCSS: 'venc-badge--30' };
     if (dias <= 60) return { etiqueta, claseCSS: 'venc-badge--60' };
@@ -499,7 +499,7 @@ export async function inicializarBaseDatosVencimientos() {
             window.dispatchEvent(new CustomEvent('veteo:productosActualizados', { detail: productosEnMemoria }));
         } catch (err) {
             console.error('[VDB]:', err);
-            if (elementoEstado) elementoEstado.textContent = 'Error de conexión.';
+            if (elementoEstado) elementoEstado.textContent = 'No pudimos traer los datos. Tocá ↺ Actualizar.';
         }
     }
 

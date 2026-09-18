@@ -172,7 +172,7 @@ export async function inicializarNotificaciones() {
     botonHabilitar.addEventListener('click', async () => {
         const tiendaId = obtenerTiendaId();
         if (!tiendaId) {
-            alert('Iniciá sesión primero para activar las notificaciones.');
+            window.Swal?.fire({ icon: 'info', title: 'Entrá primero', text: 'Iniciá sesión en tu tienda para activar los avisos.' });
             return;
         }
 
@@ -195,15 +195,15 @@ export async function inicializarNotificaciones() {
                     await guardarTokenFirestore(token);
                     mostrarEstadoActivo();
 
-                    registro.showNotification('Veteo App conectada ✓', {
-                        body: 'Recordatorio configurado a las 08:00 hs.',
+                    registro.showNotification('Avisos activados', {
+                        body: 'Te escribimos todos los días a las 08:00.',
                         icon: './icons/icon-512.png',
                         tag: 'veteo-setup',
                     });
 
                     onMessage(msj, payload => {
                         registro.showNotification(
-                            payload.notification?.title ?? 'Veteo App',
+                            payload.notification?.title ?? 'Veteo',
                             {
                                 body: payload.notification?.body ?? 'Tenés un nuevo recordatorio.',
                                 icon: './icons/icon-512.png',
@@ -211,7 +211,7 @@ export async function inicializarNotificaciones() {
                         );
                     });
                 } else {
-                    establecerEstado(puntoEstado, textoEstado, 'Error: no se obtuvo token', 'denegado');
+                    establecerEstado(puntoEstado, textoEstado, 'No pudimos activarlas. Probá de nuevo en un minuto.', 'denegado');
                 }
 
             } else if (permiso === 'denied') {

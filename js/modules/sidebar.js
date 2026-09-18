@@ -8,15 +8,12 @@ function poblarPerfil() {
     const operador = obtenerOperador();
 
     const nombre   = document.getElementById('sidebar-nombre');
-    const email    = document.getElementById('sidebar-email');
+    const tienda   = document.getElementById('sidebar-email');
     const avatar   = document.getElementById('sidebar-avatar');
-    const sheetsLink = document.getElementById('sidebar-sheets-link');
 
     if (nombre) nombre.textContent = operador?.nombre || `Tienda ${tiendaId}`;
-    if (email)  email.textContent  = `Tienda ${tiendaId}`;
+    if (tienda) tienda.textContent = operador?.nombre ? `Tienda ${tiendaId}` : 'Sin operador elegido';
     if (avatar) avatar.src         = '';
-
-    if (sheetsLink) sheetsLink.hidden = true;
 }
 
 export function inicializarSidebar() {
