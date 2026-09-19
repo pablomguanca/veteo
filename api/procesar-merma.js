@@ -157,7 +157,7 @@ module.exports = async (req, res) => {
         const top5 = articulosOrdenados.slice(0, 5);
 
         const wb = new ExcelJS.Workbook();
-        wb.creator = 'Veteo App';
+        wb.creator = 'Veteo';
         wb.modified = new Date();
 
         const h1 = wb.addWorksheet('Mermas Generales Totales');
@@ -458,11 +458,11 @@ Devuelve la respuesta ÚNICAMENTE como un array JSON válido de JavaScript (sin 
         const buffer = await wb.xlsx.writeBuffer();
 
         res.setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
-        res.setHeader('Content-Disposition', 'attachment; filename=Libro_Maestro_Mermas.xlsx');
+        res.setHeader('Content-Disposition', 'attachment; filename=Veteo_Analisis_de_Mermas.xlsx');
         return res.status(200).send(buffer);
 
     } catch (error) {
         console.error(error);
-        return res.status(500).json({ error: 'Error interno al compilar el Libro Maestro.' });
+        return res.status(500).json({ error: 'Error interno al compilar el reporte.' });
     }
 };

@@ -221,7 +221,11 @@
                         <header class="historial-modal__header">
                             <div>
                                 <h2 class="historial-modal__title" id="historial-titulo">Historial de cargas</h2>
-                                <p class="historial-modal__sub" id="historial-sub">Tienda 656</p>
+                                <p class="historial-modal__sub">
+                                    <span id="historial-sub">Tienda 656</span>
+                                    <span aria-hidden="true">·</span>
+                                    <span class="historial-modal__conteo" id="historial-conteo">…</span>
+                                </p>
                             </div>
                             <button class="historial-modal__close" id="btn-cerrar-historial" aria-label="Cerrar">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24"
@@ -635,7 +639,7 @@
                 </svg>
                 Top productos
             </a>
-            <a href="reportes.html" class="sidebar__link" target="_blank" rel="noopener">
+            <a href="./reportes.html" class="sidebar__link">
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
                     stroke-linecap="round" stroke-linejoin="round">
                     <path d="M12 3c0 4.97-4.03 9-9 9 4.97 0 9 4.03 9 9 0-4.97 4.03-9 9-9-4.97 0-9-4.03-9-9Z" />

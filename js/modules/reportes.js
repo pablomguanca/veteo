@@ -129,7 +129,7 @@ export async function enviarLoteMermas() {
         const urlDescarga = window.URL.createObjectURL(blobExcel);
         const link = document.createElement('a');
         link.href = urlDescarga;
-        link.download = `Libro_Maestro_Mermas_Veteo.xlsx`;
+        link.download = `Veteo_Analisis_de_Mermas.xlsx`;
         
         document.body.appendChild(link);
         link.click();

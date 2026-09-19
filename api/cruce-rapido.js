@@ -113,7 +113,7 @@ module.exports = async (req, res) => {
             .sort((a, b) => (a.i1 + a.i2) - (b.i1 + b.i2));
 
         const wb = new ExcelJS.Workbook();
-        wb.creator = 'Veteo App';
+        wb.creator = 'Veteo';
 
         const ws = wb.addWorksheet('Comparativo de Pérdidas');
         ws.views = [{ showGridLines: true, state: 'frozen', ySplit: 5 }];

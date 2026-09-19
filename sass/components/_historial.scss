@@ -71,16 +71,6 @@
         max-height: 80vh;
     }
 
-    &::before {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        height: 2px;
-        background: linear-gradient(90deg, v.$violet, v.$green);
-    }
-
     &__header {
         display: flex;
         align-items: flex-start;
@@ -98,9 +88,18 @@
     }
 
     &__sub {
+        display: flex;
+        align-items: center;
+        gap: 6px;
         font-size: 12px;
         color: v.$muted;
         margin: 0;
+    }
+
+    &__conteo {
+        color: v.$text;
+        font-weight: 600;
+        font-variant-numeric: tabular-nums;
     }
 
     &__close {
@@ -163,9 +162,9 @@
         }
 
         &--active {
-            background: v.$violet-glow;
-            border-color: v.$violet-border;
-            color: v.$violet;
+            background: v.$surface-3;
+            border-color: v.$border-2;
+            color: v.$text;
         }
     }
 }
@@ -216,24 +215,32 @@
     }
 
     &__badge {
-        font-size: 10px;
-        font-weight: 600;
-        letter-spacing: 0.5px;
-        text-transform: uppercase;
-        padding: 3px 8px;
-        border-radius: v.$radius-xs;
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        font-size: 11px;
+        font-weight: 500;
+        padding: 3px 9px;
+        border-radius: 999px;
+        border: 1px solid v.$border;
+        background: v.$surface-3;
+        color: v.$muted;
+        flex-shrink: 0;
+        white-space: nowrap;
+    }
+
+    &__dot {
+        width: 6px;
+        height: 6px;
+        border-radius: 50%;
         flex-shrink: 0;
 
-        &--cargado {
-            background: v.$green-glow;
-            border: 1px solid v.$green-border;
-            color: v.$green;
+        .historial-item__badge--cargado & {
+            background: v.$green;
         }
 
-        &--pendiente {
-            background: v.$amber-glow;
-            border: 1px solid v.$amber-border;
-            color: v.$amber;
+        .historial-item__badge--pendiente & {
+            background: v.$amber;
         }
     }
 
@@ -247,7 +254,7 @@
     }
 
     &__operador {
-        color: v.$violet;
+        color: v.$text;
     }
 }
 

@@ -11,6 +11,7 @@ import {
     botonesFila, claseUrgencia, textoUrgencia,
     confirmarEliminacion, ICONO_COPIADO
 } from '../utils/fila-vencimiento.js';
+import { parsearFecha, formatearVencimiento as formatearFecha } from '../utils/fecha-vencimiento.js';
 import { getAuthInstance } from '../firebase/firebase.js';
 import {
     collection, doc, getDoc, getDocs, setDoc,
@@ -314,18 +315,6 @@ export async function ejecutarCargaCompleta(item, tipo) {
     }
 }
 
-function parsearFecha(cadena) {
-    if (!cadena) return null;
-    const s = String(cadena).trim();
-    if (/^\d{2}\/\d{2}\/\d{4}$/.test(s)) {
-        const [d, m, a] = s.split('/');
-        return new Date(`${a}-${m}-${d}T00:00:00`);
-    }
-    if (/^\d{4}-\d{2}-\d{2}/.test(s)) return new Date(s.slice(0, 10) + 'T00:00:00');
-    const f = new Date(s);
-    return isNaN(f) ? null : f;
-}
-
 function obtenerDiasRestantes(cadena) {
     const objetivo = parsearFecha(cadena);
     if (!objetivo) return null;
@@ -341,12 +330,6 @@ function obtenerEtapa(dias) {
     if (dias <= 30) return { etiqueta, claseCSS: 'venc-badge--30' };
     if (dias <= 60) return { etiqueta, claseCSS: 'venc-badge--60' };
     return { etiqueta, claseCSS: 'venc-badge--90' };
-}
-
-function formatearFecha(cadena) {
-    const f = parsearFecha(cadena);
-    if (!f) return cadena;
-    return f.toLocaleDateString('es-AR', { day: 'numeric', month: 'short', year: 'numeric' });
 }
 
 function escaparHTML(s) {

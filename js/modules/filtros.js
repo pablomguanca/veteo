@@ -105,7 +105,7 @@ function generarPDF(target) {
 
         <div class="pdf-header__center">
             <p class="pdf-header__subtitle">
-                Listado de Vencimientos a Controlar
+                Listado de vencimientos a controlar
             </p>
         </div>
 
@@ -136,7 +136,7 @@ function generarPDF(target) {
     </table>
 
     <footer class="pdf-footer">
-        <p>Desarrollado por Pablo M. Guanca</p>
+        <p>Veteo · Prevención de merma en tienda</p>
     </footer>
 
 </body>

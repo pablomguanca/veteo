@@ -5,6 +5,7 @@ import { getFirestoreInstance } from '../firebase/firebase.js';
 import { getMessaging, getToken, onMessage } from 'firebase/messaging';
 import { doc, setDoc } from 'firebase/firestore';
 import { obtenerConfiguracion } from './config.js';
+import { parsearFecha } from '../utils/fecha-vencimiento.js';
 
 let mensajeria = null;
 
@@ -42,18 +43,6 @@ function establecerEstado(punto, texto, textoEstado, estado) {
     const sel = estados[estado] ?? estados.inactivo;
     punto.className = `notif-status__dot ${sel.clasePunto}`;
     texto.textContent = textoEstado || sel.etiqueta;
-}
-
-function parsearFecha(cadena) {
-    if (!cadena) return null;
-    const s = String(cadena).trim();
-    if (/^\d{2}\/\d{2}\/\d{4}$/.test(s)) {
-        const [d, m, a] = s.split('/');
-        return new Date(`${a}-${m}-${d}T00:00:00`);
-    }
-    if (/^\d{4}-\d{2}-\d{2}/.test(s)) return new Date(s.slice(0, 10) + 'T00:00:00');
-    const f = new Date(s);
-    return isNaN(f) ? null : f;
 }
 
 function mostrarBanner(refs, { mensaje, etiquetaBoton, alHacerClic, modificadorExtra = null }) {

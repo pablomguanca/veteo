@@ -1,5 +1,6 @@
 import { getFirestoreInstance } from '../firebase/firebase.js';
 import { obtenerTiendaId } from './auth.js';
+import { formatearVencimientoCorto } from '../utils/fecha-vencimiento.js';
 import {
     collection, getDocs, query,
     where, orderBy, Timestamp
@@ -102,25 +103,38 @@ function renderLista(rows) {
             <div class="historial-item__top">
                 <span class="historial-item__desc">${row.descripcion || row.ean || '—'}</span>
                 <span class="historial-item__badge ${estadoBadgeClass(row.estadoAsignado)}">
-                    ${estadoEtiqueta(row.estadoAsignado)}
+                    <span class="historial-item__dot"></span>${estadoEtiqueta(row.estadoAsignado)}
                 </span>
             </div>
             <div class="historial-item__meta">
                 <span class="historial-item__fecha">${formatearFechaHora(row.fechaCarga)}</span>
                 ${row.operador ? `<span class="historial-item__operador">· ${row.operador}</span>` : ''}
-                ${row.vencimiento ? `<span class="historial-item__vto">· VTO ${row.vencimiento}</span>` : ''}
+                ${row.vencimiento ? `<span class="historial-item__vto">· VTO ${formatearVencimientoCorto(row.vencimiento)}</span>` : ''}
             </div>
         `;
         lista.appendChild(li);
     });
 }
 
+function renderConteo(cantidad) {
+    const conteo = document.getElementById('historial-conteo');
+    if (!conteo) return;
+
+    if (cantidad === null) {
+        conteo.textContent = '…';
+        return;
+    }
+    conteo.textContent = cantidad === 1 ? '1 carga' : `${cantidad} cargas`;
+}
+
 async function cargarPeriodo(periodo) {
     const lista = document.getElementById('historial-lista');
-    lista.innerHTML = '<li class="historial-item historial-item--loading">Cargando...</li>';
+    lista.innerHTML = '<li class="historial-item historial-item--loading">Cargando…</li>';
     document.getElementById('historial-vacio').hidden = true;
+    renderConteo(null);
 
     const rows = await fetchHistorial(periodo);
+    renderConteo(rows.length);
     renderLista(rows);
 }
 

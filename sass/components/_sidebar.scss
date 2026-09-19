@@ -141,6 +141,14 @@
         &:last-child {
             border-bottom: none;
         }
+
+        &--activo {
+            color: v.$violet;
+
+            svg {
+                color: v.$violet;
+            }
+        }
     }
 
     &__profile {
