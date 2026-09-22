@@ -103,8 +103,20 @@ export function inicializarAdminCatalogo() {
                 }),
             });
 
-            const data = await res.json();
+            const cuerpo = await res.text();
             Swal.close();
+
+            let data;
+            try {
+                data = JSON.parse(cuerpo);
+            } catch {
+                const detalle = cuerpo.replace(/<[^>]*>/g, ' ').replace(/\s+/g, ' ').trim().slice(0, 160);
+                throw new Error(
+                    res.status === 504 || /timed? ?out/i.test(cuerpo)
+                        ? 'El servidor tardó demasiado y cortó la carga. Probá con menos filas.'
+                        : `El servidor respondió ${res.status} sin JSON: ${detalle || 'sin detalle'}`
+                );
+            }
 
             if (data.ok) {
                 resultado.textContent = `✓ ${data.procesados} productos cargados correctamente al catálogo.`;

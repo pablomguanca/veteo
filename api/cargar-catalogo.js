@@ -79,10 +79,10 @@ module.exports = async (req, res) => {
     if (req.method === 'OPTIONS') return res.status(200).end();
     if (req.method !== 'POST') return res.status(405).json({ error: 'Método no permitido' });
 
-    const permiso = await autorizar(req);
-    if (!permiso.ok) return res.status(permiso.codigo).json({ error: permiso.error });
-
     try {
+        const permiso = await autorizar(req);
+        if (!permiso.ok) return res.status(permiso.codigo).json({ error: permiso.error });
+
         const {
             archivoBase64, nombreColumnaEan, nombreColumnaDesc,
             nombreColumnaSec, nombreColumnaCosto,
@@ -103,8 +103,10 @@ module.exports = async (req, res) => {
         const colCosto = nombreColumnaCosto || null;
 
         const BATCH_SIZE = 490;
+        const CONCURRENCIA = 4;
         let procesados = 0;
         let errores = 0;
+        const pendientes = [];
         let batch = db.batch();
         let enBatch = 0;
 
@@ -138,13 +140,19 @@ module.exports = async (req, res) => {
             procesados++;
 
             if (enBatch >= BATCH_SIZE) {
-                await batch.commit();
+                pendientes.push(batch);
                 batch = db.batch();
                 enBatch = 0;
             }
         }
 
-        if (enBatch > 0) await batch.commit();
+        if (enBatch > 0) pendientes.push(batch);
+
+        for (let i = 0; i < pendientes.length; i += CONCURRENCIA) {
+            await Promise.all(
+                pendientes.slice(i, i + CONCURRENCIA).map(lote => lote.commit())
+            );
+        }
 
         return res.status(200).json({
             ok: true,
@@ -154,6 +162,8 @@ module.exports = async (req, res) => {
 
     } catch (error) {
         console.error('[cargar-catalogo]:', error);
-        return res.status(500).json({ error: 'Error interno al cargar el catálogo.' });
+        return res.status(500).json({
+            error: `Error interno al cargar el catálogo: ${error?.message || error}`,
+        });
     }
 };

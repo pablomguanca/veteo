@@ -3,6 +3,12 @@
     "name": "veteo",
     "buildCommand": "npm run build",
     "outputDirectory": "dist",
+    "functions": {
+        "api/cargar-catalogo.js": {
+            "maxDuration": 60,
+            "memory": 1024
+        }
+    },
     "routes": [
         {
             "src": "/sw.js",
