@@ -3,17 +3,24 @@ const { getFirestore } = require('firebase-admin/firestore');
 const { getAuth } = require('firebase-admin/auth');
 const XLSX = require('xlsx');
 
-if (!getApps().length) {
+function inicializarAdmin() {
+    if (getApps().length) return;
+
+    const faltantes = ['FIREBASE_PROJECT_ID', 'FIREBASE_CLIENT_EMAIL', 'FIREBASE_PRIVATE_KEY']
+        .filter(nombre => !process.env[nombre]);
+
+    if (faltantes.length) {
+        throw new Error(`Faltan variables de entorno en el servidor: ${faltantes.join(', ')}`);
+    }
+
     initializeApp({
         credential: cert({
             projectId: process.env.FIREBASE_PROJECT_ID,
             clientEmail: process.env.FIREBASE_CLIENT_EMAIL,
-            privateKey: process.env.FIREBASE_PRIVATE_KEY?.replace(/\\n/g, '\n'),
+            privateKey: process.env.FIREBASE_PRIVATE_KEY.replace(/\\n/g, '\n'),
         }),
     });
 }
-
-const db = getFirestore();
 
 function numeroSeccion(valor) {
     const match = String(valor ?? '').trim().match(/^\D*(\d+)/);
@@ -80,6 +87,9 @@ module.exports = async (req, res) => {
     if (req.method !== 'POST') return res.status(405).json({ error: 'Método no permitido' });
 
     try {
+        inicializarAdmin();
+        const db = getFirestore();
+
         const permiso = await autorizar(req);
         if (!permiso.ok) return res.status(permiso.codigo).json({ error: permiso.error });
 
