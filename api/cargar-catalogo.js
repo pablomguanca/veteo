@@ -1,6 +1,5 @@
 const { initializeApp, cert, getApps } = require('firebase-admin/app');
 const { getFirestore } = require('firebase-admin/firestore');
-const { getAuth } = require('firebase-admin/auth');
 const XLSX = require('xlsx');
 
 function inicializarAdmin() {
@@ -62,6 +61,8 @@ async function autorizar(req) {
     if (!token) {
         return { ok: false, codigo: 401, error: 'Iniciá sesión para cargar el catálogo.' };
     }
+
+    const { getAuth } = require('firebase-admin/auth');
 
     let usuario;
     try {
