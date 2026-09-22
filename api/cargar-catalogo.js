@@ -62,7 +62,16 @@ async function autorizar(req) {
         return { ok: false, codigo: 401, error: 'Iniciá sesión para cargar el catálogo.' };
     }
 
-    const { getAuth } = require('firebase-admin/auth');
+    let getAuth;
+    try {
+        ({ getAuth } = require('firebase-admin/auth'));
+    } catch (err) {
+        throw new Error(
+            /ES Module|ERR_REQUIRE_ESM/.test(err?.message || '')
+                ? 'El servidor corre una versión de Node anterior a la 22 y firebase-admin/auth no puede cargarse. Subí la versión de Node en Vercel.'
+                : `No se pudo cargar la verificación de sesión: ${err?.message || err}`
+        );
+    }
 
     let usuario;
     try {
