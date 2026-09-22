@@ -1,3 +1,5 @@
+import { actualizarTotalEnRiesgo } from './vencimientos-db.js';
+
 function filtrarRows(rows, filtro) {
     if (filtro === 'vencidos') {
         return rows.filter(r => r.dataset.vencido === 'true');
@@ -27,6 +29,8 @@ function aplicarFiltroUI(target, filtro) {
 
     visibles.forEach(r => r.style.display = '');
     ocultas.forEach(r => r.style.display = 'none');
+
+    actualizarTotalEnRiesgo();
 }
 
 function generarPDF(target) {

@@ -183,3 +183,37 @@
         color: v.$red;
     }
 }
+.admin-bloqueo {
+    text-align: center;
+    padding: 24px 0 8px;
+
+    &__titulo {
+        font-family: v.$ff-title;
+        font-size: 17px;
+        font-weight: 700;
+        color: v.$text;
+        margin-bottom: 8px;
+    }
+
+    &__texto {
+        font-size: 13px;
+        line-height: 1.6;
+        color: v.$muted;
+        margin-bottom: 20px;
+    }
+
+    &__enlace {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 44px;
+        padding: 0 22px;
+        border-radius: v.$radius-sm;
+        border: 1px solid v.$border;
+        background: v.$surface-2;
+        color: v.$text;
+        font-size: 14px;
+        font-weight: 600;
+        text-decoration: none;
+    }
+}

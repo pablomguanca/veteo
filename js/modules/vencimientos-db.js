@@ -1,5 +1,5 @@
 import { getFirestoreInstance } from '../firebase/firebase.js';
-import { alternarEstadoVacio } from '../utils/ui.js';
+import { alternarEstadoVacio, formatearMoneda, aNumero } from '../utils/ui.js';
 import { obtenerTiendaId, obtenerOperador } from './auth.js';
 import {
     sincronizarImpacto, sumarCargaGamificacion,
@@ -40,6 +40,33 @@ function refEscaneados(tiendaId) {
 
 function refHistorial(tiendaId) {
     return collection(getFirestoreInstance(), 'tiendas', tiendaId, 'historial');
+}
+
+function refCatalogo() {
+    return collection(getFirestoreInstance(), 'catalogo');
+}
+
+async function obtenerCostosCatalogo() {
+    const costos = {};
+    try {
+        const snap = await getDocs(refCatalogo());
+        snap.forEach(d => {
+            const costo = aNumero(d.data().costo);
+            if (costo !== null) costos[d.id] = costo;
+        });
+    } catch (err) {
+        console.error('[Catálogo de costos]:', err);
+    }
+    return costos;
+}
+
+async function costoDeCatalogo(ean) {
+    try {
+        const snap = await getDoc(doc(refCatalogo(), String(ean || '').trim()));
+        return snap.exists() ? aNumero(snap.data().costo) : null;
+    } catch {
+        return null;
+    }
 }
 
 function claveProducto(ean, vencimiento) {
@@ -164,6 +191,8 @@ export async function importarTxtFirestore(contenido) {
         if (!mapaEstados[clave]) mapaEstados[clave] = estado;
     }
 
+    const costos = await obtenerCostosCatalogo();
+
     const chunks = [];
     for (let i = 0; i < filas.length; i += 490) {
         chunks.push(filas.slice(i, i + 490));
@@ -176,11 +205,13 @@ export async function importarTxtFirestore(contenido) {
             if (!clave) return;
             const previo = mapaEstados[clave];
             const docRef = doc(vencRef, clave);
+            const ean = String(fila.ean || '').trim();
 
             batch.set(docRef, {
                 po: fila.po || '',
                 sec: fila.sec || '',
-                ean: String(fila.ean || '').trim(),
+                ean,
+                costo: costos[ean] ?? null,
                 descripcion: fila.descripcion || '',
                 stock: fila.stock || '',
                 cantidad: fila.cantidad || '',
@@ -296,6 +327,7 @@ export async function guardarEscaneadoFirestore(datos) {
     await setDoc(destino, {
         sec: datos.sec || previo.sec || '',
         ean,
+        costo: await costoDeCatalogo(ean) ?? previo.costo ?? null,
         descripcion: datos.descripcion || 'Ingreso manual',
         cantidad: datos.cantidad || 1,
         fechaVencimiento: vencimiento,
@@ -460,11 +492,18 @@ function renderizarTabla(contenedor, elementoVacio, filas) {
 
         const agotado = sinStock(item);
 
+        const costoUnitario = aNumero(item.costo);
+        const unidades = aNumero(cantRaw);
+        const costoFila = costoUnitario !== null && unidades !== null
+            ? costoUnitario * unidades
+            : null;
+
         const elemento = document.createElement('div');
         elemento.className = `venc-row ${estado.includes('CARGADO') ? 'venc-row--done' : ''}`;
         elemento.dataset.fecha = vto;
         elemento.dataset.vencido = dias < 0 ? 'true' : 'false';
         elemento.dataset.sinStock = agotado ? 'true' : 'false';
+        elemento.dataset.costo = costoFila === null ? '' : String(costoFila);
         if (dias < 0) elemento.style.display = 'none';
 
         elemento.innerHTML = `
@@ -474,7 +513,9 @@ function renderizarTabla(contenedor, elementoVacio, filas) {
                 <div class="venc-row__meta">
                     <span class="venc-row__urgency ${claseUrgencia(dias)}">${textoUrgencia(dias)}</span>
                     ${agotado ? '<span class="venc-row__sin-stock">Sin stock</span>' : ''}
-                    <span>${textoVence} · EAN ${escaparHTML(ean)} · SEC ${sec} · Cant: ${cant}</span>
+                    <span>${textoVence} · EAN ${escaparHTML(ean)} · SEC ${sec}</span>
+                    <span class="venc-row__cant">Cant: ${cant}</span>
+                    ${costoFila === null ? '' : `<span class="venc-row__costo">${formatearMoneda(costoFila)}</span>`}
                 </div>
             </div>
             <div class="venc-row__actions">
@@ -544,7 +585,39 @@ function renderizarTabla(contenedor, elementoVacio, filas) {
         });
     }
 
+    actualizarTotalEnRiesgo();
     recalcularGamificacionTotal();
+}
+
+export function actualizarTotalEnRiesgo() {
+    const contenedor = document.getElementById('vdb-list');
+    const destino = document.getElementById('vdb-riesgo');
+    if (!contenedor || !destino) return;
+
+    const visibles = [...contenedor.querySelectorAll('.venc-row')]
+        .filter(r => r.style.display !== 'none' && r.dataset.sinStock !== 'true');
+
+    let total = 0;
+    let conCosto = 0;
+
+    visibles.forEach(r => {
+        const costo = aNumero(r.dataset.costo);
+        if (costo === null) return;
+        total += costo;
+        conCosto++;
+    });
+
+    if (!conCosto) {
+        destino.hidden = true;
+        return;
+    }
+
+    const faltantes = visibles.length - conCosto;
+    destino.hidden = false;
+    destino.innerHTML = `
+        <span class="vdb-riesgo__label">Costo total en riesgo</span>
+        <span class="vdb-riesgo__monto">${formatearMoneda(total)}</span>
+        ${faltantes ? `<span class="vdb-riesgo__nota">${faltantes} sin costo en el catálogo</span>` : ''}`;
 }
 
 export async function inicializarBaseDatosVencimientos() {

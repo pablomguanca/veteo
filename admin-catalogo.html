@@ -22,7 +22,15 @@
                 </p>
             </header>
 
-            <div class="admin-card__body">
+            <div class="admin-bloqueo" id="admin-bloqueo" hidden>
+                <p class="admin-bloqueo__titulo">Acceso restringido</p>
+                <p class="admin-bloqueo__texto">
+                    Entrá a Veteo con tu cuenta y volvé a esta página.
+                </p>
+                <a class="admin-bloqueo__enlace" href="./index.html">Ir a Veteo</a>
+            </div>
+
+            <div class="admin-card__body" id="admin-cuerpo" hidden>
                 <div class="admin-field">
                     <label class="admin-field__label" for="archivo-excel">Archivo Excel (.xlsx)</label>
                     <div class="file-wrapper">
@@ -53,14 +61,27 @@
 
                 <div class="admin-field">
                     <label class="admin-field__label" for="col-sec">
-                        Nombre de columna — Sector
+                        Nombre de columna — Sección
                         <span class="admin-field__label--optional">(opcional)</span>
                     </label>
-                    <input class="admin-field__input" type="text" id="col-sec" placeholder="Dejar vacío si no existe" />
+                    <input class="admin-field__input" type="text" id="col-sec" value="Sección"
+                        placeholder="Dejar vacío si no existe" />
+                    <p class="admin-field__hint">
+                        De “14 - SECO” se guarda solo el 14
+                    </p>
+                </div>
+
+                <div class="admin-field">
+                    <label class="admin-field__label" for="col-costo">
+                        Nombre de columna — Costo
+                        <span class="admin-field__label--optional">(opcional)</span>
+                    </label>
+                    <input class="admin-field__input" type="text" id="col-costo" value="Costo Unitario MNT"
+                        placeholder="Dejar vacío si no existe" />
                 </div>
             </div>
 
-            <footer class="admin-card__footer">
+            <footer class="admin-card__footer" id="admin-pie" hidden>
                 <button class="btn-primary" id="btn-cargar" disabled>
                     Cargar al catálogo
                 </button>

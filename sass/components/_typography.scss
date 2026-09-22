@@ -69,3 +69,32 @@
     min-height: 16px;
     margin-bottom: 8px;
 }
+.vdb-riesgo {
+    display: flex;
+    align-items: baseline;
+    flex-wrap: wrap;
+    gap: 2px 10px;
+    margin-bottom: 10px;
+
+    &__label {
+        font-family: v.$ff-mono;
+        font-size: 10px;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+        color: v.$muted;
+    }
+
+    &__monto {
+        font-family: v.$ff-title;
+        font-size: 18px;
+        font-weight: 700;
+        letter-spacing: -0.3px;
+        color: v.$text;
+    }
+
+    &__nota {
+        font-family: v.$ff-mono;
+        font-size: 10px;
+        color: v.$dim;
+    }
+}

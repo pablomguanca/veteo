@@ -77,6 +77,20 @@
         }
     }
 
+    &__cant {
+        font-family: v.$ff-mono;
+        font-size: 12px;
+        font-weight: 700;
+        color: v.$text;
+    }
+
+    &__costo {
+        font-family: v.$ff-mono;
+        font-size: 12px;
+        font-weight: 700;
+        color: v.$green;
+    }
+
     &__sin-stock {
         font-family: v.$ff-body;
         font-size: 11px;

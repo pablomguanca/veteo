@@ -1,4 +1,25 @@
 import '../../sass/main.scss';
+import { onAuthStateChanged } from 'firebase/auth';
+import { inicializarFirebase } from '../firebase/firebase.js';
+
+let usuarioActual = null;
+
+async function inicializarAccesoAdmin() {
+    const cuerpo = document.getElementById('admin-cuerpo');
+    const pie = document.getElementById('admin-pie');
+    const bloqueo = document.getElementById('admin-bloqueo');
+
+    const { auth } = await inicializarFirebase();
+
+    onAuthStateChanged(auth, user => {
+        usuarioActual = user;
+        const habilitado = Boolean(user);
+
+        if (cuerpo) cuerpo.hidden = !habilitado;
+        if (pie) pie.hidden = !habilitado;
+        if (bloqueo) bloqueo.hidden = habilitado;
+    });
+}
 
 export function inicializarAdminCatalogo() {
     const inputArchivo = document.getElementById('archivo-excel');
@@ -21,6 +42,7 @@ export function inicializarAdminCatalogo() {
         const colEan = document.getElementById('col-ean').value.trim();
         const colDesc = document.getElementById('col-desc').value.trim();
         const colSec = document.getElementById('col-sec').value.trim();
+        const colCosto = document.getElementById('col-costo').value.trim();
 
         if (!archivo || !colEan || !colDesc) {
             Swal.fire({
@@ -63,14 +85,21 @@ export function inicializarAdminCatalogo() {
                 reader.readAsDataURL(archivo);
             });
 
+            if (!usuarioActual) throw new Error('Iniciá sesión para cargar el catálogo.');
+            const token = await usuarioActual.getIdToken();
+
             const res = await fetch('/api/cargar-catalogo', {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`,
+                },
                 body: JSON.stringify({
                     archivoBase64,
                     nombreColumnaEan: colEan,
                     nombreColumnaDesc: colDesc,
                     nombreColumnaSec: colSec || null,
+                    nombreColumnaCosto: colCosto || null,
                 }),
             });
 
@@ -104,5 +133,6 @@ export function inicializarAdminCatalogo() {
 }
 
 document.addEventListener('DOMContentLoaded', () => {
+    inicializarAccesoAdmin();
     inicializarAdminCatalogo();
 });
