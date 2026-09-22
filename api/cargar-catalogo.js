@@ -50,6 +50,25 @@ function emailsAutorizados() {
         .filter(Boolean);
 }
 
+async function emailDelToken(token) {
+    const apiKey = process.env.FIREBASE_API_KEY;
+    if (!apiKey) throw new Error('Falta la variable FIREBASE_API_KEY en el servidor.');
+
+    const respuesta = await fetch(
+        `https://identitytoolkit.googleapis.com/v1/accounts:lookup?key=${apiKey}`,
+        {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ idToken: token }),
+        }
+    );
+
+    if (!respuesta.ok) return null;
+
+    const datos = await respuesta.json();
+    return datos?.users?.[0]?.email || null;
+}
+
 async function autorizar(req) {
     const permitidos = emailsAutorizados();
     if (!permitidos.length) {
@@ -62,26 +81,13 @@ async function autorizar(req) {
         return { ok: false, codigo: 401, error: 'Iniciá sesión para cargar el catálogo.' };
     }
 
-    let getAuth;
-    try {
-        ({ getAuth } = require('firebase-admin/auth'));
-    } catch (err) {
-        throw new Error(
-            /ES Module|ERR_REQUIRE_ESM/.test(err?.message || '')
-                ? 'El servidor corre una versión de Node anterior a la 22 y firebase-admin/auth no puede cargarse. Subí la versión de Node en Vercel.'
-                : `No se pudo cargar la verificación de sesión: ${err?.message || err}`
-        );
-    }
-
-    let usuario;
-    try {
-        usuario = await getAuth().verifyIdToken(token);
-    } catch {
+    const verificado = await emailDelToken(token);
+    if (!verificado) {
         return { ok: false, codigo: 401, error: 'Tu sesión expiró. Volvé a iniciar sesión.' };
     }
 
-    const email = String(usuario.email || '').toLowerCase();
-    if (!email || !permitidos.includes(email)) {
+    const email = verificado.toLowerCase();
+    if (!permitidos.includes(email)) {
         return { ok: false, codigo: 403, error: 'Esta cuenta no tiene permiso para cargar el catálogo.' };
     }
 
