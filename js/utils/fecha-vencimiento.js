@@ -10,6 +10,14 @@ export function parsearFecha(cadena) {
     return isNaN(f) ? null : f;
 }
 
+export function normalizarVencimiento(cadena) {
+    const f = parsearFecha(cadena);
+    if (!f || isNaN(f)) return '';
+    const dia = String(f.getDate()).padStart(2, '0');
+    const mes = String(f.getMonth() + 1).padStart(2, '0');
+    return `${dia}/${mes}/${f.getFullYear()}`;
+}
+
 export function formatearVencimiento(cadena) {
     const f = parsearFecha(cadena);
     if (!f) return cadena;

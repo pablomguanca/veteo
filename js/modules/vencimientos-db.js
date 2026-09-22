@@ -11,13 +11,18 @@ import {
     botonesFila, claseUrgencia, textoUrgencia,
     confirmarEliminacion, ICONO_COPIADO
 } from '../utils/fila-vencimiento.js';
-import { parsearFecha, formatearVencimiento as formatearFecha } from '../utils/fecha-vencimiento.js';
+import {
+    parsearFecha, formatearVencimiento as formatearFecha,
+    normalizarVencimiento,
+} from '../utils/fecha-vencimiento.js';
 import { getAuthInstance } from '../firebase/firebase.js';
 import {
     collection, doc, getDoc, getDocs, setDoc,
     deleteDoc, writeBatch, serverTimestamp,
     query, where, orderBy,
 } from 'firebase/firestore';
+
+const DIAS_RETENCION_VENCIDOS = 7;
 
 let productosEnMemoria = [];
 
@@ -35,6 +40,60 @@ function refEscaneados(tiendaId) {
 
 function refHistorial(tiendaId) {
     return collection(getFirestoreInstance(), 'tiendas', tiendaId, 'historial');
+}
+
+function claveProducto(ean, vencimiento) {
+    const eanLimpio = String(ean || '').trim();
+    const fecha = normalizarVencimiento(vencimiento);
+    if (!eanLimpio || !fecha) return '';
+    return `${eanLimpio}__${fecha.replace(/\//g, '-')}`;
+}
+
+async function eliminarEnLotes(referencias) {
+    for (let i = 0; i < referencias.length; i += 490) {
+        const batch = writeBatch(getFirestoreInstance());
+        referencias.slice(i, i + 490).forEach(ref => batch.delete(ref));
+        await batch.commit();
+    }
+    return referencias.length;
+}
+
+async function buscarEscaneados(tiendaId, ean, vencimiento) {
+    const eanLimpio = String(ean || '').trim();
+    const fecha = normalizarVencimiento(vencimiento);
+    if (!eanLimpio || !fecha) return [];
+
+    const snap = await getDocs(query(refEscaneados(tiendaId), where('ean', '==', eanLimpio)));
+    return snap.docs.filter(d => normalizarVencimiento(d.data().fechaVencimiento) === fecha);
+}
+
+async function barrerEscaneados(tiendaId, clavesDelArchivo) {
+    const snap = await getDocs(refEscaneados(tiendaId));
+    const aEliminar = [];
+    const estadosHeredados = {};
+
+    snap.forEach(d => {
+        const data = d.data();
+        const vencimiento = data.fechaVencimiento || data.vencimiento || '';
+        const clave = claveProducto(data.ean, vencimiento);
+
+        if (clave && clavesDelArchivo.has(clave)) {
+            if (String(data.estado || '').includes('CARGADO')) {
+                estadosHeredados[clave] = {
+                    estado: data.estado,
+                    cargadoEl: data.cargadoEl || null,
+                };
+            }
+            aEliminar.push(d.ref);
+            return;
+        }
+
+        const dias = obtenerDiasRestantes(vencimiento);
+        if (dias !== null && dias < -DIAS_RETENCION_VENCIDOS) aEliminar.push(d.ref);
+    });
+
+    const eliminados = await eliminarEnLotes(aEliminar);
+    return { eliminados, estadosHeredados };
 }
 
 function parsearTxt(contenido) {
@@ -73,7 +132,7 @@ export async function importarTxtFirestore(contenido) {
     const snapTodos = await getDocs(vencRef);
 
     const clavesDelArchivo = new Set(
-        filas.map(fila => `${fila.ean}__${fila.vencimiento.replace(/\//g, '-')}`)
+        filas.map(fila => claveProducto(fila.ean, fila.vencimiento)).filter(Boolean)
     );
 
     const mapaEstados = {};
@@ -96,14 +155,13 @@ export async function importarTxtFirestore(contenido) {
         }
     });
 
-    const chunksEliminar = [];
-    for (let i = 0; i < clavesAEliminar.length; i += 490) {
-        chunksEliminar.push(clavesAEliminar.slice(i, i + 490));
-    }
-    for (const chunk of chunksEliminar) {
-        const batch = writeBatch(getFirestoreInstance());
-        chunk.forEach(clave => batch.delete(doc(vencRef, clave)));
-        await batch.commit();
+    await eliminarEnLotes(clavesAEliminar.map(clave => doc(vencRef, clave)));
+
+    const { eliminados: escaneadosBarridos, estadosHeredados } =
+        await barrerEscaneados(tiendaId, clavesDelArchivo);
+
+    for (const [clave, estado] of Object.entries(estadosHeredados)) {
+        if (!mapaEstados[clave]) mapaEstados[clave] = estado;
     }
 
     const chunks = [];
@@ -114,18 +172,19 @@ export async function importarTxtFirestore(contenido) {
     for (const chunk of chunks) {
         const batch = writeBatch(getFirestoreInstance());
         chunk.forEach(fila => {
-            const clave = `${fila.ean}__${fila.vencimiento.replace(/\//g, '-')}`;
+            const clave = claveProducto(fila.ean, fila.vencimiento);
+            if (!clave) return;
             const previo = mapaEstados[clave];
             const docRef = doc(vencRef, clave);
 
             batch.set(docRef, {
                 po: fila.po || '',
                 sec: fila.sec || '',
-                ean: fila.ean || '',
+                ean: String(fila.ean || '').trim(),
                 descripcion: fila.descripcion || '',
                 stock: fila.stock || '',
                 cantidad: fila.cantidad || '',
-                vencimiento: fila.vencimiento || '',
+                vencimiento: normalizarVencimiento(fila.vencimiento),
                 estado: previo ? previo.estado : 'PENDIENTE',
                 importadoEl: hoy,
                 cargadoEl: previo ? previo.cargadoEl : null,
@@ -134,7 +193,7 @@ export async function importarTxtFirestore(contenido) {
         await batch.commit();
     }
 
-    return { ok: true, imported: filas.length };
+    return { ok: true, imported: filas.length, escaneadosBarridos };
 }
 
 export async function obtenerTodosFirestore() {
@@ -143,11 +202,27 @@ export async function obtenerTodosFirestore() {
 
     const snapVenc = await getDocs(refVencimientos(tiendaId));
     const vencimientos = [];
-    snapVenc.forEach(d => vencimientos.push({ id: d.id, fuente: 'venc', ...d.data() }));
+    snapVenc.forEach(d => {
+        const data = d.data();
+        vencimientos.push({
+            id: d.id,
+            fuente: 'venc',
+            ...data,
+            vencimiento: normalizarVencimiento(data.vencimiento) || data.vencimiento || '',
+        });
+    });
 
     const snapEsc = await getDocs(refEscaneados(tiendaId));
     const escaneados = [];
-    snapEsc.forEach(d => escaneados.push({ id: d.id, fuente: 'esc', ...d.data() }));
+    snapEsc.forEach(d => {
+        const data = d.data();
+        escaneados.push({
+            id: d.id,
+            fuente: 'esc',
+            ...data,
+            fechaVencimiento: normalizarVencimiento(data.fechaVencimiento) || data.fechaVencimiento || '',
+        });
+    });
     const hoy = new Date();
     hoy.setHours(0, 0, 0, 0);
     const snapHist = await getDocs(refHistorial(tiendaId));
@@ -167,34 +242,34 @@ export async function actualizarEstadoFirestore(ean, vencimiento, estado) {
     const tiendaId = obtenerTiendaId();
     if (!tiendaId) throw new Error('No hay tienda activa');
 
-    const clave = `${ean}__${vencimiento.replace(/\//g, '-')}`;
-    const docRef = doc(getFirestoreInstance(), 'tiendas', tiendaId, 'vencimientos', clave);
-    const snap = await getDoc(docRef);
+    const clave = claveProducto(ean, vencimiento);
 
-    if (snap.exists()) {
-        await setDoc(docRef, {
-            estado,
-            cargadoEl: serverTimestamp(),
-        }, { merge: true });
+    if (clave) {
+        const docRef = doc(refVencimientos(tiendaId), clave);
+        const snap = await getDoc(docRef);
 
-        await registrarHistorial(tiendaId, { ...snap.data(), estado });
-        return { ok: true };
+        if (snap.exists()) {
+            await setDoc(docRef, {
+                estado,
+                cargadoEl: serverTimestamp(),
+            }, { merge: true });
+
+            await registrarHistorial(tiendaId, { ...snap.data(), estado });
+            return { ok: true };
+        }
     }
 
-    const escRef = refEscaneados(tiendaId);
-    const qEsc = query(escRef,
-        where('ean', '==', ean),
-        where('fechaVencimiento', '==', vencimiento)
-    );
-    const snapEsc = await getDocs(qEsc);
+    const escaneados = await buscarEscaneados(tiendaId, ean, vencimiento);
 
-    if (!snapEsc.empty) {
-        const escDoc = snapEsc.docs[0];
-        await setDoc(escDoc.ref, {
+    if (escaneados.length) {
+        const batch = writeBatch(getFirestoreInstance());
+        escaneados.forEach(d => batch.set(d.ref, {
             estado,
             cargadoEl: serverTimestamp(),
-        }, { merge: true });
-        await registrarHistorial(tiendaId, { ...escDoc.data(), estado });
+        }, { merge: true }));
+        await batch.commit();
+
+        await registrarHistorial(tiendaId, { ...escaneados[0].data(), estado });
         return { ok: true };
     }
 
@@ -205,18 +280,34 @@ export async function guardarEscaneadoFirestore(datos) {
     const tiendaId = obtenerTiendaId();
     if (!tiendaId) throw new Error('No hay tienda activa');
 
-    const nuevoRef = doc(refEscaneados(tiendaId));
-    await setDoc(nuevoRef, {
-        sec: datos.sec || '',
-        ean: datos.ean || '',
+    const ean = String(datos.ean || '').trim();
+    const vencimiento = normalizarVencimiento(datos.fecha_vencimiento);
+    if (!vencimiento) throw new Error('La fecha de vencimiento no es válida');
+
+    const clave = claveProducto(ean, vencimiento);
+    const destino = clave
+        ? doc(refEscaneados(tiendaId), clave)
+        : doc(refEscaneados(tiendaId));
+
+    const existentes = clave ? await buscarEscaneados(tiendaId, ean, vencimiento) : [];
+    const anterior = existentes.find(d => (d.data().estado || '').includes('CARGADO')) || existentes[0];
+    const previo = anterior?.data() || {};
+
+    await setDoc(destino, {
+        sec: datos.sec || previo.sec || '',
+        ean,
         descripcion: datos.descripcion || 'Ingreso manual',
         cantidad: datos.cantidad || 1,
-        fechaVencimiento: String(datos.fecha_vencimiento || ''),
+        fechaVencimiento: vencimiento,
         nota: datos.nota || '',
-        estado: 'PENDIENTE',
-        cargadoEl: null,
-        creadoEl: serverTimestamp(),
+        estado: previo.estado || 'PENDIENTE',
+        cargadoEl: previo.cargadoEl || null,
+        creadoEl: previo.creadoEl || serverTimestamp(),
     });
+
+    await eliminarEnLotes(
+        existentes.filter(d => d.id !== destino.id).map(d => d.ref)
+    );
 
     return { ok: true };
 }
@@ -235,17 +326,10 @@ export async function eliminarEscaneadoFirestore(ean, fechaVencimiento) {
     const tiendaId = obtenerTiendaId();
     if (!tiendaId) throw new Error('No hay tienda activa');
 
-    const escRef = refEscaneados(tiendaId);
-    const q = query(escRef,
-        where('ean', '==', ean),
-        where('fechaVencimiento', '==', fechaVencimiento)
-    );
-    const snap = await getDocs(q);
-    if (snap.empty) throw new Error('No se encontró el registro');
+    const existentes = await buscarEscaneados(tiendaId, ean, fechaVencimiento);
+    if (!existentes.length) throw new Error('No se encontró el registro');
 
-    const batch = writeBatch(getFirestoreInstance());
-    snap.docs.forEach(d => batch.delete(d.ref));
-    await batch.commit();
+    await eliminarEnLotes(existentes.map(d => d.ref));
 
     return { ok: true };
 }
@@ -413,7 +497,11 @@ function renderizarTabla(contenedor, elementoVacio, filas) {
                 } else {
                     await eliminarImportadoFirestore(item.id);
                 }
-                productosEnMemoria = productosEnMemoria.filter(p => p.id !== item.id);
+                productosEnMemoria = productosEnMemoria.filter(p => {
+                    if (p.id === item.id) return false;
+                    if (!esEscaneado || p.fuente !== 'esc') return true;
+                    return claveProducto(p.ean, p.fechaVencimiento) !== claveProducto(ean, vto);
+                });
                 elemento.remove();
                 const quedanVisibles = [...contenedor.querySelectorAll('.venc-row')]
                     .some(r => r.style.display !== 'none');
@@ -504,7 +592,14 @@ export async function inicializarBaseDatosVencimientos() {
                 const res = await importarTxtFirestore(e.target.result);
                 if (res.ok) {
                     await cargarDatos();
-                    trackearEvento('importacion_txt', { cantidad_productos: res.imported });
+                    if (res.escaneadosBarridos && elementoEstado) {
+                        elementoEstado.textContent +=
+                            ` · ${res.escaneadosBarridos} carga${res.escaneadosBarridos > 1 ? 's' : ''} manual${res.escaneadosBarridos > 1 ? 'es' : ''} dada${res.escaneadosBarridos > 1 ? 's' : ''} de baja`;
+                    }
+                    trackearEvento('importacion_txt', {
+                        cantidad_productos: res.imported,
+                        escaneados_barridos: res.escaneadosBarridos || 0,
+                    });
                 }
             } catch (err) {
                 console.error('[Importar TXT]:', err);
