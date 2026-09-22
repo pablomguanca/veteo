@@ -416,6 +416,13 @@ function obtenerEtapa(dias) {
     return { etiqueta, claseCSS: 'venc-badge--90' };
 }
 
+function sinStock(item) {
+    const crudo = String(item.stock ?? '').trim();
+    if (!crudo) return false;
+    const numero = parseFloat(crudo.replace(',', '.'));
+    return isFinite(numero) && numero <= 0;
+}
+
 function escaparHTML(s) {
     return String(s ?? '')
         .replace(/&/g, '&amp;').replace(/</g, '&lt;')
@@ -451,10 +458,13 @@ function renderizarTabla(contenedor, elementoVacio, filas) {
 
         const { etiquetaPrincipal: labelPrincipal, mostrarUM } = resolverAcciones(item);
 
+        const agotado = sinStock(item);
+
         const elemento = document.createElement('div');
         elemento.className = `venc-row ${estado.includes('CARGADO') ? 'venc-row--done' : ''}`;
         elemento.dataset.fecha = vto;
         elemento.dataset.vencido = dias < 0 ? 'true' : 'false';
+        elemento.dataset.sinStock = agotado ? 'true' : 'false';
         if (dias < 0) elemento.style.display = 'none';
 
         elemento.innerHTML = `
@@ -463,6 +473,7 @@ function renderizarTabla(contenedor, elementoVacio, filas) {
                 <div class="venc-row__name">${escaparHTML(desc)}</div>
                 <div class="venc-row__meta">
                     <span class="venc-row__urgency ${claseUrgencia(dias)}">${textoUrgencia(dias)}</span>
+                    ${agotado ? '<span class="venc-row__sin-stock">Sin stock</span>' : ''}
                     <span>${textoVence} · EAN ${escaparHTML(ean)} · SEC ${sec} · Cant: ${cant}</span>
                 </div>
             </div>

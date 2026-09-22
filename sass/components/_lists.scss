@@ -77,6 +77,18 @@
         }
     }
 
+    &__sin-stock {
+        font-family: v.$ff-body;
+        font-size: 11px;
+        font-weight: 700;
+        letter-spacing: 0.02em;
+        text-transform: uppercase;
+        color: v.$muted;
+        border: 1px solid v.$border;
+        border-radius: v.$radius-xs;
+        padding: 1px 6px;
+    }
+
     &__actions {
         display: flex;
         align-items: center;
@@ -192,6 +204,15 @@
 
 .venc-row[data-vencido="true"] {
     opacity: 0.6;
+}
+
+.venc-row[data-sin-stock="true"] {
+    opacity: 0.55;
+
+    .venc-row__name {
+        text-decoration: line-through;
+        text-decoration-thickness: 1px;
+    }
 }
 
 .vdb-list,

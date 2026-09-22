@@ -44,7 +44,7 @@ function generarPDF(target) {
     const cssUrl = new URL('/css/pdf.css', window.location.origin).href;
 
     const rows = [...contenedor.querySelectorAll('.venc-row')]
-        .filter(r => r.style.display !== 'none');
+        .filter(r => r.style.display !== 'none' && r.dataset.sinStock !== 'true');
 
     const filas = rows.map(row => {
         const meta = row.querySelector('.venc-row__meta')?.textContent || '';
@@ -182,7 +182,7 @@ async function generarExcelPCH(target) {
     if (!contenedor) return;
 
     const rows = [...contenedor.querySelectorAll('.venc-row')]
-        .filter(r => r.style.display !== 'none');
+        .filter(r => r.style.display !== 'none' && r.dataset.sinStock !== 'true');
 
     if (rows.length === 0) {
         Swal.fire({
