@@ -28,10 +28,13 @@ function sellarServiceWorker() {
 
         generateBundle(opciones, paquete) {
             directorioSalida = opciones.dir || directorioSalida;
-            huella = createHash('sha256')
-                .update(Object.keys(paquete).sort().join('|'))
-                .digest('hex')
-                .slice(0, 12);
+            const hash = createHash('sha256');
+            for (const nombre of Object.keys(paquete).sort()) {
+                const pieza = paquete[nombre];
+                hash.update(nombre);
+                hash.update(pieza.type === 'chunk' ? pieza.code : pieza.source);
+            }
+            huella = hash.digest('hex').slice(0, 12);
         },
 
         closeBundle() {

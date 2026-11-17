@@ -61,23 +61,11 @@ async function cachePrimero(peticion) {
     return respuestaDeRed(peticion);
 }
 
-async function revalidarEnSegundoPlano(peticion) {
-    const cache = await caches.open(NOMBRE_CACHE);
-    const cacheado = await cache.match(peticion);
-
-    const enRed = respuestaDeRed(peticion).catch(() => null);
-    if (cacheado) {
-        return cacheado;
-    }
-
-    const respuesta = await enRed;
-    if (respuesta) return respuesta;
-    throw new Error('Sin red y sin caché');
-}
-
 self.addEventListener('install', (evento) => {
     evento.waitUntil(
-        caches.open(NOMBRE_CACHE).then((cache) => cache.addAll(URLS_PRECACHE))
+        caches.open(NOMBRE_CACHE)
+            .then((cache) => cache.addAll(URLS_PRECACHE))
+            .then(() => self.skipWaiting())
     );
 });
 
@@ -114,12 +102,7 @@ self.addEventListener('fetch', (evento) => {
         return;
     }
 
-    if (url.pathname.endsWith('.html')) {
-        evento.respondWith(redPrimero(peticion));
-        return;
-    }
-
-    evento.respondWith(revalidarEnSegundoPlano(peticion));
+    evento.respondWith(redPrimero(peticion));
 });
 
 self.addEventListener('notificationclick', (evento) => {
