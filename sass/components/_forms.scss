@@ -49,6 +49,23 @@
         appearance: none;
         cursor: pointer;
     }
+
+    &__input[type='date'] {
+        cursor: pointer;
+        min-height: 44px;
+
+        &::-webkit-calendar-picker-indicator {
+            cursor: pointer;
+            opacity: 0.75;
+            padding: 4px;
+            margin-left: 4px;
+            transition: opacity v.$duration-fast v.$ease;
+
+            &:hover {
+                opacity: 1;
+            }
+        }
+    }
 }
 
 .field-row {

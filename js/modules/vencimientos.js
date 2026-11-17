@@ -38,7 +38,14 @@ export async function inicializarVencimientos() {
     if (!botonAgregar || !fondoModal) return;
 
     const entradaFecha = document.getElementById('f-fecha');
-    if (entradaFecha) entradaFecha.min = new Date().toISOString().split('T')[0];
+    if (entradaFecha) {
+        entradaFecha.min = new Date().toISOString().split('T')[0];
+        entradaFecha.addEventListener('click', () => {
+            try {
+                entradaFecha.showPicker?.();
+            } catch { }
+        });
+    }
 
     botonAgregar.addEventListener('click', () => abrirModal(fondoModal));
 
